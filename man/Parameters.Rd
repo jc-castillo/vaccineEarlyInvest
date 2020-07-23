@@ -179,7 +179,6 @@ homogeneous benefits, a=0 corresponds to all benefits to the first person.}
 \itemize{
 \item \href{#method-new}{\code{Parameters$new()}}
 \item \href{#method-setDerivedParameters}{\code{Parameters$setDerivedParameters()}}
-\item \href{#method-setCountryParameters}{\code{Parameters$setCountryParameters()}}
 \item \href{#method-clone}{\code{Parameters$clone()}}
 }
 }
@@ -216,23 +215,6 @@ Compute additional parameters that are functions of the input parameters
 \if{html}{\out{<div class="r">}}\preformatted{Parameters$setDerivedParameters()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setCountryParameters"></a>}}
-\if{latex}{\out{\hypertarget{method-setCountryParameters}{}}}
-\subsection{Method \code{setCountryParameters()}}{
-Compute parameters related to individual countries
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Parameters$setCountryParameters(input)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{Name of country group}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

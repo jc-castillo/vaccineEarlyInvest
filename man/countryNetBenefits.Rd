@@ -9,7 +9,7 @@ countryNetBenefits(
   dcandidate,
   targetPermutations,
   dplatforms,
-  step,
+  grid,
   price,
   par,
   lambda = 1
@@ -24,7 +24,7 @@ countryNetBenefits(
 
 \item{dplatforms}{`data.table` with platform information}
 
-\item{step}{Size of the capacity grid}
+\item{grid}{Size of the capacity grid}
 
 \item{price}{Price per vaccine / year}
 

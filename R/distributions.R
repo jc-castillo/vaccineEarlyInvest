@@ -7,14 +7,14 @@
 #' @param targetPermutations `data.table` with permutations of targets
 #' @param dplatforms `data.table` with platform information
 #' @param par `Parameters` object with model parameters
-#' @param step Size of the capacity grid
+#' @param grid Size of the capacity grid
 #' @param price Price per vaccine / year
 #' @param lambda Lagrange multiplier. Should be one, unless trying to solve problem with constrained budget.
 #'
 #' @return Expected benefits for the country
 #' @export
-countryNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, step, price, par, lambda=1) {
-  netBenefits <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=step) -
+countryNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par, lambda=1) {
+  netBenefits <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=grid) -
     lambda * priceTakerCost(capacities, price)
 
   return(netBenefits)
@@ -119,12 +119,12 @@ candidateDraws <- function(dcandidate, par, seed=30) {
 #' @param capacities Starting point
 #' @param objectiveFun Function to optimize
 #' @param step Step size of the grid
-#' @param verbose Whether to print extensive output
+#' @param verbose Whether to print extensive output (2), some output (1), or no output (0)
 #' @param ... Other parameters to pass on to the objective function
 #'
 #' @return Optimal capacities
 #' @export
-optimize <- function(capacities, objectiveFun, step=100, verbose=T, ...) {
+optimize <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
   # Setting up values for main optimization
   max <- objectiveFun(capacities, step, ...)
   end <- F
@@ -136,6 +136,10 @@ optimize <- function(capacities, objectiveFun, step=100, verbose=T, ...) {
   improvement <- rep(1e12, ncand) # Vector that keeps track of last improvement obtained when moving in each dimension.
                                   # Initialize assuming every dimension can potentially lead to a large improvement
   l <- 100000
+
+  if (verbose==1) {
+    print("Objective function: ")
+  }
 
   # Main loop that moves capacities towards optimum
   while (!end) {
@@ -152,7 +156,7 @@ optimize <- function(capacities, objectiveFun, step=100, verbose=T, ...) {
       # Try increasing dimension i by one grid step
       captemp <- capacities
       captemp[i] <- captemp[i] + step
-      nval <- objectiveFun(captemp, step, ...)
+      nval <- objectiveFun(captemp, grid=step, ...)
 
       if (nval > best) { # Mark down if there's an improvement
         improvement[i] <- (nval - best)/step
@@ -167,7 +171,7 @@ optimize <- function(capacities, objectiveFun, step=100, verbose=T, ...) {
         # Constrains analysis to positive capacities
         captemp <- capacities
         captemp[i] <- captemp[i] - step
-        nval <- objectiveFun(captemp, step, ...)
+        nval <- objectiveFun(captemp, grid=step, ...)
 
         if (nval > best) { # Mark down if there's an improvement
           improvement[i] <- (nval - best)/step
@@ -201,11 +205,17 @@ optimize <- function(capacities, objectiveFun, step=100, verbose=T, ...) {
       max <- best
     }
 
-    if (verbose) {
+    if (verbose == 2) {
       print(capacities)
       print(best)
       print(improvement, digits=3)
+    } else if (verbose==1) {
+      cat(best, ", ")
     }
+  }
+
+  if (verbose==1) {
+    cat("\n")
   }
 
   return(capacities)

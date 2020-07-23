@@ -4,7 +4,7 @@
 \alias{optimize}
 \title{Maximize objective function staying within a grid}
 \usage{
-optimize(capacities, objectiveFun, step = 100, verbose = T, ...)
+optimize(capacities, objectiveFun, step = 100, verbose = 1, ...)
 }
 \arguments{
 \item{capacities}{Starting point}
@@ -13,7 +13,7 @@ optimize(capacities, objectiveFun, step = 100, verbose = T, ...)
 
 \item{step}{Step size of the grid}
 
-\item{verbose}{Whether to print extensive output}
+\item{verbose}{Whether to print extensive output (2), some output (1), or no output (0)}
 
 \item{...}{Other parameters to pass on to the objective function}
 }

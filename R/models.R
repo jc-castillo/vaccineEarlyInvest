@@ -8,17 +8,17 @@
 #' @return Data.table with summary data
 #' @export
 #' @import data.table
-loadData <- function(par, summaryFile=NULL, includeVaccines=c()) {
+loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
 
-  if (is.null(summaryFile)) {
+  if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
       d <- data.table(read.csv("Data/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
     } else if (par$inputfile=="US") {
       d <- data.table(read.csv("Data/vaccinesSummaryUS.csv", fileEncoding = "UTF-8-BOM"))
     }
   } else {
-    d <- data.table(read.csv(summaryFile, fileEncoding = "UTF-8-BOM"))
+    d <- data.table(read.csv(candidateFile, fileEncoding = "UTF-8-BOM"))
   }
 
   d[is.na(PreClinicalCandidates), PreClinicalCandidates := 0]

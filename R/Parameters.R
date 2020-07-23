@@ -38,7 +38,7 @@ Parameters <- R6Class("Parameters", list(
   #' @field vaccshare Fraction of population that accounts for some fraction of damage
   vaccshare=1.5/7.8,
   #' @field monthben Economic benefit for the whole world per month (in billion $)
-  monthben=375,
+  monthben=500,
   #' @field worldmortality World mortality
   worldmortality=200000,
   #' @field mortality Monthly internal mortality
@@ -184,7 +184,7 @@ Parameters <- R6Class("Parameters", list(
   #' @param ... Set methods at non-default values
   #' @return A new `Parameters` object.
   initialize = function(input="International", ...) {
-    if (class(input) == "reactivevalues") {
+    if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
       nms <- names(input)
       for (nm in nms) {
         if (nm %in% names(self)) {
@@ -193,48 +193,6 @@ Parameters <- R6Class("Parameters", list(
           }
         }
       }
-    } else if (input == "US") { # Defaults for the US
-      self$global=F
-      self$popshare=0.33/7.8
-      self$gdpshare=20.54/87.3
-      self$fracHighRisk=0.2452
-
-    } else if (input == "EU") {
-      self$global=F
-      self$popshare=446/7800
-      self$gdpshare=16/87.3
-      self$fracHighRisk=0.2677
-
-    } else if (input == "EU+") { # EU + UK + Japan + S. Korea + Canada + Switzerland
-      self$global=F
-      self$popshare=737/7800
-      self$gdpshare=27.8/87.3
-      self$fracHighRisk=0.268
-      # GDP: 18.7 + 5.1 + 1.7 + 1.6 + 0.7
-      # Pop: 513 + 127 + 51 + 37 + 9
-
-    } else if (input == "Rich") { # For US + EU + UK + Japan + Korea + Canada + Australia + Switzerland + Norway + New Zealand
-      self$global=F
-      self$popshare=1100/7800
-      self$gdpshare=50.36/87.3
-      self$fracHighRisk=0.2604
-      # GDP: 20.5 + 18.7 + 5.1 + 1.7 + 1.6 + 1.43 + 0.7 + 0.43 + 0.2
-      # Pop: 328 + 513 + 127 + 51 + 37 + 25 + 9 + 5.6 + 5
-
-    } else if (input == "BRIC") { # Defaults for the US
-      self$global=F
-      self$popshare=3080/7800
-      self$gdpshare=19.6/87.3
-      self$fracHighRisk=0.12839
-
-    } else if (input == "Rest") { # Defaults for the rest of the world
-      self$global=F
-      self$popshare=3620/7800
-      self$gdpshare=19.4/87.3
-      self$fracHighRisk=0.0869
-
-    } else if (input != "International") { # The defaults are for the international version. Error message for other inputs.
-      stop("Wrong name when initializing parameters")
     }
 
     self$capkink_nucleic <- self$capkink
@@ -252,11 +210,6 @@ Parameters <- R6Class("Parameters", list(
       }
     }
 
-    # if (!is.null(benefitdist)) {
-    #   self$benefitdist <- benefitdist
-    # }
-
-    self$setCountryParameters(input)
     self$setDerivedParameters()
 
     for (i in seq_len(length(parlist))) {
@@ -276,6 +229,13 @@ Parameters <- R6Class("Parameters", list(
       self$mortality <- self$popshare * self$worldmortality
     }
 
+    if (!self$global) {
+      popratio <- self$popshare / (0.33/7.8)
+      gdpratio <- self$gdpshare / (20.54/87.3)
+      gdppcratio <- gdpratio / popratio
+      self$statLife=7 * gdppcratio
+    }
+
     self$capcost <- self$c * self$capacity * 12 / 1000
     self$hben <- self$mortality * self$statLife * self$yearsLost / self$lifeExp / 1000
     self$effpop <- self$fracneeded * self$pop
@@ -283,13 +243,6 @@ Parameters <- R6Class("Parameters", list(
     if (self$global) {
       self$totmonthben <- (self$monthben + self$hben) * (1 - self$sharm)
     } else {
-      self$outlivesratio <- (150000 - self$mortality) / self$mortality
-
-      # Commented out: for altruistic programs
-      # self$totmonthben <- (self$monthben * self$gdpshare * (1+self$spillovers) +
-      #                        self$hben * (1 + self$outlifefactor * self$outlivesratio)) * (1 - self$sharm)
-      # self$damageshare <- (self$monthben * self$gdpshare + self$hben) * (1 - self$sharm) / self$totmonthben
-
       self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
       damageratio <- 0.25 / (1-0.25) * (1-0.75) / 0.75
       self$damageshare <- 1 / (1 + (1 - self$fracHighRisk) / self$fracHighRisk * damageratio)
@@ -314,31 +267,6 @@ Parameters <- R6Class("Parameters", list(
       slope2 <- (1-self$damageshare) / (1 - self$vaccshare)
       int2 <- self$damageshare - slope2 * self$vaccshare
       self$piecewisepar <- list(slope1=slope1, int1=int1, slope2=slope2, int2=int2)
-
-      # browser()
-      # x <- seq(0,1,0.01)
-      # y <- ifelse(x < self$vaccshare, int1 + slope1 * x,  int2 + slope2 * x)
-      # ggplot() + geom_line(aes(x, y))
-    }
-  },
-
-  #' @description
-  #' Compute parameters related to individual countries
-  #' @param input Name of country group
-  setCountryParameters = function(input) {
-    if (length(input) == 1) {
-      if (input %in% c("US", "EU", "EU+", "Rich", "BRIC", "Rest")) {
-        popratio <- self$popshare / (0.33/7.8)
-        gdpratio <- self$gdpshare / (20.54/87.3)
-        gdppcratio <- gdpratio / popratio
-        self$statLife=7 * gdppcratio
-        self$lifeExp=78.5
-        self$yearsLost=10
-        self$capacity=300
-
-        self$inputfile <- "US"
-        self$maxcand <- 19
-      }
     }
   }
 
