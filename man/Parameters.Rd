@@ -23,7 +23,7 @@ Class to handle model parameters
 
 \item{\code{pattenuated}}{Probability that there's no problem at the live attenuated platform level}
 
-\item{\code{psubunit}}{Probability that there's no problem at the inactivated platform level}
+\item{\code{pinactivated}}{Probability that there's no problem at the inactivated platform level}
 
 \item{\code{pvlp}}{Probability that there's no problem at the virus-like particle platform level}
 
@@ -43,7 +43,7 @@ Class to handle model parameters
 
 \item{\code{vaccshare}}{Fraction of population that accounts for some fraction of damage}
 
-\item{\code{mmonthben}}{Economic benefit for the whole world per month (in billion $)}
+\item{\code{monthben}}{Economic benefit for the whole world per month (in billion $)}
 
 \item{\code{worldmortality}}{World mortality}
 
@@ -63,17 +63,17 @@ Class to handle model parameters
 
 \item{\code{capkink}}{Capacity at which marginal cost has a kink (doses / month)}
 
-\item{\code{capkink}}{Capacity at which marginal cost has a kink for RNA and DNA (doses / month)}
+\item{\code{capkink_nucleic}}{Capacity at which marginal cost has a kink for RNA and DNA (doses / month)}
 
-\item{\code{capkink}}{Capacity at which marginal cost has a kink for protein subunit and viral vector (doses / month)}
+\item{\code{capkink_subunits}}{Capacity at which marginal cost has a kink for protein subunit and viral vector (doses / month)}
 
-\item{\code{capkink}}{Capacity at which marginal cost has a kink for live attenuated and deactivated (doses / month)}
+\item{\code{capkink_live}}{Capacity at which marginal cost has a kink for live attenuated and deactivated (doses / month)}
 
 \item{\code{mgcostelast}}{Elasticity of marginal cost after kink}
 
 \item{\code{afterCapacity}}{Capacity after the end of the program (doses / month)}
 
-\item{\code{afterCapacity}}{Capacity in the counterfactual (doses / month)}
+\item{\code{counterCapacity}}{Capacity in the counterfactual (doses / month)}
 
 \item{\code{pop}}{Size of total population (billions)}
 
@@ -160,24 +160,17 @@ homogeneous benefits, a=0 corresponds to all benefits to the first person.}
 
 \item{\code{global}}{Whether the coalition is the global coalition}
 
-\item{\code{global}}{String determining the candidate input file to use}
+\item{\code{inputfile}}{String determining the candidate input file to use}
 
-\item{\code{global}}{Fraction of population needed to reopen economy}
+\item{\code{fracneeded}}{Fraction of population needed to reopen economy}
 
-\item{\code{global}}{Effective world population that needs to be vaccinated to get 100% of benefits}
+\item{\code{effpop}}{Effective world population that needs to be vaccinated to get 100% of benefits}
 
 \item{\code{outcap}}{Capacity to build in an outside market}
 
 \item{\code{outprob}}{Probability that copy vaccine will be successful, conditional on own success}
 
 \item{\code{outquantity}}{Amount of outside vaccines that will be sold at high prices}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{mmonthben}}{Economic benefit for the whole world per month (in billion $)}
 }
 \if{html}{\out{</div>}}
 }
@@ -205,6 +198,8 @@ Create a new `Parameters` object.
 \item{\code{input}}{Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
 the `input` object (of class `reactivevalues`) with the inputs from a shiny app, in which case all inputs are copied into
 fields.}
+
+\item{\code{...}}{Set methods at non-default values}
 }
 \if{html}{\out{</div>}}
 }
@@ -226,10 +221,18 @@ Compute additional parameters that are functions of the input parameters
 \if{html}{\out{<a id="method-setCountryParameters"></a>}}
 \if{latex}{\out{\hypertarget{method-setCountryParameters}{}}}
 \subsection{Method \code{setCountryParameters()}}{
+Compute parameters related to individual countries
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Parameters$setCountryParameters(input)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{input}}{Name of country group}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

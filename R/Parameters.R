@@ -1,6 +1,9 @@
 library("R6")
 
 #' Class to handle model parameters
+#'
+#' @import data.table
+#' @export
 Parameters <- R6Class("Parameters", list(
   #' @field poverall Probability that no problem at the overall level prevents vaccine feasibility
   poverall=0.9,
@@ -14,7 +17,7 @@ Parameters <- R6Class("Parameters", list(
   pdna=0.4,
   #' @field pattenuated Probability that there's no problem at the live attenuated platform level
   pattenuated=0.8,
-  #' @field psubunit Probability that there's no problem at the inactivated platform level
+  #' @field pinactivated Probability that there's no problem at the inactivated platform level
   pinactivated=0.8,
   #' @field pvlp Probability that there's no problem at the virus-like particle platform level
   pvlp=0.8,
@@ -34,7 +37,7 @@ Parameters <- R6Class("Parameters", list(
   damageshare=0.75,
   #' @field vaccshare Fraction of population that accounts for some fraction of damage
   vaccshare=1.5/7.8,
-  #' @field mmonthben Economic benefit for the whole world per month (in billion $)
+  #' @field monthben Economic benefit for the whole world per month (in billion $)
   monthben=375,
   #' @field worldmortality World mortality
   worldmortality=200000,
@@ -54,17 +57,17 @@ Parameters <- R6Class("Parameters", list(
   capacity=500,
   #' @field capkink Capacity at which marginal cost has a kink (doses / month)
   capkink=100,
-  #' @field capkink Capacity at which marginal cost has a kink for RNA and DNA (doses / month)
+  #' @field capkink_nucleic Capacity at which marginal cost has a kink for RNA and DNA (doses / month)
   capkink_nucleic=NULL,
-  #' @field capkink Capacity at which marginal cost has a kink for protein subunit and viral vector (doses / month)
+  #' @field capkink_subunits Capacity at which marginal cost has a kink for protein subunit and viral vector (doses / month)
   capkink_subunits=NULL,
-  #' @field capkink Capacity at which marginal cost has a kink for live attenuated and deactivated (doses / month)
+  #' @field capkink_live Capacity at which marginal cost has a kink for live attenuated and deactivated (doses / month)
   capkink_live=NULL,
   #' @field mgcostelast Elasticity of marginal cost after kink
   mgcostelast=1,
   #' @field afterCapacity Capacity after the end of the program (doses / month)
   afterCapacity=500,
-  #' @field afterCapacity Capacity in the counterfactual (doses / month)
+  #' @field counterCapacity Capacity in the counterfactual (doses / month)
   counterCapacity=500,
   #' @field pop Size of total population (billions)
   pop=7.8,
@@ -134,12 +137,12 @@ Parameters <- R6Class("Parameters", list(
   precombinant=1.0,
   #' @field potherprotein Probability that there's no problem at the candidate level when a vaccine targets some other proten
   potherprotein=1.0,
-  
+
   #' @field benefitdist String describing the form of the benefit distribution
   benefitdist="pnorm",
   #' @field piecewisepar Parameters of a piecewise linear benefit distribution
   piecewisepar=NA,
-  
+
   #' @field popshare Share of world population accounted for by coalition
   popshare=1,
   #' @field gdpshare Share of world GDP accounted for by coalition
@@ -154,18 +157,18 @@ Parameters <- R6Class("Parameters", list(
   outlivesratio=0,
   #' @field fracHighRisk Fraction of population at high risk
   fracHighRisk=0.12841,
-  
+
   #' @field global Whether the coalition is the global coalition
   global=T,
-  
-  #' @field global String determining the candidate input file to use
+
+  #' @field inputfile String determining the candidate input file to use
   inputfile="Default",
-  
-  #' @field global Fraction of population needed to reopen economy
+
+  #' @field fracneeded Fraction of population needed to reopen economy
   fracneeded=0.7,
-  #' @field global Effective world population that needs to be vaccinated to get 100% of benefits
+  #' @field effpop Effective world population that needs to be vaccinated to get 100% of benefits
   effpop=0.7*7.8,
-  
+
   #' @field outcap Capacity to build in an outside market
   outcap=0.1, # Billions
   #' @field outprob Probability that copy vaccine will be successful, conditional on own success
@@ -178,6 +181,7 @@ Parameters <- R6Class("Parameters", list(
   #' @param input Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
   #' the `input` object (of class `reactivevalues`) with the inputs from a shiny app, in which case all inputs are copied into
   #' fields.
+  #' @param ... Set methods at non-default values
   #' @return A new `Parameters` object.
   initialize = function(input="International", ...) {
     if (class(input) == "reactivevalues") {
@@ -200,7 +204,7 @@ Parameters <- R6Class("Parameters", list(
       self$popshare=446/7800
       self$gdpshare=16/87.3
       self$fracHighRisk=0.2677
-      
+
     } else if (input == "EU+") { # EU + UK + Japan + S. Korea + Canada + Switzerland
       self$global=F
       self$popshare=737/7800
@@ -208,7 +212,7 @@ Parameters <- R6Class("Parameters", list(
       self$fracHighRisk=0.268
       # GDP: 18.7 + 5.1 + 1.7 + 1.6 + 0.7
       # Pop: 513 + 127 + 51 + 37 + 9
-      
+
     } else if (input == "Rich") { # For US + EU + UK + Japan + Korea + Canada + Australia + Switzerland + Norway + New Zealand
       self$global=F
       self$popshare=1100/7800
@@ -216,29 +220,29 @@ Parameters <- R6Class("Parameters", list(
       self$fracHighRisk=0.2604
       # GDP: 20.5 + 18.7 + 5.1 + 1.7 + 1.6 + 1.43 + 0.7 + 0.43 + 0.2
       # Pop: 328 + 513 + 127 + 51 + 37 + 25 + 9 + 5.6 + 5
-      
+
     } else if (input == "BRIC") { # Defaults for the US
       self$global=F
       self$popshare=3080/7800
       self$gdpshare=19.6/87.3
       self$fracHighRisk=0.12839
-      
+
     } else if (input == "Rest") { # Defaults for the rest of the world
       self$global=F
       self$popshare=3620/7800
       self$gdpshare=19.4/87.3
       self$fracHighRisk=0.0869
-      
+
     } else if (input != "International") { # The defaults are for the international version. Error message for other inputs.
       stop("Wrong name when initializing parameters")
     }
-    
+
     self$capkink_nucleic <- self$capkink
     self$capkink_subunits <- self$capkink
     self$capkink_live <- self$capkink
-    
+
     parlist <- list(...)
-    
+
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
       if (nm %in% names(self)) {
@@ -247,14 +251,14 @@ Parameters <- R6Class("Parameters", list(
         }
       }
     }
-    
+
     # if (!is.null(benefitdist)) {
     #   self$benefitdist <- benefitdist
     # }
-    
+
     self$setCountryParameters(input)
     self$setDerivedParameters()
-    
+
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
       if (nm %in% names(self)) {
@@ -271,33 +275,33 @@ Parameters <- R6Class("Parameters", list(
     if (is.null(self$mortality)) {
       self$mortality <- self$popshare * self$worldmortality
     }
-    
+
     self$capcost <- self$c * self$capacity * 12 / 1000
     self$hben <- self$mortality * self$statLife * self$yearsLost / self$lifeExp / 1000
     self$effpop <- self$fracneeded * self$pop
-    
+
     if (self$global) {
       self$totmonthben <- (self$monthben + self$hben) * (1 - self$sharm)
     } else {
       self$outlivesratio <- (150000 - self$mortality) / self$mortality
-      
+
       # Commented out: for altruistic programs
-      # self$totmonthben <- (self$monthben * self$gdpshare * (1+self$spillovers) + 
+      # self$totmonthben <- (self$monthben * self$gdpshare * (1+self$spillovers) +
       #                        self$hben * (1 + self$outlifefactor * self$outlivesratio)) * (1 - self$sharm)
       # self$damageshare <- (self$monthben * self$gdpshare + self$hben) * (1 - self$sharm) / self$totmonthben
-      
+
       self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
       damageratio <- 0.25 / (1-0.25) * (1-0.75) / 0.75
       self$damageshare <- 1 / (1 + (1 - self$fracHighRisk) / self$fracHighRisk * damageratio)
       self$vaccshare <- self$fracHighRisk
-      
+
       self$benefitdist <- "piecewiseLinearGen"
-      
+
       piecewisepar <- list(vaccshares=c(self$fracHighRisk * self$popshare / self$fracneeded, self$popshare),
                            damageshares=c(self$damageshare, 1))
       self$piecewisepar <- piecewisepar
     }
-    
+
     # Compute damage parameters based on damage distribution
     if (self$benefitdist=="pnorm") {
       as <- seq(0,10,0.01)
@@ -310,14 +314,17 @@ Parameters <- R6Class("Parameters", list(
       slope2 <- (1-self$damageshare) / (1 - self$vaccshare)
       int2 <- self$damageshare - slope2 * self$vaccshare
       self$piecewisepar <- list(slope1=slope1, int1=int1, slope2=slope2, int2=int2)
-      
+
       # browser()
       # x <- seq(0,1,0.01)
       # y <- ifelse(x < self$vaccshare, int1 + slope1 * x,  int2 + slope2 * x)
       # ggplot() + geom_line(aes(x, y))
     }
   },
-  
+
+  #' @description
+  #' Compute parameters related to individual countries
+  #' @param input Name of country group
   setCountryParameters = function(input) {
     if (length(input) == 1) {
       if (input %in% c("US", "EU", "EU+", "Rich", "BRIC", "Rest")) {
@@ -328,13 +335,13 @@ Parameters <- R6Class("Parameters", list(
         self$lifeExp=78.5
         self$yearsLost=10
         self$capacity=300
-        
+
         self$inputfile <- "US"
         self$maxcand <- 19
       }
     }
   }
-  
+
 )
 )
 

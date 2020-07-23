@@ -20,6 +20,8 @@ overallDistribution(
 
 \item{dplatforms}{data.table with information by platform}
 
+\item{poverall}{Overall probability that a vaccine is feasible}
+
 \item{grid}{Resolution of the grid to compute all distributions}
 
 \item{target}{Whether to allow for target distributions (otherwise all targets succeed with probability 1)}

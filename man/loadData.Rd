@@ -4,7 +4,7 @@
 \alias{loadData}
 \title{Load data}
 \usage{
-loadData(par, includeVaccines = c())
+loadData(par, summaryFile = NULL, includeVaccines = c())
 }
 \arguments{
 \item{par}{Parameters object with model parameters}

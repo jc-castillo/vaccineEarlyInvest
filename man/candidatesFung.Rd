@@ -12,6 +12,8 @@ candidatesFung(d, par, computeExpComp = F, seed = 10)
 \item{par}{Parameters object with model parameters}
 
 \item{computeExpComp}{Whether to compute expected competition for all candidates for all numbers of potential competitors}
+
+\item{seed}{Seed for random generator}
 }
 \value{
 List with two data.tables. `dordered` lists all the candidates in the optimal order and with some statistics.

@@ -18,7 +18,7 @@ benefitIntegralDisc(frac1, frac2, par, share1 = 1, share2 = 1)
 \item{share2}{Share of damage at time of frac2}
 }
 \value{
-
+Values of benefits integral
 }
 \description{
 More general function that allows for linear damage discounting due to introduction of treatment
