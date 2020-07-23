@@ -66,6 +66,8 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @return List with two data.tables. `dordered` lists all the candidates in the optimal order and with some statistics.
 #' `dcanddraws` includes all the random draws and their outcomes.
 #' @export
+#' @importFrom dplyr if_else
+#' @importFrom purrr rbernoulli
 #' @import gtools
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 

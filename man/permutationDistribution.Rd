@@ -4,7 +4,7 @@
 \alias{permutationDistribution}
 \title{Total capacity distribution for one permutation of platforms}
 \usage{
-permutationDistribution(dcandidate, dplatforms)
+permutationDistribution(dcandidate, dplatforms, poverall, psubcat)
 }
 \arguments{
 \item{dcandidate}{data.table with information by candidate}

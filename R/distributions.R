@@ -114,7 +114,7 @@ candidateDraws <- function(dcandidate, par, seed=30) {
 
 #' Maximize objective function staying within a grid
 #'
-#' Implements an algorith to find the optimum of the objective function without ever moving outside of a grid with
+#' Implements an algorithm to find the optimum of the objective function without ever moving outside of a grid with
 #' a fixed step size.
 #'
 #' @param capacities Starting point
@@ -125,7 +125,7 @@ candidateDraws <- function(dcandidate, par, seed=30) {
 #'
 #' @return Optimal capacities
 #' @export
-optimize <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
+optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
   # Setting up values for main optimization
   max <- objectiveFun(capacities, step, ...)
   end <- F

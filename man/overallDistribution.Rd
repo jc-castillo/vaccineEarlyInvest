@@ -8,7 +8,8 @@ overallDistribution(
   dcandidate,
   targetPermutations,
   dplatforms,
-  poverall = 1,
+  poverall,
+  psubcat,
   grid = 1,
   target = T
 )

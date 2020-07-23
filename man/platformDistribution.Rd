@@ -4,7 +4,7 @@
 \alias{platformDistribution}
 \title{Distribution of capacity in a platform}
 \usage{
-platformDistribution(plat, subcatDists)
+platformDistribution(plat, subcatDists, psubcat)
 }
 \arguments{
 \item{plat}{Character with the subcategory name}
