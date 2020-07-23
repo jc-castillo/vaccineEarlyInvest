@@ -18,7 +18,10 @@ knitr::opts_chunk$set(
 # Finding the optimal portfolio for a country
 
 ```{r setup}
+# Loading packages and setting up options
 library(vaccineEarlyInvest)
+library(ggplot2)
+theme_set(theme_bw(base_size=12))
 ```
 
 ## Simple case: Peru
@@ -46,10 +49,28 @@ portfolio$totCapacity # In million courses / month
 # Sorting capacities in descending order
 capacities <- sort(portfolio$capacities, decreasing=T)
 
-library(ggplot2)
-theme_set(theme_bw(base_size=12))
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
        title="Capacity per cand. at $4 per course / month, Peru")
+```
+
+
+```{r, fig.width=5, fig.height=3.5}
+population <- 31.99
+gdp_pc <- 6.71
+fracHighRisk <- 0.131
+loss2yr <- 0.269
+prices <- 1:30
+
+portfolio <- demandPriceTaker(population, gdp_pc, fracHighRisk, loss2yr, prices,
+                                 candidateFile="../inst/extdata/vaccinesSummary.csv")
+```
+
+
+```{r, fig.width=5, fig.height=3.5}
+ggplot() + geom_line(aes(totalCapacity, price), portfolio$optimizations) + 
+  labs(x="Capacity (mil. courses / month)", y="Price ($ per course / year)")
+ggplot() + geom_line(aes(price, price * totalCapacity), portfolio$optimizations) + 
+  labs(x="Price ($ per course / year)", y="Expenditure (mil. $)")
 ```

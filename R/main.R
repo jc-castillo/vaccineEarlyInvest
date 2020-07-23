@@ -6,11 +6,12 @@
 #' @param gdp_pc Country GDP per capita (in thousand $)
 #' @param frac_high_risk Fraction of population that is high risk
 #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
-#' @param price Market price for capacity ($ per course / year)
+#' @param price Market price for manufacturing capacity ($ per course / year)
 #' @param steps Steps to optimize over
 #' @param candidateFile File with candidate data
 #'
-#' @return Vector with optimal capacities
+#' @return List with information on optimal portfolio. Includes investment
+#'  in every candidate, benefits, cost, and total capacity.
 #' @export
 portfolioPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, price, steps=c(10,1,0.1), candidateFile=NULL) {
   par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
@@ -37,7 +38,7 @@ portfolioPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, pri
 
   # Creating objective function
   objectiveFun <- function(capacities, grid, price, par) {
-    countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par, lambda=1)
+    countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par)
   }
 
   # Initialize at zero
@@ -54,4 +55,81 @@ portfolioPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, pri
   expBenefits <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=s)
 
   return(list(capacities=capacities, totCapacity=totCapacity, cost=cost, expBenefits=expBenefits))
+}
+
+
+#' Demand curve for a price-taking country
+#'
+#' Builds the demand curve for a price-taking country
+#'
+#' @param population Country population (in millions)
+#' @param gdp_pc Country GDP per capita (in thousand $)
+#' @param frac_high_risk Fraction of population that is high risk
+#' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
+#' @param prices Vector of market price for manufacturing capacity ($ per course / year)
+#' @param candidateFile File with candidate data
+#' @param inisteps Step sizes to optimize over for the initial point
+#' @param mainstep Step size for main optimization
+#' @param candidateFile File with candidate data
+#'
+#' @return List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,
+#' and a matrix with demand for individual candidates at every price
+#' @export
+demandPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, prices=seq(100,1,-1),
+                             inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
+  par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
+                        gdpshare=population*gdp_pc/1e3/87.3, fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
+                        counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+
+  d <- loadData(par, candidateFile)
+
+  d$Target <- "Other"
+  d$Target[1:5]<-"Spike"
+  d$Target[10:15]<-"Recombinant"
+
+  dordered <- candidatesFung(d, par)$dordered
+
+  dordered <- dordered[,1:11]
+  dplatforms <- unique(dordered[, .(Platform, pplat)])
+  setkey(dplatforms, Platform, pplat)
+  dcandidate <- copy(dordered)
+
+  # Getting information about permutations
+  targets <- c("Spike","Recombinant","Other")
+  probs <- c(as.numeric(par$pspike), as.numeric(par$precombinant), as.numeric(par$potherprotein))
+  targetPermutations <- getTargetPermutations(targets, probs)
+
+  # Creating objective function
+  objectiveFun <- function(capacities, grid, price, par) {
+    countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par, lambda=1)
+  }
+
+  # Initialize capacities at zero, initialize price
+  capacities <- rep(0, nrow(dcandidate))
+  price <- prices[1]
+
+  # Optimize over grids with decreasing step sizes to get initial point
+  for (s in inisteps) {
+    capacities <- optimizeGrid(capacities, objectiveFun, verbose=verbose, step=s, price=price, par=par)
+  }
+
+  # Setting up objects to save infomation
+  optimizations <- data.table(price=prices)
+  optimizations[, ind := .I]
+  setkey(optimizations, ind)
+  allCapacities <- matrix(0, length(prices), length(capacities))
+
+  # Loop over prices to get demand levels
+  for (p in prices[2:length(prices)]) {
+    capacities <- optimizeGrid(capacities, objectiveFun, verbose=verbose, step=mainstep, price=p, par=par)
+
+    i <- optimizations[price==p, ind]
+    allCapacities[i, ] <- capacities
+    optimizations[.(i), expBenefit :=
+                    countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=mainstep)]
+    optimizations[.(i), cost := priceTakerCost(capacities, p)]
+    optimizations[.(i), totalCapacity := sum(capacities)]
+  }
+
+  return(list(optimizations=optimizations, allCapacities=allCapacities))
 }
