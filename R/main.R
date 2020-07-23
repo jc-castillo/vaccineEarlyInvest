@@ -13,10 +13,17 @@
 #' @return List with information on optimal portfolio. Includes investment
 #'  in every candidate, benefits, cost, and total capacity.
 #' @export
-portfolioPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, price, steps=c(10,1,0.1), candidateFile=NULL) {
-  par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
-                         gdpshare=population*gdp_pc/1e3/87.3, fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
-                         counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
+                                price, steps=c(10,1,0.1), candidateFile=NULL) {
+  if (is.null(parameters)) {
+    # Create parameters from function arguments
+    par <- Parameters$new(popshare=population/7800, gdpshare=population*gdp_pc/1e3/87.3,
+                          fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
+                          counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+  } else {
+    # Copy parameters object passed as an argument
+    par <- parameters
+  }
 
   d <- loadData(par, candidateFile)
 
@@ -75,11 +82,17 @@ portfolioPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, pri
 #' @return List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,
 #' and a matrix with demand for individual candidates at every price
 #' @export
-demandPriceTaker <- function(population, gdp_pc, frac_high_risk, loss2yr, prices=seq(100,1,-1),
-                             inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
-  par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
-                        gdpshare=population*gdp_pc/1e3/87.3, fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
-                        counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
+                             prices=seq(100,1,-1), inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
+  if (is.null(parameters)) {
+    # Create parameters from function arguments
+    par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
+                          gdpshare=population*gdp_pc/1e3/87.3, fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
+                          counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+  } else {
+    # Copy parameters object passed as an argument
+    par <- parameters
+  }
 
   d <- loadData(par, candidateFile)
 

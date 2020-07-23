@@ -2,26 +2,42 @@
 % Please edit documentation in R/main.R
 \name{demandPriceTaker}
 \alias{demandPriceTaker}
-\title{Title}
+\title{Demand curve for a price-taking country}
 \usage{
 demandPriceTaker(
+  parameters = NULL,
   population,
   gdp_pc,
   frac_high_risk,
   loss2yr,
-  price,
-  inisteps = c(10, 1, 0.1),
-  mainstep = 0.1,
   prices = seq(100, 1, -1),
-  candidateFile = NULL
+  inisteps = c(10, 1),
+  mainstep = 0.1,
+  candidateFile = NULL,
+  verbose = 0
 )
 }
 \arguments{
-\item{candidateFile}{}
+\item{population}{Country population (in millions)}
+
+\item{gdp_pc}{Country GDP per capita (in thousand $)}
+
+\item{frac_high_risk}{Fraction of population that is high risk}
+
+\item{loss2yr}{Cumulative percent of GDP lost because of pandemic over two years}
+
+\item{prices}{Vector of market price for manufacturing capacity ($ per course / year)}
+
+\item{inisteps}{Step sizes to optimize over for the initial point}
+
+\item{mainstep}{Step size for main optimization}
+
+\item{candidateFile}{File with candidate data}
 }
 \value{
-
+List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,
+and a matrix with demand for individual candidates at every price
 }
 \description{
-Title
+Builds the demand curve for a price-taking country
 }

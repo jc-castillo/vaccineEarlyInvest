@@ -29,11 +29,43 @@ Class to handle model parameters
 
 \item{\code{ppreclinical}}{Probability that there's no problem at the candidate level when a vaccine is in preclincal trials}
 
+\item{\code{plivebac}}{Probability that there's no problem at the live attenuated bacteria platform level}
+
+\item{\code{paapc}}{Probability that there's no problem at the artificial antigen presenting cells platform level}
+
+\item{\code{pdendritic}}{Probability that there's no problem at the dendritic cells platform level}
+
+\item{\code{psav}}{Probability that there's no problem at the self-assembling vaccine platform level}
+
+\item{\code{punknown}}{Probability that there's no problem for unknown platform}
+
+\item{\code{prepurposed}}{Probability that there's no problem with a repurposed candidate}
+
 \item{\code{pphase1}}{Probability that there's no problem at the candidate level when a vaccine is in phase 1 trials}
 
 \item{\code{pphase2}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
 
 \item{\code{psubcat}}{Probability that there's no problem at subcategory level}
+
+\item{\code{pspike}}{Probability that there's no problem at the candidate level when a vaccine targets spike proten}
+
+\item{\code{precombinant}}{Probability that there's no problem at the candidate level when a vaccine targets recombinant proten}
+
+\item{\code{potherprotein}}{Probability that there's no problem at the candidate level when a vaccine targets some other proten}
+
+\item{\code{popshare}}{Share of world population accounted for by country / coalition}
+
+\item{\code{gdpshare}}{Share of world GDP accounted for by country /coalition}
+
+\item{\code{econlossratio}}{Ratio of economic losses in the country / coalition as a % relative to world}
+
+\item{\code{spillovers}}{How much do countries in the country /coalition care about spillovers}
+
+\item{\code{outlifefactor}}{Extent to which countries care about international lives}
+
+\item{\code{outlivesratio}}{Fraction of world that lives outside country /coalition}
+
+\item{\code{fracHighRisk}}{Fraction of population in the country /coalition at high risk}
 
 \item{\code{TT}}{Time that the vaccine is brought forward (months)}
 
@@ -57,6 +89,25 @@ Class to handle model parameters
 
 \item{\code{sharm}}{Expected share of harm avoided due to an alternative drug being developed}
 
+\item{\code{maxcand}}{Number of candidates to consider}
+
+\item{\code{hben}}{Monthly health benefits}
+
+\item{\code{damageint}}{Integral that measures fraction of damages}
+
+\item{\code{totmonthben}}{Total benefit of bringing forward vaccine for one month}
+
+\item{\code{alpha}}{Parameter for heterogeneity of benefits of vaccination with a smooth functional form.
+a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefits to the first person.}
+
+\item{\code{benefitdist}}{String describing the form of the benefit distribution}
+
+\item{\code{piecewisepar}}{Parameters of a piecewise linear benefit distribution}
+
+\item{\code{fracneeded}}{Fraction of population needed to reopen economy}
+
+\item{\code{effpop}}{Effective world population that needs to be vaccinated to get 100% of benefits}
+
 \item{\code{c}}{Cost of capacity per dose / year}
 
 \item{\code{capacity}}{Constraint on capacity (doses / month)}
@@ -71,29 +122,15 @@ Class to handle model parameters
 
 \item{\code{mgcostelast}}{Elasticity of marginal cost after kink}
 
-\item{\code{afterCapacity}}{Capacity after the end of the program (doses / month)}
+\item{\code{afterCapacity}}{Worldwide capacity after the end of the program (doses / month)}
 
-\item{\code{counterCapacity}}{Capacity in the counterfactual (doses / month)}
+\item{\code{counterCapacity}}{Worldwide capacity in the counterfactual (doses / month)}
 
-\item{\code{pop}}{Size of total population (billions)}
+\item{\code{pop}}{World population population (billions)}
 
 \item{\code{cprod}}{Production cost per vaccine ($)}
 
 \item{\code{replications}}{Number of replications for Monte Carlo}
-
-\item{\code{maxcand}}{Number of candidates to consider}
-
-\item{\code{plivebac}}{Probability that there's no problem at the live attenuated bacteria platform level}
-
-\item{\code{paapc}}{Probability that there's no problem at the artificial antigen presenting cells platform level}
-
-\item{\code{pdendritic}}{Probability that there's no problem at the dendritic cells platform level}
-
-\item{\code{psav}}{Probability that there's no problem at the self-assembling vaccine platform level}
-
-\item{\code{punknown}}{Probability that there's no problem for unknown platform}
-
-\item{\code{prepurposed}}{Probability that there's no problem with a repurposed candidate}
 
 \item{\code{fcapacity}}{Fraction of capacity cost that must be borne by the firm}
 
@@ -125,46 +162,7 @@ Class to handle model parameters
 
 \item{\code{capcost}}{Total capacity cost per candidate}
 
-\item{\code{hben}}{Monthly health benefits}
-
-\item{\code{damageint}}{Integral that measures fraction of damages}
-
-\item{\code{totmonthben}}{Total benefit of bringing forward vaccine for one month}
-
-\item{\code{alpha}}{Parameter for heterogeneity of benefits of vaccination. a=1 corresponds to perfectly
-homogeneous benefits, a=0 corresponds to all benefits to the first person.}
-
-\item{\code{pspike}}{Probability that there's no problem at the candidate level when a vaccine targets spike proten}
-
-\item{\code{precombinant}}{Probability that there's no problem at the candidate level when a vaccine targets recombinant proten}
-
-\item{\code{potherprotein}}{Probability that there's no problem at the candidate level when a vaccine targets some other proten}
-
-\item{\code{benefitdist}}{String describing the form of the benefit distribution}
-
-\item{\code{piecewisepar}}{Parameters of a piecewise linear benefit distribution}
-
-\item{\code{popshare}}{Share of world population accounted for by coalition}
-
-\item{\code{gdpshare}}{Share of world GDP accounted for by coalition}
-
-\item{\code{econlossratio}}{Ratio of economic losses as a % relative to world}
-
-\item{\code{spillovers}}{How much do countries in the coalition care about spillovers}
-
-\item{\code{outlifefactor}}{Extent to which countries care about international lives}
-
-\item{\code{outlivesratio}}{Fraction of world that lives outside coalition}
-
-\item{\code{fracHighRisk}}{Fraction of population at high risk}
-
-\item{\code{global}}{Whether the coalition is the global coalition}
-
-\item{\code{inputfile}}{String determining the candidate input file to use}
-
-\item{\code{fracneeded}}{Fraction of population needed to reopen economy}
-
-\item{\code{effpop}}{Effective world population that needs to be vaccinated to get 100% of benefits}
+\item{\code{global}}{Whether the the analysis is for the whole wolrd}
 
 \item{\code{outcap}}{Capacity to build in an outside market}
 
@@ -188,7 +186,14 @@ homogeneous benefits, a=0 corresponds to all benefits to the first person.}
 \subsection{Method \code{new()}}{
 Create a new `Parameters` object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Parameters$new(input = "International", ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Parameters$new(
+  input = NULL,
+  population = NULL,
+  gdp_pc = NULL,
+  frac_high_risk = NULL,
+  loss2yr = NULL,
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -197,6 +202,14 @@ Create a new `Parameters` object.
 \item{\code{input}}{Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
 the `input` object (of class `reactivevalues`) with the inputs from a shiny app, in which case all inputs are copied into
 fields.}
+
+\item{\code{population}}{Country population (in millions)}
+
+\item{\code{gdp_pc}}{Country GDP per capita (in thousand $)}
+
+\item{\code{frac_high_risk}}{Fraction of population that is high risk}
+
+\item{\code{loss2yr}}{Cumulative percent of GDP lost because of pandemic over two years}
 
 \item{\code{...}}{Set methods at non-default values}
 }

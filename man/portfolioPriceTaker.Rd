@@ -5,6 +5,7 @@
 \title{Optimal portfolio for a price taker}
 \usage{
 portfolioPriceTaker(
+  parameters = NULL,
   population,
   gdp_pc,
   frac_high_risk,
@@ -23,14 +24,15 @@ portfolioPriceTaker(
 
 \item{loss2yr}{Cumulative percent of GDP lost because of pandemic over two years}
 
-\item{price}{Market price for capacity ($ per course / year)}
+\item{price}{Market price for manufacturing capacity ($ per course / year)}
 
 \item{steps}{Steps to optimize over}
 
 \item{candidateFile}{File with candidate data}
 }
 \value{
-Vector with optimal capacities
+List with information on optimal portfolio. Includes investment
+ in every candidate, benefits, cost, and total capacity.
 }
 \description{
 Computes the optimal portfolio for a price-taking country

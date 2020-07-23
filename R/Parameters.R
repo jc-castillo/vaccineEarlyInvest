@@ -5,6 +5,7 @@ library("R6")
 #' @import data.table
 #' @export
 Parameters <- R6Class("Parameters", list(
+  # Parameters releated to vaccine success model
   #' @field poverall Probability that no problem at the overall level prevents vaccine feasibility
   poverall=0.9,
   #' @field pvector Probability that there's no problem at the viral vector platform level
@@ -23,12 +24,48 @@ Parameters <- R6Class("Parameters", list(
   pvlp=0.8,
   #' @field ppreclinical Probability that there's no problem at the candidate level when a vaccine is in preclincal trials
   ppreclinical=0.14,
+  #' @field plivebac Probability that there's no problem at the live attenuated bacteria platform level
+  plivebac=0,
+  #' @field paapc Probability that there's no problem at the artificial antigen presenting cells platform level
+  paapc=0,
+  #' @field pdendritic Probability that there's no problem at the dendritic cells platform level
+  pdendritic=0,
+  #' @field psav Probability that there's no problem at the self-assembling vaccine platform level
+  psav=0,
+  #' @field punknown Probability that there's no problem for unknown platform
+  punknown=0,
+  #' @field prepurposed Probability that there's no problem with a repurposed candidate
+  prepurposed=0,
   #' @field pphase1 Probability that there's no problem at the candidate level when a vaccine is in phase 1 trials
   pphase1=0.23,
   #' @field pphase2 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
   pphase2=0.32,
   #' @field psubcat Probability that there's no problem at subcategory level
   psubcat=0.8,
+  #' @field pspike Probability that there's no problem at the candidate level when a vaccine targets spike proten
+  pspike=1.0,
+  #' @field precombinant Probability that there's no problem at the candidate level when a vaccine targets recombinant proten
+  precombinant=1.0,
+  #' @field potherprotein Probability that there's no problem at the candidate level when a vaccine targets some other proten
+  potherprotein=1.0,
+
+  # Country / coalition specific parameters
+  #' @field popshare Share of world population accounted for by country / coalition
+  popshare=1,
+  #' @field gdpshare Share of world GDP accounted for by country /coalition
+  gdpshare=1,
+  #' @field econlossratio Ratio of economic losses in the country / coalition as a % relative to world
+  econlossratio=1,
+  #' @field spillovers How much do countries in the country /coalition care about spillovers
+  spillovers=0,
+  #' @field outlifefactor Extent to which countries care about international lives
+  outlifefactor=0,
+  #' @field outlivesratio Fraction of world that lives outside country /coalition
+  outlivesratio=0,
+  #' @field fracHighRisk Fraction of population in the country /coalition at high risk
+  fracHighRisk=0.12841,
+
+  # Parameters from model that converts production capacity into benefits
   #' @field TT Time that the vaccine is brought forward (months)
   TT=6,
   #' @field tau Period of analysis (months)
@@ -51,10 +88,31 @@ Parameters <- R6Class("Parameters", list(
   yearsLost=10,
   #' @field sharm Expected share of harm avoided due to an alternative drug being developed
   sharm=0.5,
+  #' @field maxcand Number of candidates to consider
+  maxcand=30,
+  #' @field hben Monthly health benefits
+  hben=NA,
+  #' @field damageint Integral that measures fraction of damages
+  damageint=NA,
+  #' @field totmonthben Total benefit of bringing forward vaccine for one month
+  totmonthben=NA,
+  #' @field alpha Parameter for heterogeneity of benefits of vaccination with a smooth functional form.
+  #'  a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefits to the first person.
+  alpha=NA,
+  #' @field benefitdist String describing the form of the benefit distribution
+  benefitdist="piecewiseLinearGen",
+  #' @field piecewisepar Parameters of a piecewise linear benefit distribution
+  piecewisepar=NA,
+  #' @field fracneeded Fraction of population needed to reopen economy
+  fracneeded=0.7,
+  #' @field effpop Effective world population that needs to be vaccinated to get 100% of benefits
+  effpop=0.7*7.8,
+
+  # Parameters for cost of capacity
   #' @field c Cost of capacity per dose / year
-  c=1.5,#2,
+  c=2,
   #' @field capacity Constraint on capacity (doses / month)
-  capacity=500,
+  capacity=100,
   #' @field capkink Capacity at which marginal cost has a kink (doses / month)
   capkink=100,
   #' @field capkink_nucleic Capacity at which marginal cost has a kink for RNA and DNA (doses / month)
@@ -64,38 +122,25 @@ Parameters <- R6Class("Parameters", list(
   #' @field capkink_live Capacity at which marginal cost has a kink for live attenuated and deactivated (doses / month)
   capkink_live=NULL,
   #' @field mgcostelast Elasticity of marginal cost after kink
-  mgcostelast=1,
-  #' @field afterCapacity Capacity after the end of the program (doses / month)
+  mgcostelast=3,
+  #' @field afterCapacity Worldwide capacity after the end of the program (doses / month)
   afterCapacity=500,
-  #' @field counterCapacity Capacity in the counterfactual (doses / month)
+  #' @field counterCapacity Worldwide capacity in the counterfactual (doses / month)
   counterCapacity=500,
-  #' @field pop Size of total population (billions)
+  #' @field pop World population population (billions)
   pop=7.8,
-  #pop=3,
   #' @field cprod Production cost per vaccine ($)
   cprod=1,
   #' @field replications Number of replications for Monte Carlo
   replications=5000,
-  #' @field maxcand Number of candidates to consider
-  maxcand=35,
-  #' @field plivebac Probability that there's no problem at the live attenuated bacteria platform level
-  plivebac=0,
-  #' @field paapc Probability that there's no problem at the artificial antigen presenting cells platform level
-  paapc=0,
-  #' @field pdendritic Probability that there's no problem at the dendritic cells platform level
-  pdendritic=0,
-  #' @field psav Probability that there's no problem at the self-assembling vaccine platform level
-  psav=0,
-  #' @field punknown Probability that there's no problem for unknown platform
-  punknown=0,
-  #' @field prepurposed Probability that there's no problem with a repurposed candidate
-  prepurposed=0,
   #' @field fcapacity Fraction of capacity cost that must be borne by the firm
   fcapacity=0.15,
   #' @field fcostred Fraction of cost reduction after the second vaccine within a platform
   fcostred=0,
   #' @field outsidefactor How much more likely are firms to be successful in an outside market
   outsidefactor=2,
+
+  # Parameters related to procurement scheme
   #' @field pearly Price of early batch of vaccines
   pearly=35,
   #' @field plate Price of late batch of vaccines
@@ -107,8 +152,7 @@ Parameters <- R6Class("Parameters", list(
   #' @field riskPremium Premium that must given to candidates to participate despite risk (bn $)
   riskPremium=0.65,
   #' @field overallFung Fraction of capacity cost that is fungible across platforms
-  #overallFung=0.3,
-  overallFung=0,#0.2,
+  overallFung=0,
   #' @field platFung Fraction of capacity cost that is fungible within platforms
   platFung=0,#0.2,
   #' @field subcatFung Fraction of capacity cost that is fungible within subcategory
@@ -122,53 +166,10 @@ Parameters <- R6Class("Parameters", list(
 
   #' @field capcost Total capacity cost per candidate
   capcost=NA,
-  #' @field hben Monthly health benefits
-  hben=NA,
-  #' @field damageint Integral that measures fraction of damages
-  damageint=NA,
-  #' @field totmonthben Total benefit of bringing forward vaccine for one month
-  totmonthben=NA,
-  #' @field alpha Parameter for heterogeneity of benefits of vaccination. a=1 corresponds to perfectly
-  #'  homogeneous benefits, a=0 corresponds to all benefits to the first person.
-  alpha=NA,
-  #' @field pspike Probability that there's no problem at the candidate level when a vaccine targets spike proten
-  pspike=1.0,
-  #' @field precombinant Probability that there's no problem at the candidate level when a vaccine targets recombinant proten
-  precombinant=1.0,
-  #' @field potherprotein Probability that there's no problem at the candidate level when a vaccine targets some other proten
-  potherprotein=1.0,
+  #' @field global Whether the the analysis is for the whole wolrd
+  global=F,
 
-  #' @field benefitdist String describing the form of the benefit distribution
-  benefitdist="pnorm",
-  #' @field piecewisepar Parameters of a piecewise linear benefit distribution
-  piecewisepar=NA,
-
-  #' @field popshare Share of world population accounted for by coalition
-  popshare=1,
-  #' @field gdpshare Share of world GDP accounted for by coalition
-  gdpshare=1,
-  #' @field econlossratio Ratio of economic losses as a % relative to world
-  econlossratio=1,
-  #' @field spillovers How much do countries in the coalition care about spillovers
-  spillovers=0,
-  #' @field outlifefactor Extent to which countries care about international lives
-  outlifefactor=0,
-  #' @field outlivesratio Fraction of world that lives outside coalition
-  outlivesratio=0,
-  #' @field fracHighRisk Fraction of population at high risk
-  fracHighRisk=0.12841,
-
-  #' @field global Whether the coalition is the global coalition
-  global=T,
-
-  #' @field inputfile String determining the candidate input file to use
-  inputfile="Default",
-
-  #' @field fracneeded Fraction of population needed to reopen economy
-  fracneeded=0.7,
-  #' @field effpop Effective world population that needs to be vaccinated to get 100% of benefits
-  effpop=0.7*7.8,
-
+  # Parameters related to finding firm's incentives to participate
   #' @field outcap Capacity to build in an outside market
   outcap=0.1, # Billions
   #' @field outprob Probability that copy vaccine will be successful, conditional on own success
@@ -181,9 +182,13 @@ Parameters <- R6Class("Parameters", list(
   #' @param input Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
   #' the `input` object (of class `reactivevalues`) with the inputs from a shiny app, in which case all inputs are copied into
   #' fields.
+  #' @param population Country population (in millions)
+  #' @param gdp_pc Country GDP per capita (in thousand $)
+  #' @param frac_high_risk Fraction of population that is high risk
+  #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
   #' @param ... Set methods at non-default values
   #' @return A new `Parameters` object.
-  initialize = function(input="International", ...) {
+  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, ...) {
     if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
       nms <- names(input)
       for (nm in nms) {
@@ -208,6 +213,21 @@ Parameters <- R6Class("Parameters", list(
           self[[nm]] <- parlist[[nm]]
         }
       }
+    }
+
+    # Setting parameters related to country
+    if (!is.null(population) & !is.null(gdp_pc) & !is.null(frac_high_risk)) {
+      self$popshare <- population/7800
+      self$gdpshare <- population*gdp_pc/1e3/87.3
+      self$fracHighRisk <- frac_high_risk
+      self$afterCapacity <- population/7800*500
+      self$counterCapacity <- population/7800*500
+    } else if (!is.null(population) | !is.null(gdp_pc) | !is.null(frac_high_risk)) {
+      stop("The arguments for population, gdp_pc, and frac_high_risk must all be provided or none of them should be provided")
+    }
+
+    if (!is.null(loss2yr)) {
+      self$econlossratio <- loss2yr/0.138
     }
 
     self$setDerivedParameters()
