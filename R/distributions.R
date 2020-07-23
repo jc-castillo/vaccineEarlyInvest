@@ -35,7 +35,8 @@ countryNetBenefits <- function(capacities, dcandidate, targetPermutations, dplat
 #' @export
 countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, par, grid=1) {
   dcandidate[, capacity := capacities]
-  distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms, grid=grid)
+  distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms,
+                                      poverall=par$poverall, psubcat=par$psubcat, grid=grid)
 
   distribution[, progBen := benefits(par$totmonthben, list(capacity/1000, par$afterCapacity/1000),
                                      c(par$TT, par$tau), par)]
@@ -128,10 +129,7 @@ optimize <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
   # Setting up values for main optimization
   max <- objectiveFun(capacities, step, ...)
   end <- F
-  ncand <- min(nrow(dcandidate), length(capacities))
-  if (nrow(dcandidate) > length(capacities)) {
-    warning("Capacities vector is shorter than number of candidates")
-  }
+  ncand <- length(capacities)
 
   improvement <- rep(1e12, ncand) # Vector that keeps track of last improvement obtained when moving in each dimension.
                                   # Initialize assuming every dimension can potentially lead to a large improvement
@@ -268,7 +266,7 @@ getTargetPermutations <- function(targets, probs) {
 #'
 #' @return data.table with the overall distribution
 #' @export
-overallDistribution <- function(dcandidate, targetPermutations, dplatforms, poverall=1, grid=1, target=T) {
+overallDistribution <- function(dcandidate, targetPermutations, dplatforms, poverall, psubcat, grid=1, target=T) {
   # Map capacities to integers
   dcandidate[, capacity := round(capacity / grid)]
 
@@ -276,7 +274,7 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
     # No need to worry about permutations if all targets are successful
     dcandidate[, pcandperm := pcand]
 
-    overallDist <- permutationDistribution(dcandidate, dplatforms)
+    overallDist <- permutationDistribution(dcandidate, dplatforms, poverall, psubcat)
   } else {
 
     perm_indices <- unique(targetPermutations$perm_index)
@@ -287,7 +285,8 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 
       dcandidate[, pcandperm := pcand * targetPermutations[.(i, dcandidate$Target), success]]
 
-      ndist <- targetPermutations[.(i), probability][1] * permutationDistribution(dcandidate, dplatforms)[, prob]
+      ndist <- targetPermutations[.(i), probability][1] *
+        permutationDistribution(dcandidate, dplatforms, poverall, psubcat)[, prob]
       olddist <- dist
 
       if (length(ndist) > length(olddist)) {
@@ -323,7 +322,7 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #'
 #' @return data.table with the distribution of total capacity
 #' @import matrixStats
-permutationDistribution <- function(dcandidate, dplatforms) {
+permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 
   # t0 <- proc.time()
   # Compute capacity by subcategory
@@ -332,7 +331,7 @@ permutationDistribution <- function(dcandidate, dplatforms) {
 
   # t1 <- proc.time()
   # Compute capacity by platform
-  platDists <- rbindlist(lapply(unique(dcandidate$Platform), platformDistribution, subcatDists))
+  platDists <- rbindlist(lapply(unique(dcandidate$Platform), platformDistribution, subcatDists, psubcat))
   setkey(platDists, Platform, capacity)
 
   # t2 <- proc.time()
@@ -362,8 +361,8 @@ permutationDistribution <- function(dcandidate, dplatforms) {
 
   # Create data.table summarizing information about distribution
   overallDist <- data.table(capacity=0:maxcap, prob=dist[1:(maxcap + 1)])
-  overallDist$prob <- par$poverall * overallDist$prob
-  overallDist[1, prob := prob + (1-par$poverall)]
+  overallDist$prob <- poverall * overallDist$prob
+  overallDist[1, prob := prob + (1-poverall)]
 
   # t3 <- proc.time()
 
@@ -384,7 +383,7 @@ permutationDistribution <- function(dcandidate, dplatforms) {
 #' @param subcatDists Data.table with the distributions for every subcategory in the platform
 #'
 #' @return A data.table summarizing the distribution of total capacity in the platfom
-platformDistribution <- function(plat, subcatDists) {
+platformDistribution <- function(plat, subcatDists, psubcat) {
   dplat <- subcatDists[.(plat), on=.(Platform)]
 
   # Creating matrix where each column represents the distribution for one subcategory
@@ -394,9 +393,9 @@ platformDistribution <- function(plat, subcatDists) {
   probTableMat[is.na(probTableMat)] <- 0
 
   for (i in 1:ncol(probTableMat)) {
-    probTableMat[, i] <- par$psubcat * probTableMat[, i]
+    probTableMat[, i] <- psubcat * probTableMat[, i]
   }
-  probTableMat[1, ] <- probTableMat[1, ] + (1-par$psubcat)
+  probTableMat[1, ] <- probTableMat[1, ] + (1-psubcat)
 
   veclen <- nrow(dplat)
   nsubcats <- length(unique(dplat$Subcategory))
