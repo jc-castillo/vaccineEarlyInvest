@@ -2,11 +2,9 @@
 % Please edit documentation in R/Parameters.R
 \name{Parameters}
 \alias{Parameters}
-\title{Class to handle model parameters}
+\title{Model parameters}
 \description{
-Class to handle model parameters
-
-Class to handle model parameters
+Class to handle parameters of the model for investment in early vaccine capacity
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -45,6 +43,8 @@ Class to handle model parameters
 
 \item{\code{pphase2}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
 
+\item{\code{pphase3}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
+
 \item{\code{psubcat}}{Probability that there's no problem at subcategory level}
 
 \item{\code{pspike}}{Probability that there's no problem at the candidate level when a vaccine targets spike proten}
@@ -57,7 +57,7 @@ Class to handle model parameters
 
 \item{\code{gdpshare}}{Share of world GDP accounted for by country /coalition}
 
-\item{\code{econlossratio}}{Ratio of economic losses in the country / coalition as a % relative to world}
+\item{\code{econlossratio}}{Ratio of economic losses in the country / coalition as a \% relative to world}
 
 \item{\code{spillovers}}{How much do countries in the country /coalition care about spillovers}
 
@@ -106,7 +106,7 @@ a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefi
 
 \item{\code{fracneeded}}{Fraction of population needed to reopen economy}
 
-\item{\code{effpop}}{Effective world population that needs to be vaccinated to get 100% of benefits}
+\item{\code{effpop}}{Effective world population that needs to be vaccinated to get 100\% of benefits}
 
 \item{\code{c}}{Cost of capacity per dose / year}
 

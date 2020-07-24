@@ -1,11 +1,12 @@
 library("R6")
 
-#' Class to handle model parameters
+#' Model parameters
+#'
+#' @description Class to handle parameters of the model for investment in early vaccine capacity
 #'
 #' @import data.table
 #' @export
 Parameters <- R6Class("Parameters", list(
-  # Parameters releated to vaccine success model
   #' @field poverall Probability that no problem at the overall level prevents vaccine feasibility
   poverall=0.9,
   #' @field pvector Probability that there's no problem at the viral vector platform level
@@ -56,7 +57,7 @@ Parameters <- R6Class("Parameters", list(
   popshare=1,
   #' @field gdpshare Share of world GDP accounted for by country /coalition
   gdpshare=1,
-  #' @field econlossratio Ratio of economic losses in the country / coalition as a % relative to world
+  #' @field econlossratio Ratio of economic losses in the country / coalition as a \% relative to world
   econlossratio=1,
   #' @field spillovers How much do countries in the country /coalition care about spillovers
   spillovers=0,
@@ -107,7 +108,7 @@ Parameters <- R6Class("Parameters", list(
   piecewisepar=NA,
   #' @field fracneeded Fraction of population needed to reopen economy
   fracneeded=0.7,
-  #' @field effpop Effective world population that needs to be vaccinated to get 100% of benefits
+  #' @field effpop Effective world population that needs to be vaccinated to get 100\% of benefits
   effpop=0.7*7.8,
 
   # Parameters for cost of capacity
@@ -188,7 +189,7 @@ Parameters <- R6Class("Parameters", list(
   #' @param gdp_pc Country GDP per capita (in thousand $)
   #' @param frac_high_risk Fraction of population that is high risk
   #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
-  #' @param ... Set methods at non-default values
+  #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
   initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, ...) {
     if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
