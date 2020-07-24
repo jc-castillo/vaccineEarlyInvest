@@ -69,7 +69,7 @@ The function `demandPriceTaker()` finds the whole demand curve for a country for
 
 
 ```r
-prices <- 1:5 # Vector of prices at which demand will be evaluated
+prices <- 1:30 # Vector of prices at which demand will be evaluated
 
 demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, prices=prices,

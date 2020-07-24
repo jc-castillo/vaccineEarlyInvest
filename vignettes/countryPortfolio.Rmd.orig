@@ -60,7 +60,7 @@ ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
 The function `demandPriceTaker()` finds the whole demand curve for a country for different prices. It is much more efficient than calling `portfolioPriceTaker()` multiple times at different prices. Here is an example of how to call that function and plot total demand for manufacturing capacity for Peru:
 
 ```{r PeruDemand, fig.width=5, fig.height=3.5}
-prices <- 1:5 # Vector of prices at which demand will be evaluated
+prices <- 1:30 # Vector of prices at which demand will be evaluated
 
 demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, prices=prices,

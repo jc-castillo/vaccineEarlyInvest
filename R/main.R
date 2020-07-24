@@ -132,7 +132,7 @@ demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk
   allCapacities <- matrix(0, length(prices), length(capacities))
 
   # Loop over prices to get demand levels
-  for (p in prices[2:length(prices)]) {
+  for (p in prices[1:length(prices)]) {
     capacities <- optimizeGrid(capacities, objectiveFun, verbose=verbose, step=mainstep, price=p, par=par)
 
     i <- optimizations[price==p, ind]

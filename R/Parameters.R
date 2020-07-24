@@ -294,6 +294,3 @@ Parameters <- R6Class("Parameters", list(
 
 )
 )
-
-defaults <- Parameters$new()
-defaultsUS <- Parameters$new("US")
