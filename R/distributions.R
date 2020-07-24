@@ -48,6 +48,34 @@ countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations, 
   return(sum(distribution[, prob*socialBenefit]))
 }
 
+#' Expected benefits for one country
+#'
+#' Compute expected benefits from a portfolio for one country
+#'
+#' @param capacities Vector of capacities for each candidate
+#' @param dcandidate `data.table` with candidate information
+#' @param targetPermutations `data.table` with permutations of targets
+#' @param dplatforms `data.table` with platform information
+#' @param par `Parameters` object with model parameters
+#' @param grid Size of the capacity grid
+#'
+#' @return Expected benefits from vaccination
+#' @export
+countryDistribution <- function(capacities, dcandidate, targetPermutations, dplatforms, par, grid=1) {
+  dcandidate[, capacity := capacities]
+  distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms,
+                                      poverall=par$poverall, psubcat=par$psubcat, grid=grid)
+
+  distribution[, progBen := benefits(par$totmonthben, list(capacity/1000, par$afterCapacity/1000),
+                                     c(par$TT, par$tau), par)]
+  distribution[, noProgBen := benefits(par$totmonthben, list(1e-10, par$counterCapacity/1000),
+                                       c(par$TT, par$tau), par)]
+  distribution[, socialBenefit := progBen - noProgBen]
+  distribution[capacity==0, socialBenefit := 0]
+
+  return(distribution)
+}
+
 #' Cost for a price taker
 #'
 #' Computes the total cost of a portfolio for a player that is a price taker

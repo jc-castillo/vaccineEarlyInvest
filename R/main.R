@@ -18,7 +18,7 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
   if (is.null(parameters)) {
     # Create parameters from function arguments
     par <- Parameters$new(population=population, gdp_pc=gdp_pc,
-                           frac_high_risk=frac_high_risk, loss2yr=loss2yr)
+                          frac_high_risk=frac_high_risk, loss2yr=loss2yr)
   } else {
     # Use parameters object passed as an argument
     par <- parameters
@@ -59,8 +59,11 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
   totCapacity <- sum(capacities)
   cost <- priceTakerCost(capacities, price)
   expBenefits <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=s)
+  distribution <- countryDistribution(capacities, dcandidate, targetPermutations, dplatforms, par, grid=s)
+  expCapacity <- sum(distribution[, prob * capacity])
 
-  return(list(capacities=capacities, totCapacity=totCapacity, cost=cost, expBenefits=expBenefits))
+  return(list(capacities=capacities, totCapacity=totCapacity, cost=cost,
+              expBenefits=expBenefits, distribution=distribution, expCapacity=expCapacity))
 }
 
 
