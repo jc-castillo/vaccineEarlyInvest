@@ -8,12 +8,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.cap=""
+)
+```
 
 # Finding the optimal portfolio for a country
 
-
-```r
+```{r setup}
 # Loading packages and setting up options
 library(vaccineEarlyInvest)
 library(ggplot2)
@@ -24,8 +29,7 @@ theme_set(theme_bw(base_size=12))
 
 The main function that finds the optimal portfolio for a price taking country is `portfolioPriceTaker()`. In order to illustrate its basic usage, let's find the optimal portfolio for Peru. It has 31.99 million people, its GDP per capita is $6,710, 13.1% of its population is high risk, and the World Bank projects the Covid-19 pandemic will cause a 26.9% cumulative GDP loss over 2020 and 2021. The main arguments to `portfolioPriceTaker()` are these five numbers, the price at which manufacturing capacity is sold in the market (let's assume it's $4 per course / year), as well as the path to a .csv file with data on vaccine candidates.
 
-
-```r
+```{r PeruPortfolioCompute}
 population <- 31.99
 gdp_pc <- 6.71
 frac_high_risk <- 0.131
@@ -35,24 +39,14 @@ price <- 4
 portfolioPeru <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, price=price,
                                  candidateFile="../inst/extdata/vaccinesSummary.csv")
-#> [1] "Objective function: "
-#> 1.302723 , 2.254786 , 2.926032 , 3.245756 , 3.344065 , 3.344065 , 
-#> [1] "Objective function: "
-#> 3.383466 , 3.422812 , 3.463115 , 3.503331 , 3.545 , 3.713448 , 3.850454 , 3.955998 , 4.029705 , 4.082548 , 4.128162 , 4.166448 , 4.199885 , 4.231882 , 4.265915 , 4.284632 , 4.303598 , 4.31903 , 4.329401 , 4.336939 , 4.3423 , 4.347574 , 4.347927 , 4.348882 , 4.352215 , 4.39483 , 4.436352 , 4.476365 , 4.517707 , 4.557754 , 4.598906 , 4.63873 , 4.676744 , 4.714237 , 4.751994 , 4.791885 , 4.830119 , 4.869856 , 4.907906 , 4.943673 , 4.979281 , 5.013758 , 5.047959 , 5.080985 , 5.112787 , 5.144346 , 5.173713 , 5.202612 , 5.22826 , 5.25369 , 5.278714 , 5.298809 , 5.318014 , 5.329448 , 5.343035 , 5.355857 , 5.357927 , 5.365323 , 5.370007 , 5.372713 , 5.373566 , 5.373628 , 5.374905 , 5.376236 , 5.383015 , 5.383015 , 
-#> [1] "Objective function: "
-#> 5.383869 , 5.384696 , 5.384877 , 5.385032 , 5.385577 , 5.385715 , 5.386384 , 5.387561 , 5.387773 , 5.388341 , 5.388892 , 5.390164 , 5.39115 , 5.391692 , 5.391832 , 5.392948 , 5.393902 , 5.394834 , 5.395861 , 5.396938 , 5.397945 , 5.398847 , 5.399892 , 5.400871 , 5.401732 , 5.40269 , 5.403684 , 5.404681 , 5.406123 , 5.406965 , 5.408073 , 5.409276 , 5.410155 , 5.411169 , 5.411985 , 5.412732 , 5.413544 , 5.414338 , 5.415108 , 5.41586 , 5.416628 , 5.417398 , 5.418184 , 5.418793 , 5.419519 , 5.42023 , 5.420828 , 5.421384 , 5.421949 , 5.422686 , 5.423229 , 5.423697 , 5.424244 , 5.424697 , 5.425073 , 5.425429 , 5.425763 , 5.426117 , 5.42642 , 5.42673 , 5.427022 , 5.427734 , 5.428483 , 5.428932 , 5.429488 , 5.429834 , 5.430163 , 5.430589 , 5.430936 , 5.431097 , 5.431281 , 5.431444 , 5.43155 , 5.431932 , 5.432081 , 5.432157 , 5.432231 , 5.43233 , 5.432434 , 5.432721 , 5.433032 , 5.433193 , 5.433288 , 5.433382 , 5.43355 , 5.433826 , 5.433883 , 5.43411 , 5.434119 , 5.434186 , 5.43435 , 5.434355 , 5.434371 , 5.434378 , 5.434401 , 5.434402 , 5.434407 , 5.434431 , 5.43447 , 5.434489 , 5.43449 , 5.434564 , 5.434614 , 5.434651 , 5.434667 , 5.434709 , 5.434718 , 5.434718 ,
 ```
 
 Note that the names of all six arguments must be entered explicitly when calling `portfolioPriceTaker()`. The output from this function is a list that includes the main information about the optimal portfolio:
 
-
-```r
+```{r PeruPortfolioFigure, fig.width=5, fig.height=3.5}
 portfolioPeru$expBenefits # In billion dollars
-#> [1] 7.042718
 portfolioPeru$cost # In billion dollars
-#> [1] 1.608
 portfolioPeru$totCapacity # In million courses / month
-#> [1] 33.5
 
 # Sorting capacities in descending order
 capacities <- sort(portfolioPeru$capacities, decreasing=T)
@@ -63,12 +57,9 @@ ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
        title="Capacity per cand. at $4 per course / month, Peru")
 ```
 
-![](figure/PeruPortfolioFigure-1.png)
-
 The function `demandPriceTaker()` finds the whole demand curve for a country for different prices. It is much more efficient than calling `portfolioPriceTaker()` multiple times at different prices. Here is an example of how to call that function and plot total demand for manufacturing capacity for Peru:
 
-
-```r
+```{r PeruDemand, fig.width=5, fig.height=3.5}
 prices <- 1:5 # Vector of prices at which demand will be evaluated
 
 demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
@@ -78,10 +69,7 @@ demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_r
 ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) + 
   labs(x="Capacity (mil. courses / month)", y="Price ($ per course / year)", 
        title="Demand curve, Peru")
-#> Warning: Removed 1 row(s) containing missing values (geom_path).
 ```
-
-![](figure/PeruDemand-1.png)
 
 
 ## Advanced options
@@ -91,8 +79,7 @@ The previous simple analysis uses the default parameters of the model. Those def
 As an example, let's find the optimal portfolio for Germany at a price of $10 per course / year, but let's now assume that the probability that vaccine candidates in phase 2 are successful is 0.5 (instead of 0.32), that the expected fraction of harm that will be mitigated because of alternative treatments is 0.7 (instead of 0.5), and that worldide mortality is 500,000 people per month (instead of 200,000 per month).
 
 
-
-```r
+```{r Germany, fig.width=5, fig.height=3.5}
 # Parameters for Germany
 population <- 83.02
 gdp_pc <- 47.6
@@ -111,12 +98,6 @@ parameters <- Parameters$new(population=population, gdp_pc=gdp_pc,
 
 portfolioGermany <- portfolioPriceTaker(parameters, price=10,
                                      candidateFile="../inst/extdata/vaccinesSummary.csv")
-#> [1] "Objective function: "
-#> 17.68738 , 30.0601 , 38.66327 , 42.8045 , 46.10618 , 47.73178 , 48.42624 , 49.21456 , 49.29033 , 49.29033 , 
-#> [1] "Objective function: "
-#> 49.29063 , 49.33415 , 49.39177 , 49.43327 , 49.49695 , 49.5623 , 49.60135 , 49.66316 , 49.71929 , 49.74168 , 49.76125 , 49.77801 , 49.7823 , 49.78459 , 49.84753 , 49.90439 , 49.95606 , 50.01112 , 50.05721 , 50.10079 , 50.13439 , 50.17707 , 50.21961 , 50.25091 , 50.27875 , 50.30608 , 50.33047 , 50.35479 , 50.37854 , 50.40009 , 50.42729 , 50.43714 , 50.44113 , 50.44665 , 50.45134 , 50.45137 , 50.46354 , 50.46513 , 50.47283 , 50.47782 , 50.48016 , 50.48846 , 50.49776 , 50.50481 , 50.50906 , 50.51111 , 50.51917 , 50.52327 , 50.52483 , 50.52838 , 50.52974 , 50.53188 , 50.53188 , 
-#> [1] "Objective function: "
-#> 50.53218 , 50.53282 , 50.53287 , 50.53293 , 50.53296 , 50.53324 , 50.53406 , 50.53431 , 50.53508 , 50.53584 , 50.53658 , 50.53728 , 50.53795 , 50.53859 , 50.53921 , 50.53981 , 50.53983 , 50.54041 , 50.54042 , 50.541 , 50.54155 , 50.54209 , 50.54211 , 50.54264 , 50.5431 , 50.5437 , 50.54427 , 50.54481 , 50.54518 , 50.54552 , 50.54596 , 50.54627 , 50.54655 , 50.54695 , 50.54723 , 50.54748 , 50.54788 , 50.54812 , 50.54851 , 50.54875 , 50.54895 , 50.54908 , 50.54928 , 50.54951 , 50.54971 , 50.54988 , 50.54991 , 50.54993 , 50.55002 , 50.55018 , 50.55029 , 50.5503 , 50.55033 , 50.55035 , 50.55043 , 50.55051 , 50.55053 , 50.55053 ,
 
 # Sorting capacities in descending order
 capacities <- sort(portfolioGermany$capacities, decreasing=T)
@@ -125,7 +106,5 @@ ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
        title="Capacity per cand. at $10 per course / month, Germany")
 ```
-
-![](figure/Germany-1.png)
 
 A `Parameters` object can also be passed in the same way to `demandPriceTaker()` (instead of specifying the population, GDP per capita, fraction of high risk population, and 2-year economic loss arguments).

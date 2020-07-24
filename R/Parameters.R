@@ -40,6 +40,8 @@ Parameters <- R6Class("Parameters", list(
   pphase1=0.23,
   #' @field pphase2 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
   pphase2=0.32,
+  #' @field pphase3 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
+  pphase3=0.45,
   #' @field psubcat Probability that there's no problem at subcategory level
   psubcat=0.8,
   #' @field pspike Probability that there's no problem at the candidate level when a vaccine targets spike proten
