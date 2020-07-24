@@ -17,11 +17,10 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
                                 price, steps=c(10,1,0.1), candidateFile=NULL) {
   if (is.null(parameters)) {
     # Create parameters from function arguments
-    par <- Parameters$new(popshare=population/7800, gdpshare=population*gdp_pc/1e3/87.3,
-                          fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
-                          counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+    par <- Parameters$new(population=population, gdp_pc=gdp_pc,
+                           frac_high_risk=frac_high_risk, loss2yr=loss2yr)
   } else {
-    # Copy parameters object passed as an argument
+    # Use parameters object passed as an argument
     par <- parameters
   }
 

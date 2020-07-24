@@ -24,6 +24,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   d[is.na(PreClinicalCandidates), PreClinicalCandidates := 0]
   d[is.na(Phase1candidates), Phase1candidates := 0]
   d[is.na(Phase2candidates), Phase2candidates := 0]
+  d[is.na(Phase3candidates), Phase3candidates := 0]
   d[is.na(RepurposedCandidates), RepurposedCandidates := 0]
 
   if ("X" %in% names(d)) {
@@ -90,20 +91,23 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   d[Target == "Recombinant", ptarget := par$precombinant]
 
   # Create summary table with candidates by subcategory and phase of trials
-  dscPhase <- crossJoin(d, data.table(phase=c("Pre-clinical", "Phase 1", "Phase 2", "Repurposed")))
+  dscPhase <- crossJoin(d, data.table(phase=c("Pre-clinical", "Phase 1", "Phase 2", "Phase 3", "Repurposed")))
   dscPhase[phase=="Pre-clinical", Candidates := PreClinicalCandidates]
   dscPhase[phase=="Phase 1", Candidates := Phase1candidates]
   dscPhase[phase=="Phase 2", Candidates := Phase2candidates]
+  dscPhase[phase=="Phase 3", Candidates := Phase3candidates]
   dscPhase[phase=="Repurposed", Candidates := RepurposedCandidates]
 
   dscPhase[, PreClinicalCandidates := NULL]
   dscPhase[, Phase1candidates := NULL]
   dscPhase[, Phase2candidates := NULL]
+  dscPhase[, Phase3candidates := NULL]
   dscPhase[, RepurposedCandidates := NULL]
   dscPhase$pcand<-1.0
   dscPhase[phase == "Pre-clinical", pcand := par$ppreclinical]
   dscPhase[phase == "Phase 1", pcand := par$pphase1]
   dscPhase[phase == "Phase 2", pcand := par$pphase2]
+  dscPhase[phase == "Phase 3", pcand := par$pphase3]
   dscPhase[phase == "Repurposed", pcand := par$prepurposed]
 
   # Finding optimal order of vaccines ----
