@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Finding the optimal portfolio for a country
+## Finding the optimal portfolio for a country
 
 ```{r setup}
 # Loading packages and setting up options
@@ -25,16 +25,16 @@ library(ggplot2)
 theme_set(theme_bw(base_size=12))
 ```
 
-## Simple case: Peru
+### Simple case: Peru
 
 The main function that finds the optimal portfolio for a price taking country is `portfolioPriceTaker()`. In order to illustrate its basic usage, let's find the optimal portfolio for Peru. It has 31.99 million people, its GDP per capita is $6,710, 13.1% of its population is high risk, and the World Bank projects the Covid-19 pandemic will cause a 26.9% cumulative GDP loss over 2020 and 2021. The main arguments to `portfolioPriceTaker()` are these five numbers, the price at which manufacturing capacity is sold in the market (let's assume it's $4 per course / year), as well as the path to a .csv file with data on vaccine candidates.
 
 ```{r PeruPortfolioCompute}
-population <- 31.99
-gdp_pc <- 6.71
+population <- 31.99 # In millions
+gdp_pc <- 6.71 # In thousand dollars
 frac_high_risk <- 0.131
 loss2yr <- 0.269
-price <- 4
+price <- 4 # In dollars per course / year
 
 portfolioPeru <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, price=price,
@@ -54,7 +54,7 @@ capacities <- sort(portfolioPeru$capacities, decreasing=T)
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
-       title="Capacity per cand. at $4 per course / month, Peru")
+       title="Capacity per cand. at $4 per course / year, Peru")
 ```
 
 The function `demandPriceTaker()` finds the whole demand curve for a country for different prices. It is much more efficient than calling `portfolioPriceTaker()` multiple times at different prices. Here is an example of how to call that function and plot total demand for manufacturing capacity for Peru:
@@ -72,7 +72,7 @@ ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) +
 ```
 
 
-## Advanced options
+### Advanced options
 
 The previous simple analysis uses the default parameters of the model. Those default parameters can be modified by passing an object of the `Parameters` class (an `R6` class). In that case, the input arguments `population`, `gdp_pc`, `frac_high_risk`, and `loss2yr` passed to `portfolioPriceTaker()` and `demandPriceTaker()` are overriden. Instead, they should be passed as arguments to the constructor of the `Parameters` class.
 
@@ -81,16 +81,16 @@ As an example, let's find the optimal portfolio for Germany at a price of $10 pe
 
 ```{r Germany, fig.width=5, fig.height=3.5}
 # Parameters for Germany
-population <- 83.02
-gdp_pc <- 47.6
+population <- 83.02 # In millions
+gdp_pc <- 47.6 # In thousand dollars
 frac_high_risk <- 0.297
 loss2yr <- 0.170
-price <- 6
+price <- 6 # In dollars per course / year
 
 # Alternative model parameters
 pphase2 <- 0.5
 sharm <- 0.7
-worldmortality <- 500000
+worldmortality <- 500000 # Monthly deaths
 
 parameters <- Parameters$new(population=population, gdp_pc=gdp_pc, 
                              frac_high_risk=frac_high_risk, loss2yr=loss2yr,
@@ -104,7 +104,7 @@ capacities <- sort(portfolioGermany$capacities, decreasing=T)
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
-       title="Capacity per cand. at $10 per course / month, Germany")
+       title="Capacity per cand. at $10 per course / year, Germany")
 ```
 
 A `Parameters` object can also be passed in the same way to `demandPriceTaker()` (instead of specifying the population, GDP per capita, fraction of high risk population, and 2-year economic loss arguments).

@@ -10,7 +10,7 @@ vignette: >
 
 
 
-# Finding the optimal portfolio for a country
+## Finding the optimal portfolio for a country
 
 
 ```r
@@ -20,7 +20,7 @@ library(ggplot2)
 theme_set(theme_bw(base_size=12))
 ```
 
-## Simple case: Peru
+### Simple case: Peru
 
 The main function that finds the optimal portfolio for a price taking country is `portfolioPriceTaker()`. In order to illustrate its basic usage, let's find the optimal portfolio for Peru. It has 31.99 million people, its GDP per capita is $6,710, 13.1% of its population is high risk, and the World Bank projects the Covid-19 pandemic will cause a 26.9% cumulative GDP loss over 2020 and 2021. The main arguments to `portfolioPriceTaker()` are these five numbers, the price at which manufacturing capacity is sold in the market (let's assume it's $4 per course / year), as well as the path to a .csv file with data on vaccine candidates.
 
@@ -78,13 +78,12 @@ demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_r
 ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) + 
   labs(x="Capacity (mil. courses / month)", y="Price ($ per course / year)", 
        title="Demand curve, Peru")
-#> Warning: Removed 1 row(s) containing missing values (geom_path).
 ```
 
 ![](figure/PeruDemand-1.png)
 
 
-## Advanced options
+### Advanced options
 
 The previous simple analysis uses the default parameters of the model. Those default parameters can be modified by passing an object of the `Parameters` class (an `R6` class). In that case, the input arguments `population`, `gdp_pc`, `frac_high_risk`, and `loss2yr` passed to `portfolioPriceTaker()` and `demandPriceTaker()` are overriden. Instead, they should be passed as arguments to the constructor of the `Parameters` class.
 
