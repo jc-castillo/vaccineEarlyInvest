@@ -23,6 +23,8 @@ overallDistribution(
 
 \item{poverall}{Overall probability that a vaccine is feasible}
 
+\item{psubcat}{Probability that no problem shows up at the subcategory level}
+
 \item{grid}{Resolution of the grid to compute all distributions}
 
 \item{target}{Whether to allow for target distributions (otherwise all targets succeed with probability 1)}

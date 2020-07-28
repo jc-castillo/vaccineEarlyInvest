@@ -2,12 +2,14 @@
 #'
 #' Load summary data with characteristics for vaccines
 #'
-#' @param par Parameters object with model parameters
+#' @param par `Parameters` object with model parameters
+#' @param candidateFile String with file name (including path) for candidate information
 #' @param includeVaccines List of experimental vaccines to include in analysis
 #'
 #' @return Data.table with summary data
 #' @export
 #' @import data.table
+#' @importFrom utils read.csv
 loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
 

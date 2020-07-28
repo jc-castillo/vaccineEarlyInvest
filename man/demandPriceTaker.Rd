@@ -18,6 +18,8 @@ demandPriceTaker(
 )
 }
 \arguments{
+\item{parameters}{`Parameters` object with model parameters}
+
 \item{population}{Country population (in millions)}
 
 \item{gdp_pc}{Country GDP per capita (in thousand $)}
@@ -33,6 +35,8 @@ demandPriceTaker(
 \item{mainstep}{Step size for main optimization}
 
 \item{candidateFile}{File with candidate data}
+
+\item{verbose}{How much output to produce. 0 means no output, 1 means limited output, 2 means full output.}
 }
 \value{
 List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,

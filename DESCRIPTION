@@ -2,14 +2,14 @@ Package: vaccineEarlyInvest
 Type: Package
 Title: Investment in Early Manufacturing Capacity for Vaccines
 Version: 0.1.0
-Author: Juan Camilo Castillo
-Maintainer: The package maintainer <jccast@upenn.edu>
+Author: Juan Camilo Castillo, Brandon Tan
+Maintainer: Juan Camilo Castillo <jccast@upenn.edu>
 Description: Find an optimal portfolio for investment in early manufacturing of a
     vaccine based on health and economic benefits.
 Encoding: UTF-8
 License: GPL-3
 LazyData: true
 RoxygenNote: 7.1.0
-Imports: data.table, R6, tidyverse, hypergeo, matrixStats, gtools
+Imports: data.table, R6, tidyverse, hypergeo, matrixStats, gtools, purrr, dplyr
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

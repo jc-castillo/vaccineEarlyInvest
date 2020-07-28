@@ -211,7 +211,7 @@ fields.}
 
 \item{\code{loss2yr}}{Cumulative percent of GDP lost because of pandemic over two years}
 
-\item{\code{...}}{Set methods at non-default values}
+\item{\code{...}}{Set fields at non-default values}
 }
 \if{html}{\out{</div>}}
 }

@@ -10,6 +10,10 @@ permutationDistribution(dcandidate, dplatforms, poverall, psubcat)
 \item{dcandidate}{data.table with information by candidate}
 
 \item{dplatforms}{data.table with information by platform}
+
+\item{poverall}{Overall probability that a vaccine is feasible}
+
+\item{psubcat}{Probability that no problem shows up at the subcategory}
 }
 \value{
 data.table with the distribution of total capacity

@@ -2,6 +2,7 @@
 #'
 #' Computes the optimal portfolio for a price-taking country
 #'
+#' @param parameters `Parameters` object with model parameters
 #' @param population Country population (in millions)
 #' @param gdp_pc Country GDP per capita (in thousand $)
 #' @param frac_high_risk Fraction of population that is high risk
@@ -71,6 +72,7 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #'
 #' Builds the demand curve for a price-taking country
 #'
+#' @param parameters `Parameters` object with model parameters
 #' @param population Country population (in millions)
 #' @param gdp_pc Country GDP per capita (in thousand $)
 #' @param frac_high_risk Fraction of population that is high risk
@@ -80,6 +82,7 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #' @param inisteps Step sizes to optimize over for the initial point
 #' @param mainstep Step size for main optimization
 #' @param candidateFile File with candidate data
+#' @param verbose How much output to produce. 0 means no output, 1 means limited output, 2 means full output.
 #'
 #' @return List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,
 #' and a matrix with demand for individual candidates at every price

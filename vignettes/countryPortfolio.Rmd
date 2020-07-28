@@ -26,11 +26,11 @@ The main function that finds the optimal portfolio for a price taking country is
 
 
 ```r
-population <- 31.99
-gdp_pc <- 6.71
+population <- 31.99 # In millions
+gdp_pc <- 6.71 # In thousand dollars
 frac_high_risk <- 0.131
 loss2yr <- 0.269
-price <- 4
+price <- 4 # In dollars per course / year
 
 portfolioPeru <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, price=price,
@@ -60,7 +60,7 @@ capacities <- sort(portfolioPeru$capacities, decreasing=T)
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
-       title="Capacity per cand. at $4 per course / month, Peru")
+       title="Capacity per cand. at $4 per course / year, Peru")
 ```
 
 ![](figure/PeruPortfolioFigure-1.png)
@@ -93,16 +93,16 @@ As an example, let's find the optimal portfolio for Germany at a price of $10 pe
 
 ```r
 # Parameters for Germany
-population <- 83.02
-gdp_pc <- 47.6
+population <- 83.02 # In millions
+gdp_pc <- 47.6 # In thousand dollars
 frac_high_risk <- 0.297
 loss2yr <- 0.170
-price <- 6
+price <- 6 # In dollars per course / year
 
 # Alternative model parameters
 pphase2 <- 0.5
 sharm <- 0.7
-worldmortality <- 500000
+worldmortality <- 500000 # Monthly deaths
 
 parameters <- Parameters$new(population=population, gdp_pc=gdp_pc, 
                              frac_high_risk=frac_high_risk, loss2yr=loss2yr,
@@ -122,7 +122,7 @@ capacities <- sort(portfolioGermany$capacities, decreasing=T)
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
-       title="Capacity per cand. at $10 per course / month, Germany")
+       title="Capacity per cand. at $10 per course / year, Germany")
 ```
 
 ![](figure/Germany-1.png)

@@ -16,6 +16,8 @@ portfolioPriceTaker(
 )
 }
 \arguments{
+\item{parameters}{`Parameters` object with model parameters}
+
 \item{population}{Country population (in millions)}
 
 \item{gdp_pc}{Country GDP per capita (in thousand $)}

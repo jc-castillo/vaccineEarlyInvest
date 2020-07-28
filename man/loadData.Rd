@@ -7,7 +7,9 @@
 loadData(par, candidateFile = NULL, includeVaccines = c())
 }
 \arguments{
-\item{par}{Parameters object with model parameters}
+\item{par}{`Parameters` object with model parameters}
+
+\item{candidateFile}{String with file name (including path) for candidate information}
 
 \item{includeVaccines}{List of experimental vaccines to include in analysis}
 }

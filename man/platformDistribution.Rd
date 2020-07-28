@@ -10,6 +10,8 @@ platformDistribution(plat, subcatDists, psubcat)
 \item{plat}{Character with the subcategory name}
 
 \item{subcatDists}{Data.table with the distributions for every subcategory in the platform}
+
+\item{psubcat}{Probability that no problem shows up at the subcategory}
 }
 \value{
 A data.table summarizing the distribution of total capacity in the platfom

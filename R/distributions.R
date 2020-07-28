@@ -91,6 +91,31 @@ priceTakerCost <- function(capacities, price) {
   return(cost)
 }
 
+#' Title
+#'
+#' @param capacities
+#' @param distribution
+#' @param par
+#'
+#' @return
+#' @export
+#'
+#' @examples
+socialCost <- function(capacities, distribution, par) {
+
+  totcap <- sum(capacities)
+  baseMgCost <- par$c * 12 / 1000
+  cost <- if_else(totcap <= par$capkink,
+                  baseMgCost * totcap,
+                  baseMgCost * (totcap^(par$mgcostelast + 1) / par$capkink^(par$mgcostelast) +
+                                  par$mgcostelast * par$capkink) / (par$mgcostelast + 1)
+  )
+
+  recover <- par$fracScrap * baseMgCost * (totcap - sum(distribution[, capacity * prob]))
+
+  return(cost - recover)
+}
+
 #' Candidate success draws
 #'
 #' Generate Monte Carlo draws for the success and failure of candidates
@@ -291,6 +316,7 @@ getTargetPermutations <- function(targets, probs) {
 #' @param grid Resolution of the grid to compute all distributions
 #' @param target Whether to allow for target distributions (otherwise all targets succeed with probability 1)
 #' @param poverall Overall probability that a vaccine is feasible
+#' @param psubcat Probability that no problem shows up at the subcategory level
 #'
 #' @return data.table with the overall distribution
 #' @export
@@ -347,9 +373,12 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #'
 #' @param dcandidate data.table with information by candidate
 #' @param dplatforms data.table with information by platform
+#' @param poverall Overall probability that a vaccine is feasible
+#' @param psubcat Probability that no problem shows up at the subcategory
 #'
 #' @return data.table with the distribution of total capacity
 #' @import matrixStats
+#' @importFrom stats fft mvfft
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 
   # t0 <- proc.time()
@@ -409,8 +438,10 @@ permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 #'
 #' @param plat Character with the subcategory name
 #' @param subcatDists Data.table with the distributions for every subcategory in the platform
+#' @param psubcat Probability that no problem shows up at the subcategory
 #'
 #' @return A data.table summarizing the distribution of total capacity in the platfom
+#' @importFrom stats fft mvfft
 platformDistribution <- function(plat, subcatDists, psubcat) {
   dplat <- subcatDists[.(plat), on=.(Platform)]
 
@@ -452,6 +483,7 @@ platformDistribution <- function(plat, subcatDists, psubcat) {
 #' @param dcandidate Data.table with information by candidate
 #'
 #' @return A data.table summarizing the distribution of total capacity in the subcategory
+#' @importFrom stats fft mvfft
 subcatDistribution <- function(sub, dcandidate) {
   dsub <- dcandidate[Subcategory == sub]
 
@@ -488,6 +520,7 @@ subcatDistribution <- function(sub, dcandidate) {
 #' @param dist2 Second distribution. Vector where position i corresponds to the probability that the probability is i-1
 #'
 #' @return DIstribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+#' @importFrom stats fft mvfft
 sumdist <- function(dist1, dist2) {
   l <- length(dist1)+length(dist2)-1
 
@@ -509,6 +542,7 @@ sumdist <- function(dist1, dist2) {
 #' @param N Number of times to add
 #'
 #' @return Distribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+#' @importFrom stats fft mvfft
 sumdistSelf <- function(dist, N=2) {
   l <- N*length(dist)-(N-1)
 
