@@ -65,6 +65,29 @@ ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
 
 ![](figure/PeruPortfolioFigure-1.png)
 
+The next two figures show the distribution of the effective capacity and of net benefits obtained with the optimal portfolio.
+
+
+```r
+distribution <- portfolioPeru$distribution
+
+ggplot() + geom_histogram(aes(capacity, weight=prob), distribution,
+                          binwidth=0.5, fill="black", color="black", alpha=0.5) +
+  labs(x="Production capacity (mil. courses / month)", y="Frequency") + 
+  coord_cartesian(xlim=c(0,15))
+```
+
+![](figure/PeruHistogram-1.png)
+
+```r
+
+ggplot() + geom_histogram(aes(socialBenefit, weight=prob), distribution,
+                          binwidth=0.25, fill="black", color="black", alpha=0.5) +
+  labs(x="Social benefits (bil. $)", y="Frequency")
+```
+
+![](figure/PeruHistogram-2.png)
+
 The function `demandPriceTaker()` finds the whole demand curve for a country for different prices. It is much more efficient than calling `portfolioPriceTaker()` multiple times at different prices. Here is an example of how to call that function and plot total demand for manufacturing capacity for Peru:
 
 

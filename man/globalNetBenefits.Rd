@@ -2,7 +2,7 @@
 % Please edit documentation in R/countries.R
 \name{globalNetBenefits}
 \alias{globalNetBenefits}
-\title{Title}
+\title{Net benefits for a global program}
 \usage{
 globalNetBenefits(
   capacities,
@@ -15,11 +15,23 @@ globalNetBenefits(
 )
 }
 \arguments{
-\item{dcandidate}{}
+\item{capacities}{Vector of capacities}
+
+\item{dcandidate}{`data.table` with candidate information}
+
+\item{targetPermutations}{`data.table` with all possible target permutations}
+
+\item{dplatforms}{`data.table` with data about platforms}
+
+\item{benefitsTable}{`data.table` with benefits depending on capacity}
+
+\item{par}{`Parameters` object with main model parameters}
+
+\item{grid}{Resolution of the grid for capacities}
 }
 \value{
-
+Net global benefits
 }
 \description{
-Title
+Returns the net benefits for the whole world with a given portfolio
 }

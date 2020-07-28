@@ -91,16 +91,16 @@ priceTakerCost <- function(capacities, price) {
   return(cost)
 }
 
-#' Title
+#' Social cost
 #'
-#' @param capacities
-#' @param distribution
-#' @param par
+#' Social cost of a portfolio
 #'
-#' @return
+#' @param capacities Vector with capacities for all candidates
+#' @param distribution `data.table` with the distribution of capacities
+#' @param par `Parameters` object with main model parameters
+#'
+#' @return Social cost of the portfolio
 #' @export
-#'
-#' @examples
 socialCost <- function(capacities, distribution, par) {
 
   totcap <- sum(capacities)

@@ -1,15 +1,17 @@
-#' Title
+#' Net benefits for a global program
 #'
-#' @param capacities
-#' @param par
-#' @param benefitsTable
-#' @param grid
-#' @param dcandidate
+#' Returns the net benefits for the whole world with a given portfolio
 #'
-#' @return
+#' @param capacities Vector of capacities
+#' @param dcandidate `data.table` with candidate information
+#' @param targetPermutations `data.table` with all possible target permutations
+#' @param dplatforms `data.table` with data about platforms
+#' @param par `Parameters` object with main model parameters
+#' @param benefitsTable `data.table` with benefits depending on capacity
+#' @param grid Resolution of the grid for capacities
+#'
+#' @return Net global benefits
 #' @export
-#'
-#' @examples
 globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, benefitsTable, par, grid=1) {
   dcandidate[, capacity := capacities]
   distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms, grid=grid,
@@ -21,16 +23,16 @@ globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatf
   return(of)
 }
 
-#' Title
+#' Expected benefits
 #'
-#' @param distribution
-#' @param benefitsTable
-#' @param grid
+#' Computes expected benefits from some capacity distribution and from a benefits table
 #'
-#' @return
+#' @param distribution `data.table` with the distribution of effective capacity
+#' @param benefitsTable `data.table` with benefits as a function of effective capacity
+#' @param grid Resolution of the capacity grid
+#'
+#' @return Expected benefits
 #' @export
-#'
-#' @examples
 expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
   distribution[, socialBenefit := benefitsTable[.(grid * round(distribution$capacity/grid)), socialBenefit]]
 
@@ -38,11 +40,13 @@ expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
 }
 
 
-#' Title
+#' Country parameters
 #'
-#' @param countryData
+#' Get a list of `Parameters` objects for all countries from country data
 #'
-#' @return
+#' @param countryData `data.table` with country data
+#'
+#' @return List of `Parameters` objects for all countries in the dataset
 #' @export
 countryParameters <- function(countryData) {
 
@@ -63,13 +67,15 @@ countryParameters <- function(countryData) {
   return(countryPars)
 }
 
-#' Title
+#' Get benefits table
 #'
-#' @param countryData
-#' @param max
-#' @param grid
+#' Create a table that tells the global benefits corresponding to every level of effective capacity
 #'
-#' @return
+#' @param countryData `data.table` with country data
+#' @param max Maximum effective capacity to compute benefits for
+#' @param grid Resolution of the capacity grid
+#'
+#' @return `data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 #' @export
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
   countryPars <- countryParameters(countryData)

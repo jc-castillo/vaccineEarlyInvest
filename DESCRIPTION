@@ -10,6 +10,6 @@ Encoding: UTF-8
 License: GPL-3
 LazyData: true
 RoxygenNote: 7.1.0
-Imports: data.table, R6, tidyverse, hypergeo, matrixStats, gtools, purrr, dplyr
+Imports: data.table, R6, tidyverse, hypergeo, matrixStats, gtools, purrr, dplyr, readxl
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

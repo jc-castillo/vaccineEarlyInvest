@@ -2,16 +2,16 @@
 % Please edit documentation in R/countries.R
 \name{countryParameters}
 \alias{countryParameters}
-\title{Title}
+\title{Country parameters}
 \usage{
 countryParameters(countryData)
 }
 \arguments{
-\item{countryData}{}
+\item{countryData}{`data.table` with country data}
 }
 \value{
-
+List of `Parameters` objects for all countries in the dataset
 }
 \description{
-Title
+Get a list of `Parameters` objects for all countries from country data
 }

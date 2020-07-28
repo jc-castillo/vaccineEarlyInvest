@@ -2,16 +2,20 @@
 % Please edit documentation in R/countries.R
 \name{getBenefitsTable}
 \alias{getBenefitsTable}
-\title{Title}
+\title{Get benefits table}
 \usage{
 getBenefitsTable(countryData, max = 1000, grid = 1)
 }
 \arguments{
-\item{grid}{}
+\item{countryData}{`data.table` with country data}
+
+\item{max}{Maximum effective capacity to compute benefits for}
+
+\item{grid}{Resolution of the capacity grid}
 }
 \value{
-
+`data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 }
 \description{
-Title
+Create a table that tells the global benefits corresponding to every level of effective capacity
 }

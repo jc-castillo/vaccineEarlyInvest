@@ -2,16 +2,20 @@
 % Please edit documentation in R/distributions.R
 \name{socialCost}
 \alias{socialCost}
-\title{Title}
+\title{Social cost}
 \usage{
 socialCost(capacities, distribution, par)
 }
 \arguments{
-\item{par}{}
+\item{capacities}{Vector with capacities for all candidates}
+
+\item{distribution}{`data.table` with the distribution of capacities}
+
+\item{par}{`Parameters` object with main model parameters}
 }
 \value{
-
+Social cost of the portfolio
 }
 \description{
-Title
+Social cost of a portfolio
 }
