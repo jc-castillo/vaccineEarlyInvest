@@ -122,7 +122,7 @@ socialCost <- function(capacities, distribution, par) {
 #'
 #' @param dcandidate `data.table` with information about candidates
 #' @param par `Parameters` object with model parameters
-#' @param seed Randome seed
+#' @param seed Random seed
 #'
 #' @return `data.table` with a summary of the candidates
 #' @export
@@ -379,6 +379,8 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #' @return data.table with the distribution of total capacity
 #' @import matrixStats
 #' @importFrom stats fft mvfft
+#'
+#' @export
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 
   # t0 <- proc.time()
@@ -418,8 +420,8 @@ permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 
   # Create data.table summarizing information about distribution
   overallDist <- data.table(capacity=0:maxcap, prob=dist[1:(maxcap + 1)])
-  overallDist$prob <- poverall * overallDist$prob
-  overallDist[1, prob := prob + (1-poverall)]
+  # overallDist$prob <- poverall * overallDist$prob
+  # overallDist[1, prob := prob + (1-poverall)]
 
   # t3 <- proc.time()
 

@@ -15,7 +15,7 @@
 #'  in every candidate, benefits, cost, and total capacity.
 #' @export
 portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
-                                price, steps=c(10,1,0.1), candidateFile=NULL) {
+                                price, steps=c(10,1,0.1), candidateFile=NULL, lambda=1) {
   if (is.null(parameters)) {
     # Create parameters from function arguments
     par <- Parameters$new(population=population, gdp_pc=gdp_pc,
@@ -45,7 +45,7 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 
   # Creating objective function
   objectiveFun <- function(capacities, grid, price, par) {
-    countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par)
+    countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par, lambda=lambda)
   }
 
   # Initialize at zero
@@ -146,6 +146,11 @@ demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk
     optimizations[.(i), expBenefit :=
                     countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=mainstep)]
     optimizations[.(i), cost := priceTakerCost(capacities, p)]
+
+    distribution <- countryDistribution(capacities, dcandidate, targetPermutations, dplatforms, par, grid=mainstep)
+
+    optimizations[.(i), expCapacity := sum(distribution[, prob * capacity])]
+    optimizations[.(i), successProb := sum(distribution[capacity > 0.011, prob])]
     optimizations[.(i), totalCapacity := sum(capacities)]
   }
 

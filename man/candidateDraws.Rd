@@ -11,7 +11,7 @@ candidateDraws(dcandidate, par, seed = 30)
 
 \item{par}{`Parameters` object with model parameters}
 
-\item{seed}{Randome seed}
+\item{seed}{Random seed}
 }
 \value{
 `data.table` with a summary of the candidates
