@@ -12,7 +12,8 @@ portfolioPriceTaker(
   loss2yr,
   price,
   steps = c(10, 1, 0.1),
-  candidateFile = NULL
+  candidateFile = NULL,
+  lambda = 1
 )
 }
 \arguments{
