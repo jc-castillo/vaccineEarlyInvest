@@ -121,6 +121,8 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #'
 #' @importFrom readxl read_excel
 #' @import data.table
+#' @importFrom stats weighted.mean
+#' 
 loadCountryData <- function(filename, Gavi=F) {
   rawData <- data.table(read_excel("../../Other/highrisk_clean_bt.xlsx"))
 
