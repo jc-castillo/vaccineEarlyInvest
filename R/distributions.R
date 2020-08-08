@@ -516,12 +516,12 @@ subcatDistribution <- function(sub, dcandidate) {
 
 #' Sum of distributions
 #'
-#' Distribution of the sum of two indepenent discrete random variables
+#' Distribution of the sum of two independent discrete random variables
 #'
-#' @param dist1 First distribution. Vector where position i corresponds to the probability that the probability is i-1
-#' @param dist2 Second distribution. Vector where position i corresponds to the probability that the probability is i-1
+#' @param dist1 First distribution. Vector where position i corresponds to the probability that the random variable is i-1
+#' @param dist2 Second distribution. Vector where position i corresponds to the probability that the random variable is i-1
 #'
-#' @return DIstribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+#' @return DIstribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 #' @importFrom stats fft mvfft
 sumdist <- function(dist1, dist2) {
   l <- length(dist1)+length(dist2)-1
@@ -540,10 +540,10 @@ sumdist <- function(dist1, dist2) {
 #'
 #' Computes the sum of the distribution of N iid discrete random variables
 #'
-#' @param dist Input distribution. Vector where position i corresponds to the probability that the probability is i-1
+#' @param dist Input distribution. Vector where position i corresponds to the probability that the random variable is i-1
 #' @param N Number of times to add
 #'
-#' @return Distribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+#' @return Distribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 #' @importFrom stats fft mvfft
 sumdistSelf <- function(dist, N=2) {
   l <- N*length(dist)-(N-1)
