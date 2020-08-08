@@ -11,5 +11,8 @@ License: GPL-3
 LazyData: true
 RoxygenNote: 7.1.0
 Imports: data.table, R6, tidyverse, hypergeo, matrixStats, gtools, purrr, dplyr, readxl
-Suggests: knitr, rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
