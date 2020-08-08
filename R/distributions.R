@@ -524,6 +524,9 @@ subcatDistribution <- function(sub, dcandidate) {
 #' @return DIstribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 #' @importFrom stats fft mvfft
 sumdist <- function(dist1, dist2) {
+  if(any(dist1<0) | sum(dist1)!=1 | any(dist2<0) | sum(dist2)!=1){
+    stop('dist must be a discrete distribution')
+  }
   l <- length(dist1)+length(dist2)-1
 
   d1 <- rep(0, l)
@@ -546,6 +549,9 @@ sumdist <- function(dist1, dist2) {
 #' @return Distribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 #' @importFrom stats fft mvfft
 sumdistSelf <- function(dist, N=2) {
+  if(any(dist<0) | sum(dist)!=1){
+    stop('dist must be a discrete distribution')
+  }
   l <- N*length(dist)-(N-1)
 
   dd <- rep(0, l)
