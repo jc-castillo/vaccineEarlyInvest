@@ -37,13 +37,20 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # d <- d[.(dchoose$Platform, dchoose$Subcategory), on=.(Platform, Subcategory)]
 
   # Delete rows of vaccines to omit in analysis
-  exp_subcat = c("Live attenuated bacteria","Self-assembling vaccine","Dendritic cells",
-                 "Artificial antigen presenting cells","Unknown")
-  exp_names = c("BCG","Self-assembling","Dendritic","AAPC","Unknown")
-  
-  for (i in 1:length(exp_names)) {
-    if(!exp_names[i] %in% includeVaccines)
-      d <- d[Subcategory != exp_subcat[i]]
+  if (!"BCG" %in% includeVaccines) {
+    d <- d[Subcategory != "Live attenuated bacteria"]
+  }
+  if (!"Self-assembling" %in% includeVaccines) {
+    d <- d[Subcategory != "Self-assembling vaccine"]
+  }
+  if (!"Dendritic" %in% includeVaccines) {
+    d <- d[Subcategory != "Dendritic cells"]
+  }
+  if (!"AAPC" %in% includeVaccines) {
+    d <- d[Subcategory != "Artificial antigen presenting cells"]
+  }
+  if (!"Unknown" %in% includeVaccines) {
+    d <- d[Subcategory != "Unknown"]
   }
 
   return(d)
