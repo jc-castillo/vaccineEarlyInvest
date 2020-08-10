@@ -15,7 +15,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
   if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
-      d <- data.table(read.csv("inst/extdata/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
+      d <- data.table(read.csv("Data/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
     } else if (par$inputfile=="US") {
       d <- data.table(read.csv("Data/vaccinesSummaryUS.csv", fileEncoding = "UTF-8-BOM"))
     }
