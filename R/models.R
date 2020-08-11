@@ -405,6 +405,8 @@ benefitIntegral <- function(frac, par) {
 #'
 #' @return Values of benefits integral
 benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
+  if(any(frac1<0) | any(frac2>1)) stop('limit of integral must be between 0 and 1')
+  if(any(share1<0) | any(share1>1) | any(share2<0) | any(share2>1)) stop('share of damage must be between 0 and 1')
   slope <- (share2 - share1) / (frac2 - frac1)
   inishare <- share1 - frac1 * slope
   endshare <- share2 + (1-frac2) * slope
@@ -423,7 +425,7 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
   } else if (par$benefitdist == "piecewiseLinear") {
     stop("Not implemented. Use piecewiseLinearGen")
   } else if (par$benefitdist == "piecewiseLinearGen") {
-    if (frac1 > 0 | share1 < 1 | share2 < 1) {
+    if (any(frac1 > 0) | any(share1 < 1) | any(share2 < 1)) {
       stop("Not implemented yet.")
     }
 
@@ -438,10 +440,10 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
       dsn <- damageshares[i+1]
       vsn <- vaccshares[i+1]
 
-      add <- if_else(frac < vs, 0,
+      add <- if_else(frac2 < vs, 0,
                      if_else(frac2 > vsn,
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
-                             (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
+                             (frac2 - vs) * ds + 1/2 * (frac2 - vs)^2 * (dsn - ds) / (vsn - vs),
                      )
       )
 
