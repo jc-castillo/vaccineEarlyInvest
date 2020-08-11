@@ -438,10 +438,10 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
       dsn <- damageshares[i+1]
       vsn <- vaccshares[i+1]
 
-      add <- if_else(frac2 < vs, 0,
+      add <- if_else(frac < vs, 0,
                      if_else(frac2 > vsn,
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
-                             (frac2 - vs) * ds + 1/2 * (frac2 - vs)^2 * (dsn - ds) / (vsn - vs),
+                             (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
                      )
       )
 
