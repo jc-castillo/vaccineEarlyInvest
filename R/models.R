@@ -471,7 +471,9 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
 #' @return Total benefits from vaccination
 #' @export
 benefits <- function(monthben, capacities, endtimes, par) {
-
+  if(any(monthben<0)) stop('benefits must be non-negative')
+  if(any(capacities<0)) stop('capacities must be non-negative')
+  if(any(endtimes<0)) stop('endtimes must be non-negative')
   if (length(capacities) != length(endtimes)) {
     stop("The capacities and endtimes vectors should be of the same length")
   }
