@@ -329,9 +329,9 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   }
 
   if (computeExpComp) {
-    # dexpComp <- data.table(ind=1:maxcand)
+    # dexpComp <- data.table(ind=1:par$maxcand)
 
-    for (n in 1:maxcand) {
+    for (n in 1:par$maxcand) {
       dcanddraws[, paste0("success_", n) := as.numeric(success==1 & n >= index), by="r"]
       # dcanddraws[, paste0("successes_", n) := sum(as.numeric(success==1 & n >= index)), by="r"]
       dcanddraws[, paste0("successes_", n) := sum(get(paste0("success_", n))), by="r"]
