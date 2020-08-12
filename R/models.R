@@ -360,6 +360,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 #'
 #' @return Share of benefits obtained
 #' @import hypergeo
+#' @export
 benefitIntegral <- function(frac, par) {
   if (par$benefitdist == "pnorm") {
     ret <- Re(frac * (1-hypergeo(-1/par$alpha, 1/par$alpha, 1+1/par$alpha, frac^par$alpha)))
