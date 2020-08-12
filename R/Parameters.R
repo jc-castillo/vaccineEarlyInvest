@@ -7,6 +7,8 @@ library("R6")
 #' @import data.table
 #' @export
 Parameters <- R6Class("Parameters", list(
+  #' @field inputfile World or US input file
+  inputfile="Default"
   #' @field poverall Probability that no problem at the overall level prevents vaccine feasibility
   poverall=0.9,
   #' @field pvector Probability that there's no problem at the viral vector platform level
