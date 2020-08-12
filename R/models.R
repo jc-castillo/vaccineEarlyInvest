@@ -68,7 +68,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @importFrom purrr rbernoulli
 #' @import gtools
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
-  #Temperoray fix for Target
+  #Temporary fix for Target
   d$Target = 'Others'
   
   # Adding platform feasibility probabilities to table
