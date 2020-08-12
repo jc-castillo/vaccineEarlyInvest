@@ -15,7 +15,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
   if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
-      d <- data.table(read.csv("Data/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
+      d <- data.table(read.csv("inst/extdata/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
     } else if (par$inputfile=="US") {
       d <- data.table(read.csv("Data/vaccinesSummaryUS.csv", fileEncoding = "UTF-8-BOM"))
     }
@@ -358,7 +358,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 #' @return Share of benefits obtained
 #' @import hypergeo
 benefitIntegral <- function(frac, par) {
-  if(any(frac < 0) | any(frac >= 1)) stop('frac must be a real number big or equal to 0 and strictly smaller than 1')
+  if(any(frac < 0) | any(frac > 1)) stop('frac must be a real number big or equal to 0 and strictly smaller than 1')
   if (par$benefitdist == "pnorm") {
     ret <- Re(frac * (1-hypergeo(-1/par$alpha, 1/par$alpha, 1+1/par$alpha, frac^par$alpha)))
   } else if (par$benefitdist == "piecewiseLinear") {
@@ -380,7 +380,7 @@ benefitIntegral <- function(frac, par) {
       vsn <- vaccshares[i+1]
 
       add <- if_else(frac < vs, 0,
-                     if_else(frac > vsn,
+                     if_else(frac >= vsn,
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
                              (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
                              )
