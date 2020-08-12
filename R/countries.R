@@ -124,7 +124,8 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @importFrom stats weighted.mean
 #' 
 loadCountryData <- function(filename, Gavi=F) {
-  rawData <- data.table(read_excel("../../Other/highrisk_clean_bt.xlsx"))
+
+  rawData <- data.table(read_excel(filename))
 
   #drop countries without needed data (DISCUSS HOW TO COMPARE TO GLOBAL SCENARIO)
   data <- rawData[!is.na(populationtotal) & !is.na(gdp) & !is.na(frac_highrisk)]
