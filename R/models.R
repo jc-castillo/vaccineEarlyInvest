@@ -358,7 +358,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 #' @return Share of benefits obtained
 #' @import hypergeo
 benefitIntegral <- function(frac, par) {
-  if(any(frac < 0) | any(frac > 1)) stop('frac must be a real number big or equal to 0 and strictly smaller than 1')
+  if(any(frac < 0) | any(frac > 1)) stop('frac must be a real number between 0 and 1')
   if (par$benefitdist == "pnorm") {
     ret <- Re(frac * (1-hypergeo(-1/par$alpha, 1/par$alpha, 1+1/par$alpha, frac^par$alpha)))
   } else if (par$benefitdist == "piecewiseLinear") {
