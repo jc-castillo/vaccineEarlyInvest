@@ -489,11 +489,11 @@ benefits <- function(monthben, capacities, endtimes, par) {
     timeFinish <- begintime + (1-fracImmunized) * (par$effpop) / capacity
 
     # Different computation when everyone was already vaccinated in the fist stage
-    benefitsNew <- if_else(fracImmunized >= 1,
+    benefitsNew <- ifelse(fracImmunized >= 1,
                            (endtime - begintime) * monthben,
-                           if_else(fracImmunizedNew < 1, # Different computation when capacity is enough to vaccinate everyone before endtime2
+                           ifelse(fracImmunizedNew < 1, # Different computation when capacity is enough to vaccinate everyone before endtime2
                                    (benefitIntegral(fracImmunizedNew, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll * monthben,
-                                   if_else(fracImmunized < 1,
+                                   ifelse(fracImmunized < 1,
                                            ((benefitIntegral(1, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll + (endtime - timeFinish)) * monthben,
                                            (endtime - timeFinish) * monthben
                                    )
