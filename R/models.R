@@ -53,7 +53,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
 #' Candidates with fungible costs
 #'
-#' Based on summary data for candidates, finds the optimal order to select those candidades, as well as some statistics about
+#' Based on summary data for candidates, finds the optimal order to select those candidates, as well as some statistics about
 #' them. Some of those statistics are computed by a Monte Carlo simulation.
 #'
 #' @param d Summary data with candidates
