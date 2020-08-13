@@ -322,6 +322,8 @@ getTargetPermutations <- function(targets, probs) {
 #' @return data.table with the overall distribution
 #' @export
 overallDistribution <- function(dcandidate, targetPermutations, dplatforms, poverall, psubcat, grid=1, target=T) {
+  if(poverall<0 | poverall>1 | psubcat<0 | psubcat>1) stop('probability should be between 0 and 1') 
+  if(grid<=0) stop('grid must be positive')
   # Map capacities to integers
   dcandidate[, capacity := round(capacity / grid)]
 
@@ -383,7 +385,7 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #'
 #' @export
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
-
+  if(poverall<0 | poverall>1 | psubcat<0 | psubcat>1) stop('probability should be between 0 and 1') 
   # t0 <- proc.time()
   # Compute capacity by subcategory
   subcatDists <- rbindlist(lapply(unique(dcandidate$Subcategory), subcatDistribution, dcandidate))
@@ -446,6 +448,9 @@ permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 #' @return A data.table summarizing the distribution of total capacity in the platfom
 #' @importFrom stats fft mvfft
 platformDistribution <- function(plat, subcatDists, psubcat) {
+  if(length(plat)>1) stop('plat should be a character')
+  if(!(plat %in% subcatDists$Platform)) stop('please enter a correct Platform')
+  if(psubcat<0 | psubcat>1) stop('probability should be between 0 and 1')
   dplat <- subcatDists[.(plat), on=.(Platform)]
 
   # Creating matrix where each column represents the distribution for one subcategory
@@ -489,7 +494,7 @@ platformDistribution <- function(plat, subcatDists, psubcat) {
 #' @importFrom stats fft mvfft
 subcatDistribution <- function(sub, dcandidate) {
   dsub <- dcandidate[Subcategory == sub]
-
+  if(!(sub %in% dcandidate$Subcategory)) stop('please enter a correct subcategory')
   # Creating matrix where each column represents the distribution for one candidate
   rsub <- nrow(dsub)
   veclen <- sum(dsub$capacity) + 1
