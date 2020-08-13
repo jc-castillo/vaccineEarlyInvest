@@ -34,6 +34,7 @@ globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatf
 #' @return Expected benefits
 #' @export
 expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
+  if(grid<=0) stop('grid should be positive')
   distribution[, socialBenefit := benefitsTable[.(grid * round(distribution$capacity/grid)), socialBenefit]]
 
   return(sum(distribution[, prob*socialBenefit]))
@@ -78,6 +79,7 @@ countryParameters <- function(countryData) {
 #' @return `data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 #' @export
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
+  if(grid<=0) stop('grid should be positive')
   countryPars <- countryParameters(countryData)
 
   distribution <- data.table(capacity = seq(0, max, grid))
