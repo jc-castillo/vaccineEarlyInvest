@@ -86,6 +86,8 @@ countryDistribution <- function(capacities, dcandidate, targetPermutations, dpla
 #' @return Total cost of the portfolio
 #' @export
 priceTakerCost <- function(capacities, price) {
+  if(any(capacities<0)) stop('capacities should be non-negative')
+  if(price<0) stop('price should be non-negative')
   baseMgCost <- price * 12 / 1000
   cost <- baseMgCost * sum(capacities)
   return(cost)
@@ -102,7 +104,7 @@ priceTakerCost <- function(capacities, price) {
 #' @return Social cost of the portfolio
 #' @export
 socialCost <- function(capacities, distribution, par) {
-
+  if(any(capacities<0)) stop('capacities should be non-negative')
   totcap <- sum(capacities)
   baseMgCost <- par$c * 12 / 1000
   cost <- if_else(totcap <= par$capkink,
