@@ -68,9 +68,6 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @importFrom purrr rbernoulli
 #' @import gtools
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
-  #Temporary fix for Target
-  d$Target = 'Others'
-  
   # Adding platform feasibility probabilities to table
   d[Platform == "DNA", pplat := as.numeric(par$pdna)]
   d[Platform == "RNA", pplat := par$prna]
