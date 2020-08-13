@@ -353,14 +353,20 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 
 #' Benefit integral
 #'
-#' Computes the share of benefits obtained when a fraction `frac` of the population is vaccinated by the end of the analysis period.
+#' Computes the share of benefits obtained from vaccinating a fraction `frac` of the population is 
+#' by the end of the analysis period.
 #'
 #' @param frac Fraction of population that has been vaccinated by the end of the period
 #' @param par Parameters object with model parameters
 #'
-#' @return Share of benefits obtained
+#' @return Share of benefits obtained (`numeric` between 0 and 1)
 #' @import hypergeo
 #' @export
+#' @examples
+#' piecewisepar <- list(vaccshares=c(0.2,0.4,0.7),  damageshares=c(0.5,0.8,1))
+#' par <- Parameters$new(piecewisepar=piecewisepar)
+#' benefitIntegral(0.5, par)
+
 benefitIntegral <- function(frac, par) {
   if (par$benefitdist == "pnorm") {
     ret <- Re(frac * (1-hypergeo(-1/par$alpha, 1/par$alpha, 1+1/par$alpha, frac^par$alpha)))
@@ -376,6 +382,9 @@ benefitIntegral <- function(frac, par) {
     damageshares <- c(0, par$piecewisepar$damageshares, 1)
     vaccshares <- c(0, par$piecewisepar$vaccshares, 1)
 
+    if(length(damageshares) != length(vaccshares))
+      stop()
+    
     for (i in seq_len(length(damageshares)-1)) {
       ds <- damageshares[i]
       vs <- vaccshares[i]

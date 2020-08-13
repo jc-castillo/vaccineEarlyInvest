@@ -12,8 +12,14 @@ benefitIntegral(frac, par)
 \item{par}{Parameters object with model parameters}
 }
 \value{
-Share of benefits obtained
+Share of benefits obtained (`numeric` between 0 and 1)
 }
 \description{
-Computes the share of benefits obtained when a fraction `frac` of the population is vaccinated by the end of the analysis period.
+Computes the share of benefits obtained from vaccinating a fraction `frac` of the population is 
+by the end of the analysis period.
+}
+\examples{
+piecewisepar <- list(vaccshares=c(0.2,0.4,0.7),  damageshares=c(0.5,0.8,1))
+par <- Parameters$new(piecewisepar=piecewisepar)
+benefitIntegral(0.5, par)
 }

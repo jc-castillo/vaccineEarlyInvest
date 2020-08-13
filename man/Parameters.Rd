@@ -182,7 +182,6 @@ a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefi
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new `Parameters` object.
 \subsection{Usage}{
@@ -221,7 +220,6 @@ A new `Parameters` object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setDerivedParameters"></a>}}
-\if{latex}{\out{\hypertarget{method-setDerivedParameters}{}}}
 \subsection{Method \code{setDerivedParameters()}}{
 Compute additional parameters that are functions of the input parameters
 \subsection{Usage}{
@@ -231,7 +229,6 @@ Compute additional parameters that are functions of the input parameters
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
