@@ -283,6 +283,7 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
 #' @return data.table with all permutations and their probabilities
 #' @export
 getTargetPermutations <- function(targets, probs) {
+  if(any(probs<0) | any(probs>1)) stop('probs must be between 0 and 1')
   tperm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
 
   perm <- vector(mode="numeric", length=nrow(tperm))
