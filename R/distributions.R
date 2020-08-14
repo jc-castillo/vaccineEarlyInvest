@@ -18,7 +18,7 @@
 #' @return Expected benefits for the country
 #' @export
 countryNetBenefits <- function(capacities, dcandidate, targetPermutations, 
-                               dplatforms, grid, price, par, lambda=1) {
+                               dplatforms, grid=1, price, par, lambda=1) {
   ceb <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, 
                                  dplatforms, par, grid=grid)
   netBenefits <- ceb - lambda * priceTakerCost(capacities, price)
