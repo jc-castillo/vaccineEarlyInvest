@@ -9,9 +9,9 @@ socialCost(capacities, distribution, par)
 \arguments{
 \item{capacities}{Vector with capacities for all candidates}
 
-\item{distribution}{`data.table` with the distribution of capacities}
+\item{distribution}{\code{data.table} with the distribution of capacities}
 
-\item{par}{`Parameters` object with main model parameters}
+\item{par}{\code{Parameters} object with main model parameters}
 }
 \value{
 Social cost of the portfolio

@@ -57,7 +57,7 @@ Class to handle parameters of the model for investment in early vaccine capacity
 
 \item{\code{gdpshare}}{Share of world GDP accounted for by country /coalition}
 
-\item{\code{econlossratio}}{Ratio of economic losses in the country / coalition as a \% relative to world}
+\item{\code{econlossratio}}{Ratio of economic losses in the country / coalition as a percent relative to world}
 
 \item{\code{spillovers}}{How much do countries in the country /coalition care about spillovers}
 
@@ -106,7 +106,8 @@ a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefi
 
 \item{\code{fracneeded}}{Fraction of population needed to reopen economy}
 
-\item{\code{effpop}}{Effective world population that needs to be vaccinated to get 100\% of benefits}
+\item{\code{effpop}}{Effective world population that needs to be vaccinated to
+get all (100 percent) of benefits}
 
 \item{\code{c}}{Cost of capacity per dose / year}
 
@@ -184,7 +185,7 @@ a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefi
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new `Parameters` object.
+Create a new \code{Parameters} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Parameters$new(
   input = NULL,
@@ -200,7 +201,7 @@ Create a new `Parameters` object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{input}}{Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
-the `input` object (of class `reactivevalues`) with the inputs from a shiny app, in which case all inputs are copied into
+the \code{input} object (of class \code{reactivevalues}) with the inputs from a shiny app, in which case all inputs are copied into
 fields.}
 
 \item{\code{population}}{Country population (in millions)}
@@ -216,7 +217,7 @@ fields.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new `Parameters` object.
+A new \code{Parameters} object.
 }
 }
 \if{html}{\out{<hr>}}

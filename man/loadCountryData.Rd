@@ -12,7 +12,7 @@ loadCountryData(filename, Gavi = F)
 \item{Gavi}{Logical, whether to treat Gavi countries as a blcok}
 }
 \value{
-a `data.table` with country data
+a \code{data.table} with country data
 }
 \description{
 Loads a .xlsx file with country data, including demographics, GDP, and economic impact due to Covid-19

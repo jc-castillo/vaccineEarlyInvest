@@ -17,7 +17,7 @@ portfolioPriceTaker(
 )
 }
 \arguments{
-\item{parameters}{`Parameters` object with model parameters}
+\item{parameters}{\code{Parameters} object with model parameters}
 
 \item{population}{Country population (in millions)}
 
@@ -35,8 +35,10 @@ portfolioPriceTaker(
 }
 \value{
 List with information on optimal portfolio. Includes investment
- in every candidate, benefits, cost, and total capacity.
+in every candidate, benefits, cost, and total capacity.
 }
 \description{
-Computes the optimal portfolio for a price-taking country
+Computes the optimal portfolio for a price-taking country.
+This is done by calling optimisation function \code{\link[=optimizeGrid]{optimizeGrid()}}
+on benefits function \code{\link[=countryNetBenefits]{countryNetBenefits()}}
 }

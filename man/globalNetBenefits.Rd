@@ -17,15 +17,15 @@ globalNetBenefits(
 \arguments{
 \item{capacities}{Vector of capacities}
 
-\item{dcandidate}{`data.table` with candidate information}
+\item{dcandidate}{\code{data.table} with candidate information}
 
-\item{targetPermutations}{`data.table` with all possible target permutations}
+\item{targetPermutations}{\code{data.table} with all possible target permutations}
 
-\item{dplatforms}{`data.table` with data about platforms}
+\item{dplatforms}{\code{data.table} with data about platforms}
 
-\item{benefitsTable}{`data.table` with benefits depending on capacity}
+\item{benefitsTable}{\code{data.table} with benefits depending on capacity}
 
-\item{par}{`Parameters` object with main model parameters}
+\item{par}{\code{Parameters} object with main model parameters}
 
 \item{grid}{Resolution of the grid for capacities}
 }

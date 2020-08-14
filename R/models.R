@@ -53,15 +53,18 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
 #' Candidates with fungible costs
 #'
-#' Based on summary data for candidates, finds the optimal order to select those candidates, as well as some statistics about
+#' Based on summary data for candidates, finds the optimal order to select those 
+#' candidates, as well as some statistics about
 #' them. Some of those statistics are computed by a Monte Carlo simulation.
 #'
 #' @param d Summary data with candidates
 #' @param par Parameters object with model parameters
-#' @param computeExpComp Whether to compute expected competition for all candidates for all numbers of potential competitors
+#' @param computeExpComp Whether to compute expected competition for all 
+#'                       candidates for all numbers of potential competitors
 #' @param seed Seed for random generator
 #'
-#' @return List with two data.tables. `dordered` lists all the candidates in the optimal order and with some statistics.
+#' @return List with two data.tables. `dordered` lists all the candidates in 
+#'         the optimal order and with some statistics.
 #' `dcanddraws` includes all the random draws and their outcomes.
 #' @export
 #' @importFrom dplyr if_else
@@ -87,7 +90,8 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   d[Target == "Recombinant", ptarget := par$precombinant]
 
   # Create summary table with candidates by subcategory and phase of trials
-  dscPhase <- crossJoin(d, data.table(phase=c("Pre-clinical", "Phase 1", "Phase 2", "Phase 3", "Repurposed")))
+  dscPhase <- crossJoin(d, data.table(
+    phase=c("Pre-clinical", "Phase 1", "Phase 2", "Phase 3", "Repurposed")))
   dscPhase[phase=="Pre-clinical", Candidates := PreClinicalCandidates]
   dscPhase[phase=="Phase 1", Candidates := Phase1candidates]
   dscPhase[phase=="Phase 2", Candidates := Phase2candidates]
@@ -138,7 +142,8 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 
   # Compute possible target protein success combinations
   targets<- c("Spike","Recombinant","Other")
-  probs<- c(as.numeric(par$pspike), as.numeric(par$precombinant), as.numeric(par$potherprotein))
+  probs<- c(as.numeric(par$pspike), 
+            as.numeric(par$precombinant), as.numeric(par$potherprotein))
   perm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
   p_perm <- vector(mode="numeric", length=nrow(perm))
   temp <- matrix(0,nrow=nrow(perm),ncol=ncol(perm))
@@ -347,13 +352,20 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 
 #' Benefit integral
 #'
-#' Computes the share of benefits obtained when a fraction `frac` of the population is vaccinated by the end of the analysis period.
+#' Computes the share of benefits obtained from vaccinating a fraction `frac` of the population is 
+#' by the end of the analysis period.
 #'
 #' @param frac Fraction of population that has been vaccinated by the end of the period
 #' @param par Parameters object with model parameters
 #'
-#' @return Share of benefits obtained
+#' @return Share of benefits obtained (`numeric` between 0 and 1)
 #' @import hypergeo
+#' @export
+#' @examples
+#' piecewisepar <- list(vaccshares=c(0.2,0.4,0.7),  damageshares=c(0.5,0.8,1))
+#' par <- Parameters$new(piecewisepar=piecewisepar)
+#' benefitIntegral(0.5, par)
+
 benefitIntegral <- function(frac, par) {
   if(any(frac < 0) | any(frac > 1)) stop('frac must be a real number between 0 and 1')
   if (par$benefitdist == "pnorm") {
@@ -370,6 +382,9 @@ benefitIntegral <- function(frac, par) {
     damageshares <- c(0, par$piecewisepar$damageshares, 1)
     vaccshares <- c(0, par$piecewisepar$vaccshares, 1)
 
+    if(length(damageshares) != length(vaccshares))
+      stop()
+    
     for (i in seq_len(length(damageshares)-1)) {
       ds <- damageshares[i]
       vs <- vaccshares[i]

@@ -18,19 +18,20 @@ countryNetBenefits(
 \arguments{
 \item{capacities}{Vector of capacities for each candidate}
 
-\item{dcandidate}{`data.table` with candidate information}
+\item{dcandidate}{\code{data.table} with candidate information}
 
-\item{targetPermutations}{`data.table` with permutations of targets}
+\item{targetPermutations}{\code{data.table} with permutations of targets}
 
-\item{dplatforms}{`data.table` with platform information}
+\item{dplatforms}{\code{data.table} with platform information}
 
 \item{grid}{Size of the capacity grid}
 
 \item{price}{Price per vaccine / year}
 
-\item{par}{`Parameters` object with model parameters}
+\item{par}{\code{Parameters} object with model parameters}
 
-\item{lambda}{Lagrange multiplier. Should be one, unless trying to solve problem with constrained budget.}
+\item{lambda}{Lagrange multiplier. Should be one, unless trying to solve
+problem with constrained budget.}
 }
 \value{
 Expected benefits for the country

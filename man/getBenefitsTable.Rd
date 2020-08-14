@@ -7,14 +7,14 @@
 getBenefitsTable(countryData, max = 1000, grid = 1)
 }
 \arguments{
-\item{countryData}{`data.table` with country data}
+\item{countryData}{\code{data.table} with country data}
 
 \item{max}{Maximum effective capacity to compute benefits for}
 
 \item{grid}{Resolution of the capacity grid}
 }
 \value{
-`data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
+\code{data.table} keyed by \code{capacity}. The \code{socialBenefits} column gives the benefit from the program
 }
 \description{
 Create a table that tells the global benefits corresponding to every level of effective capacity

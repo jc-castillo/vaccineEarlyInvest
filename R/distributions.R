@@ -1,24 +1,31 @@
 #' Net benefits for a country
 #'
-#' Expected net benefits for a country that invests in a certain portfolio
+#' Expected net benefits for a country that invests in a certain portfolio.
+#' This function is typically called by [portfolioPriceTaker()], which contains
+#' pre-processing of relevant inputs.
 #'
 #' @param capacities Vector of capacities for each candidate
-#' @param dcandidate `data.table` with candidate information
+#' @param dcandidate `data.table` with candidate information, typically from
+#'                   [candidatesFung()]
 #' @param targetPermutations `data.table` with permutations of targets
 #' @param dplatforms `data.table` with platform information
 #' @param par `Parameters` object with model parameters
 #' @param grid Size of the capacity grid
 #' @param price Price per vaccine / year
-#' @param lambda Lagrange multiplier. Should be one, unless trying to solve problem with constrained budget.
+#' @param lambda Lagrange multiplier. Should be one, unless trying to solve 
+#'               problem with constrained budget.
 #'
 #' @return Expected benefits for the country
 #' @export
-countryNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, grid=1, price, par, lambda=1) {
-  netBenefits <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=grid) -
-    lambda * priceTakerCost(capacities, price)
-
+countryNetBenefits <- function(capacities, dcandidate, targetPermutations, 
+                               dplatforms, grid, price, par, lambda=1) {
+  ceb <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, 
+                                 dplatforms, par, grid=grid)
+  netBenefits <- ceb - lambda * priceTakerCost(capacities, price)
   return(netBenefits)
 }
+
+
 
 #' Expected benefits for one country
 #'
@@ -33,7 +40,8 @@ countryNetBenefits <- function(capacities, dcandidate, targetPermutations, dplat
 #'
 #' @return Expected benefits from vaccination
 #' @export
-countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, par, grid=1) {
+countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations, 
+                                    dplatforms, par, grid=1) {
   dcandidate[, capacity := capacities]
   distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms,
                                       poverall=par$poverall, psubcat=par$psubcat, grid=grid)
