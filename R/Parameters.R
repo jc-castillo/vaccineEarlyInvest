@@ -235,7 +235,7 @@ Parameters <- R6Class("Parameters", list(
       self$econlossratio <- loss2yr/0.138
     }
 
-    self$setDerivedParameters()
+
 
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
@@ -245,6 +245,8 @@ Parameters <- R6Class("Parameters", list(
         }
       }
     }
+    
+    self$setDerivedParameters()
   },
 
   #' @description
