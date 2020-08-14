@@ -236,7 +236,8 @@ Parameters <- R6Class("Parameters", list(
     }
 
 
-
+    self$setDerivedParameters()
+    
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
       if (nm %in% names(self)) {
@@ -246,7 +247,6 @@ Parameters <- R6Class("Parameters", list(
       }
     }
     
-    self$setDerivedParameters()
   },
 
   #' @description
