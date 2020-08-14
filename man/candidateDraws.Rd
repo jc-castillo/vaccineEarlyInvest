@@ -7,14 +7,14 @@
 candidateDraws(dcandidate, par, seed = 30)
 }
 \arguments{
-\item{dcandidate}{`data.table` with information about candidates}
+\item{dcandidate}{\code{data.table} with information about candidates}
 
-\item{par}{`Parameters` object with model parameters}
+\item{par}{\code{Parameters} object with model parameters}
 
 \item{seed}{Random seed}
 }
 \value{
-`data.table` with a summary of the candidates
+\code{data.table} with a summary of the candidates
 }
 \description{
 Generate Monte Carlo draws for the success and failure of candidates

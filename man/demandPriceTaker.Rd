@@ -18,7 +18,7 @@ demandPriceTaker(
 )
 }
 \arguments{
-\item{parameters}{`Parameters` object with model parameters}
+\item{parameters}{\code{Parameters} object with model parameters}
 
 \item{population}{Country population (in millions)}
 
@@ -39,7 +39,7 @@ demandPriceTaker(
 \item{verbose}{How much output to produce. 0 means no output, 1 means limited output, 2 means full output.}
 }
 \value{
-List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,
+List with information on demand curve. Includes a \code{data.table} with total demand, benefits, and cost,
 and a matrix with demand for individual candidates at every price
 }
 \description{

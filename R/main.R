@@ -1,6 +1,8 @@
 #' Optimal portfolio for a price taker
 #'
-#' Computes the optimal portfolio for a price-taking country
+#' Computes the optimal portfolio for a price-taking country. 
+#' This is done by calling optimisation function [optimizeGrid()] 
+#' on benefits function [countryNetBenefits()]
 #'
 #' @param parameters `Parameters` object with model parameters
 #' @param population Country population (in millions)
@@ -40,12 +42,15 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 
   # Getting information about permutations
   targets <- c("Spike","Recombinant","Other")
-  probs <- c(as.numeric(par$pspike), as.numeric(par$precombinant), as.numeric(par$potherprotein))
+  probs <- c(as.numeric(par$pspike), 
+             as.numeric(par$precombinant), 
+             as.numeric(par$potherprotein))
   targetPermutations <- getTargetPermutations(targets, probs)
 
   # Creating objective function
   objectiveFun <- function(capacities, grid, price, par) {
-    countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par, lambda=lambda)
+    countryNetBenefits(capacities, dcandidate, targetPermutations, 
+                       dplatforms, grid, price, par, lambda=lambda)
   }
 
   # Initialize at zero
@@ -59,8 +64,12 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
   # Computing other values
   totCapacity <- sum(capacities)
   cost <- priceTakerCost(capacities, price)
-  expBenefits <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=s)
-  distribution <- countryDistribution(capacities, dcandidate, targetPermutations, dplatforms, par, grid=s)
+  expBenefits <- 
+    countryExpectedBenefits(capacities, dcandidate, 
+                            targetPermutations, dplatforms, par, grid=s)
+  distribution <- 
+    countryDistribution(capacities, dcandidate, 
+                        targetPermutations, dplatforms, par, grid=s)
   expCapacity <- sum(distribution[, prob * capacity])
 
   return(list(capacities=capacities, totCapacity=totCapacity, cost=cost,

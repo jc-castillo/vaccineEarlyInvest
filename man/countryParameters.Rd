@@ -7,11 +7,11 @@
 countryParameters(countryData)
 }
 \arguments{
-\item{countryData}{`data.table` with country data}
+\item{countryData}{\code{data.table} with country data}
 }
 \value{
-List of `Parameters` objects for all countries in the dataset
+List of \code{Parameters} objects for all countries in the dataset
 }
 \description{
-Get a list of `Parameters` objects for all countries from country data
+Get a list of \code{Parameters} objects for all countries from country data
 }

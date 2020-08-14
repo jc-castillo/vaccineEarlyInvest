@@ -12,10 +12,10 @@ benefitIntegral(frac, par)
 \item{par}{Parameters object with model parameters}
 }
 \value{
-Share of benefits obtained (`numeric` between 0 and 1)
+Share of benefits obtained (\code{numeric} between 0 and 1)
 }
 \description{
-Computes the share of benefits obtained from vaccinating a fraction `frac` of the population is 
+Computes the share of benefits obtained from vaccinating a fraction \code{frac} of the population is
 by the end of the analysis period.
 }
 \examples{

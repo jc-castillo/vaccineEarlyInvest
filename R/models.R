@@ -58,15 +58,18 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
 #' Candidates with fungible costs
 #'
-#' Based on summary data for candidates, finds the optimal order to select those candidades, as well as some statistics about
+#' Based on summary data for candidates, finds the optimal order to select those 
+#' candidates, as well as some statistics about
 #' them. Some of those statistics are computed by a Monte Carlo simulation.
 #'
 #' @param d Summary data with candidates
 #' @param par Parameters object with model parameters
-#' @param computeExpComp Whether to compute expected competition for all candidates for all numbers of potential competitors
+#' @param computeExpComp Whether to compute expected competition for all 
+#'                       candidates for all numbers of potential competitors
 #' @param seed Seed for random generator
 #'
-#' @return List with two data.tables. `dordered` lists all the candidates in the optimal order and with some statistics.
+#' @return List with two data.tables. `dordered` lists all the candidates in 
+#'         the optimal order and with some statistics.
 #' `dcanddraws` includes all the random draws and their outcomes.
 #' @export
 #' @importFrom dplyr if_else
@@ -93,7 +96,8 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   d[Target == "Recombinant", ptarget := par$precombinant]
 
   # Create summary table with candidates by subcategory and phase of trials
-  dscPhase <- crossJoin(d, data.table(phase=c("Pre-clinical", "Phase 1", "Phase 2", "Phase 3", "Repurposed")))
+  dscPhase <- crossJoin(d, data.table(
+    phase=c("Pre-clinical", "Phase 1", "Phase 2", "Phase 3", "Repurposed")))
   dscPhase[phase=="Pre-clinical", Candidates := PreClinicalCandidates]
   dscPhase[phase=="Phase 1", Candidates := Phase1candidates]
   dscPhase[phase=="Phase 2", Candidates := Phase2candidates]
@@ -144,7 +148,8 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 
   # Compute possible target protein success combinations
   targets<- c("Spike","Recombinant","Other")
-  probs<- c(as.numeric(par$pspike), as.numeric(par$precombinant), as.numeric(par$potherprotein))
+  probs<- c(as.numeric(par$pspike), 
+            as.numeric(par$precombinant), as.numeric(par$potherprotein))
   perm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
   p_perm <- vector(mode="numeric", length=nrow(perm))
   temp <- matrix(0,nrow=nrow(perm),ncol=ncol(perm))

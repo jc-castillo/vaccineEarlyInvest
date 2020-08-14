@@ -14,7 +14,7 @@ in the vector represent the capacities for that period in each scenario.}
 
 \item{endtimes}{Vector of endtimes of all the periods}
 
-\item{par}{`Parameters` object with model parameters}
+\item{par}{\code{Parameters} object with model parameters}
 }
 \value{
 Total benefits from vaccination

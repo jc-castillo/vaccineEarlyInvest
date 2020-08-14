@@ -57,7 +57,7 @@ Parameters <- R6Class("Parameters", list(
   popshare=1,
   #' @field gdpshare Share of world GDP accounted for by country /coalition
   gdpshare=1,
-  #' @field econlossratio Ratio of economic losses in the country / coalition as a \% relative to world
+  #' @field econlossratio Ratio of economic losses in the country / coalition as a percent relative to world
   econlossratio=1,
   #' @field spillovers How much do countries in the country /coalition care about spillovers
   spillovers=0,
@@ -108,7 +108,8 @@ Parameters <- R6Class("Parameters", list(
   piecewisepar=NA,
   #' @field fracneeded Fraction of population needed to reopen economy
   fracneeded=0.7,
-  #' @field effpop Effective world population that needs to be vaccinated to get 100\% of benefits
+  #' @field effpop Effective world population that needs to be vaccinated to 
+  #' get all (100 percent) of benefits
   effpop=0.7*7.8,
 
   # Parameters for cost of capacity

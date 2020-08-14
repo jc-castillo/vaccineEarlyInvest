@@ -7,9 +7,9 @@
 expectedBenefitsTable(distribution, benefitsTable, grid = 1)
 }
 \arguments{
-\item{distribution}{`data.table` with the distribution of effective capacity}
+\item{distribution}{\code{data.table} with the distribution of effective capacity}
 
-\item{benefitsTable}{`data.table` with benefits as a function of effective capacity}
+\item{benefitsTable}{\code{data.table} with benefits as a function of effective capacity}
 
 \item{grid}{Resolution of the capacity grid}
 }
