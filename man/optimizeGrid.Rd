@@ -4,7 +4,7 @@
 \alias{optimizeGrid}
 \title{Maximize objective function staying within a grid}
 \usage{
-optimizeGrid(capacities, objectiveFun, step = 100, verbose = 1, ...)
+optimizeGrid(capacities, objectiveFun, step = 100, verbose = 1, name = "", ...)
 }
 \arguments{
 \item{capacities}{Starting point}
@@ -15,12 +15,14 @@ optimizeGrid(capacities, objectiveFun, step = 100, verbose = 1, ...)
 
 \item{verbose}{Whether to print extensive output (2), some output (1), or no output (0)}
 
+\item{name}{Name of the objective function that is being optimised}
+
 \item{...}{Other parameters to pass on to the objective function}
 }
 \value{
 Optimal capacities
 }
 \description{
-Implements an algorithm to find the optimum of the objective function without ever moving outside of a grid with
-a fixed step size.
+Implements an algorithm to find the optimum of the objective function
+without ever moving outside of a grid with a fixed step size.
 }

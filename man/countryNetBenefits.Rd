@@ -18,7 +18,8 @@ countryNetBenefits(
 \arguments{
 \item{capacities}{Vector of capacities for each candidate}
 
-\item{dcandidate}{\code{data.table} with candidate information}
+\item{dcandidate}{\code{data.table} with candidate information, typically from
+\code{\link[=candidatesFung]{candidatesFung()}}}
 
 \item{targetPermutations}{\code{data.table} with permutations of targets}
 
@@ -37,5 +38,7 @@ problem with constrained budget.}
 Expected benefits for the country
 }
 \description{
-Expected net benefits for a country that invests in a certain portfolio
+Expected net benefits for a country that invests in a certain portfolio.
+This function is typically called by \code{\link[=portfolioPriceTaker]{portfolioPriceTaker()}}, which contains
+pre-processing of relevant inputs.
 }
