@@ -192,11 +192,12 @@ candidateDraws <- function(dcandidate, par, seed=30) {
 #' @param objectiveFun Function to optimize
 #' @param step Step size of the grid
 #' @param verbose Whether to print extensive output (2), some output (1), or no output (0)
+#' @param name Name of the objective function that is being optimised
 #' @param ... Other parameters to pass on to the objective function
 #'
 #' @return Optimal capacities
 #' @export
-optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
+optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, name = "", ...) {
   # Setting up values for main optimization
   max <- objectiveFun(capacities, step, ...)
   end <- F
@@ -208,7 +209,7 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
   l <- 100000
   
   if (verbose==1) {
-    print("Objective function: ")
+    print(paste0("Objective function: ", name))
   }
   
   # Main loop that moves capacities towards optimum
