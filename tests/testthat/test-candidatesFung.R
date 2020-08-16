@@ -13,6 +13,9 @@ test_that('returns a list with two named data.tables',{
   expect_equal(names(list2),c('dordered','dcanddraws'))
   expect_equal(class(list3),'list')
   expect_equal(names(list3),c('dordered','dcanddraws'))
+  expect_true(all(list1$dordered[,c('pplat','ptarget','pcand','psuccess')]>=0))
+  expect_true(all(list1$dordered[,c('pplat','ptarget','pcand','psuccess')]<=1))
+  expect_true(all(list1$dordered[,c('socialCost','socialBenefit','margcost','margbenefit','cost')]>=0))
 })
 
 test_that('seed needs to be an integer',{

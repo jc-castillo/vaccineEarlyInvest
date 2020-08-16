@@ -194,6 +194,8 @@ Parameters <- R6Class("Parameters", list(
   #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
   #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
+  #' @examples 
+  #' par = Parameters$new(global = T, population = 10)
   initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, ...) {
     if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
       nms <- names(input)

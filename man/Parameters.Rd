@@ -6,9 +6,19 @@
 \description{
 Class to handle parameters of the model for investment in early vaccine capacity
 }
+\examples{
+
+## ------------------------------------------------
+## Method `Parameters$new`
+## ------------------------------------------------
+
+par = Parameters$new(global = T, population = 10)
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{inputfile}}{World or US input file}
+
 \item{\code{poverall}}{Probability that no problem at the overall level prevents vaccine feasibility}
 
 \item{\code{pvector}}{Probability that there's no problem at the viral vector platform level}
@@ -219,6 +229,14 @@ fields.}
 \subsection{Returns}{
 A new \code{Parameters} object.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{par = Parameters$new(global = T, population = 10)
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setDerivedParameters"></a>}}

@@ -22,3 +22,7 @@ Total benefits from vaccination
 \description{
 Computes the benefits obtained from vaccination by integrating the share of harm reduction over time.
 }
+\examples{
+cap = list(c(1,2,4),c(2,5,7))
+ben = benefits(100, cap, c(3,4))
+}

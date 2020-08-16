@@ -42,3 +42,21 @@ Computes the optimal portfolio for a price-taking country.
 This is done by calling optimisation function \code{\link[=optimizeGrid]{optimizeGrid()}}
 on benefits function \code{\link[=countryNetBenefits]{countryNetBenefits()}}
 }
+\examples{
+population <- 31.99 
+gdp_pc <- 6.71
+frac_high_risk <- 0.131
+loss2yr <- 0.269
+price <- 4
+portfolio <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc,
+                   frac_high_risk=frac_high_risk, 
+                   loss2yr=loss2yr, price=price,
+                   candidateFile="../inst/extdata/vaccinesSummary.csv")
+or 
+
+par <- Parameters$new(population=population, gdp_pc=gdp_pc,
+                   frac_high_risk=frac_high_risk, 
+                   loss2yr=loss2yr)
+portfolio <- portfolioPriceTaker(parameters=par, price=price,
+                   candidateFile="../inst/extdata/vaccinesSummary.csv")          
+}

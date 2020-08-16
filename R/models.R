@@ -10,6 +10,11 @@
 #' @export
 #' @import data.table
 #' @importFrom utils read.csv
+#' @examples 
+#' par=Parameters$new()
+#' d = loadData(par, includeVaccines = 'BCG')
+#' d = loadData(par,candidatefile = 
+#'              "inst/extdata/vaccinesSummary.csv")
 loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
 
@@ -70,6 +75,13 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @importFrom dplyr if_else
 #' @importFrom purrr rbernoulli
 #' @import gtools
+#' @examples 
+#' par = Parameters$new()
+#' d = loadData(par = par)
+#' d$Target = 'Others'
+#' d$Target[1:5] = 'Spike'
+#' d$Target[6:10] = 'Recombinant'
+#' candidate = candidatesFung(d, par)
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   # Adding platform feasibility probabilities to table
   d[Platform == "DNA", pplat := as.numeric(par$pdna)]
@@ -418,6 +430,9 @@ benefitIntegral <- function(frac, par) {
 #' @param share2 Share of damage at time of frac2
 #'
 #' @return Values of benefits integral
+#' @examples 
+#' par = Parameters$new(benefitdist='pnorm',alpha=1)
+#' benefit = benefitIntegralDisc(0,0.5,par)
 benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
   if(any(frac1<0) | any(frac2>1)) stop('limit of integral must be between 0 and 1')
   if(any(share1<0) | any(share1>1) | any(share2<0) | any(share2>1)) stop('share of damage must be between 0 and 1')
@@ -482,6 +497,9 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
 #'
 #' @return Total benefits from vaccination
 #' @export
+#' @examples 
+#' cap = list(c(1,2,4),c(2,5,7))
+#' ben = benefits(100, cap, c(3,4))
 benefits <- function(monthben, capacities, endtimes, par) {
   if(any(monthben<0)) stop('benefits must be non-negative')
   if(any(unlist(capacities)<0)) stop('capacities must be non-negative')
