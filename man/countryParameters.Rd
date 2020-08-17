@@ -15,3 +15,7 @@ List of \code{Parameters} objects for all countries in the dataset
 \description{
 Get a list of \code{Parameters} objects for all countries from country data
 }
+\examples{
+countryData = loadCountryData('inst/extdata/countryData.xlsx')
+countryPar = countryParameters(countryData)
+}

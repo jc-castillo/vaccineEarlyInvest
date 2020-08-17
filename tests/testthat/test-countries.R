@@ -16,6 +16,7 @@ test_that('getBenefitsTable works',{
   expect_error(getBenefitsTable(countryData, max = -90,grid=-0.1))
   expect_error(getBenefitsTable(countryData, max = 90,grid=-0.1))
   expect_error(getBenefitsTable(countryData, max = 'a',grid=-0.1))
+  expect_true(all(getBenefitsTable(countryData)>=0,na.rm=T))
 })
 
 test_that('countryParameters works',{

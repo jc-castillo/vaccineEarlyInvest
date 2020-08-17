@@ -19,3 +19,7 @@ getBenefitsTable(countryData, max = 1000, grid = 1)
 \description{
 Create a table that tells the global benefits corresponding to every level of effective capacity
 }
+\examples{
+countryData = loadCountryData('inst/extdata/countryData.xlsx')
+benefitsTable = getBenefitsTable(countryData)
+}

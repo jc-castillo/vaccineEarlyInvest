@@ -17,3 +17,6 @@ a \code{data.table} with country data
 \description{
 Loads a .xlsx file with country data, including demographics, GDP, and economic impact due to Covid-19
 }
+\examples{
+countrydata <- loadCountryData('inst/extdata/countryData.xlsx')
+}

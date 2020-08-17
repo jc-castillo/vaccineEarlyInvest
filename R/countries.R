@@ -49,6 +49,9 @@ expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
 #'
 #' @return List of `Parameters` objects for all countries in the dataset
 #' @export
+#' @examples 
+#' countryData = loadCountryData('inst/extdata/countryData.xlsx')
+#' countryPar = countryParameters(countryData)
 countryParameters <- function(countryData) {
 
 
@@ -78,6 +81,9 @@ countryParameters <- function(countryData) {
 #'
 #' @return `data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 #' @export
+#' @examples 
+#' countryData = loadCountryData('inst/extdata/countryData.xlsx')
+#' benefitsTable = getBenefitsTable(countryData)
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
   if(grid<=0) stop('grid should be positive')
   countryPars <- countryParameters(countryData)
@@ -124,7 +130,8 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @importFrom readxl read_excel
 #' @import data.table
 #' @importFrom stats weighted.mean
-#' 
+#' @examples
+#' countrydata <- loadCountryData('inst/extdata/countryData.xlsx')
 loadCountryData <- function(filename, Gavi=F) {
 
   rawData <- data.table(read_excel(filename))

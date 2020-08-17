@@ -58,5 +58,5 @@ or
 par <- Parameters$new(population=population, gdp_pc=gdp_pc,
                    frac_high_risk=frac_high_risk, 
                    loss2yr=loss2yr)
-portfolio <- portfolioPriceTaker(parameters=par)        
+demand <- portfolioPriceTaker(parameters=par)        
 }

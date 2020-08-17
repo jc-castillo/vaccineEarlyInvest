@@ -7,6 +7,13 @@ test_that('benefitIntegral() takes in only frac between 0 and 1',{
   expect_error(benefitIntegral(c(0.1,200), par=par))
 })
 
+
+test_that('benefitIntegral() increasing in frac',{
+  par = Parameters$new()
+  expect_gte(benefitIntegral(0.7,par = par),benefitIntegral(0.5,par = par))
+  expect_gte(benefitIntegral(0.5,par = par),benefitIntegral(0.2,par = par))
+})
+
 test_that('benefitIntegral() reports error for certain inputs',{
   par = Parameters$new()
   expect_error(benefitIntegral('a',par = par))
