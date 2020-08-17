@@ -22,10 +22,7 @@ countryNetBenefits <- function(capacities, dcandidate, targetPermutations,
   ceb <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, 
                                  dplatforms, par, grid=grid)
   netBenefits <- ceb - lambda * priceTakerCost(capacities, price)
-<<<<<<< HEAD
-=======
-  
->>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
+
   return(netBenefits)
 }
 
@@ -122,11 +119,7 @@ priceTakerCost <- function(capacities, price) {
 #' @return Social cost of the portfolio
 #' @export
 socialCost <- function(capacities, distribution, par) {
-<<<<<<< HEAD
   if(any(capacities<0)) stop('capacities should be non-negative')
-=======
-  
->>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   totcap <- sum(capacities)
   baseMgCost <- par$c * 12 / 1000
   cost <- 
@@ -416,11 +409,7 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #'
 #' @export
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
-<<<<<<< HEAD
   if(poverall<0 | poverall>1 | psubcat<0 | psubcat>1) stop('probability should be between 0 and 1') 
-=======
-  
->>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   # t0 <- proc.time()
   # Compute capacity by subcategory
   subcatDists <- rbindlist(lapply(unique(dcandidate$Subcategory), subcatDistribution, dcandidate))
@@ -529,11 +518,7 @@ platformDistribution <- function(plat, subcatDists, psubcat) {
 #' @importFrom stats fft mvfft
 subcatDistribution <- function(sub, dcandidate) {
   dsub <- dcandidate[Subcategory == sub]
-<<<<<<< HEAD
   if(!(sub %in% dcandidate$Subcategory)) stop('please enter a correct subcategory')
-=======
-  
->>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   # Creating matrix where each column represents the distribution for one candidate
   rsub <- nrow(dsub)
   veclen <- sum(dsub$capacity) + 1
