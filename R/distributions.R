@@ -22,6 +22,10 @@ countryNetBenefits <- function(capacities, dcandidate, targetPermutations,
   ceb <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, 
                                  dplatforms, par, grid=grid)
   netBenefits <- ceb - lambda * priceTakerCost(capacities, price)
+<<<<<<< HEAD
+=======
+  
+>>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   return(netBenefits)
 }
 
@@ -45,14 +49,16 @@ countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations,
   dcandidate[, capacity := capacities]
   distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms,
                                       poverall=par$poverall, psubcat=par$psubcat, grid=grid)
-
-  distribution[, progBen := benefits(par$totmonthben, list(capacity/1000, par$afterCapacity/1000),
+  
+  distribution[, progBen := benefits(par$totmonthben, 
+                                     list(capacity/1000, par$afterCapacity/1000),
                                      c(par$TT, par$tau), par)]
-  distribution[, noProgBen := benefits(par$totmonthben, list(1e-10, par$counterCapacity/1000),
+  distribution[, noProgBen := benefits(par$totmonthben, 
+                                       list(1e-10, par$counterCapacity/1000),
                                        c(par$TT, par$tau), par)]
   distribution[, socialBenefit := progBen - noProgBen]
   distribution[capacity==0, socialBenefit := 0]
-
+  
   return(sum(distribution[, prob*socialBenefit]))
 }
 
@@ -69,18 +75,22 @@ countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations,
 #'
 #' @return Expected benefits from vaccination
 #' @export
-countryDistribution <- function(capacities, dcandidate, targetPermutations, dplatforms, par, grid=1) {
+countryDistribution <- function(capacities, dcandidate, targetPermutations, 
+                                dplatforms, par, grid=1) {
   dcandidate[, capacity := capacities]
-  distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms,
-                                      poverall=par$poverall, psubcat=par$psubcat, grid=grid)
-
-  distribution[, progBen := benefits(par$totmonthben, list(capacity/1000, par$afterCapacity/1000),
+  distribution <- 
+    overallDistribution(dcandidate, targetPermutations, dplatforms,
+                        poverall=par$poverall, psubcat=par$psubcat, grid=grid)
+  
+  distribution[, progBen := benefits(par$totmonthben, 
+                                     list(capacity/1000, par$afterCapacity/1000),
                                      c(par$TT, par$tau), par)]
-  distribution[, noProgBen := benefits(par$totmonthben, list(1e-10, par$counterCapacity/1000),
+  distribution[, noProgBen := benefits(par$totmonthben, 
+                                       list(1e-10, par$counterCapacity/1000),
                                        c(par$TT, par$tau), par)]
   distribution[, socialBenefit := progBen - noProgBen]
   distribution[capacity==0, socialBenefit := 0]
-
+  
   return(distribution)
 }
 
@@ -112,17 +122,22 @@ priceTakerCost <- function(capacities, price) {
 #' @return Social cost of the portfolio
 #' @export
 socialCost <- function(capacities, distribution, par) {
+<<<<<<< HEAD
   if(any(capacities<0)) stop('capacities should be non-negative')
+=======
+  
+>>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   totcap <- sum(capacities)
   baseMgCost <- par$c * 12 / 1000
-  cost <- if_else(totcap <= par$capkink,
-                  baseMgCost * totcap,
-                  baseMgCost * (totcap^(par$mgcostelast + 1) / par$capkink^(par$mgcostelast) +
-                                  par$mgcostelast * par$capkink) / (par$mgcostelast + 1)
-  )
-
+  cost <- 
+    if_else(totcap <= par$capkink,
+            baseMgCost * totcap,
+            baseMgCost * (totcap^(par$mgcostelast + 1) / par$capkink^(par$mgcostelast) +
+                            par$mgcostelast * par$capkink) / (par$mgcostelast + 1)
+    )
+  
   recover <- par$fracScrap * baseMgCost * (totcap - sum(distribution[, capacity * prob]))
-
+  
   return(cost - recover)
 }
 
@@ -143,8 +158,9 @@ candidateDraws <- function(dcandidate, par, seed=30) {
   dplat <- unique(dplat)
   dtarget <- dcandidate[, c("Target", "ptarget")]
   dtarget <- unique(dtarget)
-
-  # Dataset with all replications. Cartesian product of that dataset with datesets by candidate, subcategory, and platform
+  
+  # Dataset with all replications. Cartesian product of that dataset with 
+  # datesets by candidate, subcategory, and platform
   ddraws <- data.table(r=1:par$replications)
   setkey(ddraws, r)
   dplatdraws <- crossJoin(ddraws, dplat)
@@ -156,7 +172,7 @@ candidateDraws <- function(dcandidate, par, seed=30) {
   dcandidate[, candInd := .I]
   dcanddraws <- crossJoin(ddraws, dcandidate)
   setkey(dcanddraws, r, Platform, Subcategory)
-
+  
   # Draw main random variables
   set.seed(seed)
   ddraws[, y := rbernoulli(.N, par$poverall)]
@@ -164,61 +180,64 @@ candidateDraws <- function(dcandidate, par, seed=30) {
   dsubcatdraws[, y := rbernoulli(.N, par$psubcat)]
   dtargetdraws[, y := rbernoulli(.N, ptarget)]
   dcanddraws[, y := rbernoulli(.N, pcand)]
-
+  
   # Input random variables into main dataset with all candidates and all draws
-  dcanddraws[, ysubcand := dsubcatdraws[.(dcanddraws$r, dcanddraws$Platform, dcanddraws$Subcategory), y]]
+  dcanddraws[, ysubcand := dsubcatdraws[.(dcanddraws$r, dcanddraws$Platform, 
+                                          dcanddraws$Subcategory), y]]
   dcanddraws[, yplat := dplatdraws[.(dcanddraws$r, dcanddraws$Platform), y]]
   dcanddraws[, ytarget := dtargetdraws[.(dcanddraws$r, dcanddraws$Target), y]]
   dcanddraws[, yoverall := ddraws[.(dcanddraws$r), y]]
   dcanddraws[, success := yoverall * yplat * ysubcand * ytarget * y]
-
+  
   return(dcanddraws)
 }
 
 #' Maximize objective function staying within a grid
 #'
-#' Implements an algorithm to find the optimum of the objective function without ever moving outside of a grid with
-#' a fixed step size.
+#' Implements an algorithm to find the optimum of the objective function 
+#' without ever moving outside of a grid with a fixed step size.
 #'
 #' @param capacities Starting point
 #' @param objectiveFun Function to optimize
 #' @param step Step size of the grid
 #' @param verbose Whether to print extensive output (2), some output (1), or no output (0)
+#' @param name Name of the objective function that is being optimised
 #' @param ... Other parameters to pass on to the objective function
 #'
 #' @return Optimal capacities
 #' @export
-optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
+optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, name = "", ...) {
   # Setting up values for main optimization
   max <- objectiveFun(capacities, step, ...)
   end <- F
   ncand <- length(capacities)
-
-  improvement <- rep(1e12, ncand) # Vector that keeps track of last improvement obtained when moving in each dimension.
-                                  # Initialize assuming every dimension can potentially lead to a large improvement
+  
+  # Vector that keeps track of last improvement obtained when moving in each dimension.
+  # Initialize assuming every dimension can potentially lead to a large improvement
+  improvement <- rep(1e12, ncand) 
   l <- 100000
-
+  
   if (verbose==1) {
-    print("Objective function: ")
+    print(paste0("Objective function: ", name))
   }
-
+  
   # Main loop that moves capacities towards optimum
   while (!end) {
     bestdir <- -1
     best <- max
-
+    
     improved <- F
     j <- 1
-
+    
     # Within each step, loop over all dimensions until one of them leads to an improvement
     while (j <= ncand & !improved) {
       i <- which.max(improvement) # Choose dimension that had the largest previous improvement
-
+      
       # Try increasing dimension i by one grid step
       captemp <- capacities
       captemp[i] <- captemp[i] + step
       nval <- objectiveFun(captemp, grid=step, ...)
-
+      
       if (nval > best) { # Mark down if there's an improvement
         improvement[i] <- (nval - best)/step
         best <- nval
@@ -226,14 +245,14 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
         positive <- T
         improved <- T
       }
-
+      
       if (capacities[i] - step >= 0 & !improved) {
         # If no improvement, try decreasing that dimension by one grid step.
         # Constrains analysis to positive capacities
         captemp <- capacities
         captemp[i] <- captemp[i] - step
         nval <- objectiveFun(captemp, grid=step, ...)
-
+        
         if (nval > best) { # Mark down if there's an improvement
           improvement[i] <- (nval - best)/step
           best <- nval
@@ -242,17 +261,19 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
           improved <- T
         }
       }
-
+      
       if (!improved) {
-        # If no improvement, assign a very small value to the improvement vector. The very small value gets smaller
-        # in each step so that future steps give priority to dimensions that haven't been considered in a while.
+        # If no improvement, assign a very small value to the improvement vector. 
+        # The very small value gets smaller
+        # in each step so that future steps give priority to dimensions that 
+        # haven't been considered in a while.
         improvement[i] <- exp(-l / 5000)
         l <- l+1
       }
-
+      
       j <- j+1
     }
-
+    
     if (bestdir == -1) {
       # Stop when no dimension leads to an improvement
       end <- T
@@ -265,7 +286,7 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
       }
       max <- best
     }
-
+    
     if (verbose == 2) {
       print(capacities)
       print(best)
@@ -274,11 +295,11 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
       cat(best, ", ")
     }
   }
-
+  
   if (verbose==1) {
     cat("\n")
   }
-
+  
   return(capacities)
 }
 
@@ -295,7 +316,7 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, ...) {
 getTargetPermutations <- function(targets, probs) {
   if(any(probs<0) | any(probs>1)) stop('probs must be between 0 and 1')
   tperm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
-
+  
   perm <- vector(mode="numeric", length=nrow(tperm))
   temp <- matrix(0,nrow=nrow(tperm),ncol=ncol(tperm))
   for (i in 1:length(probs)){
@@ -310,10 +331,10 @@ getTargetPermutations <- function(targets, probs) {
   tperm[, probability := perm[perm!=0]]
   tperm[, perm_index := seq.int(nrow(tperm))]
   tperm <- data.table(tperm)
-
+  
   targetPermutations <- melt(tperm, id.vars=c("probability", "perm_index"), variable.name="Target", value.name="success")
   setkey(targetPermutations, perm_index, Target)
-
+  
   return(targetPermutations)
 }
 
@@ -336,26 +357,26 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
   if(grid<=0) stop('grid must be positive')
   # Map capacities to integers
   dcandidate[, capacity := round(capacity / grid)]
-
+  
   if (!target) {
     # No need to worry about permutations if all targets are successful
     dcandidate[, pcandperm := pcand]
-
+    
     overallDist <- permutationDistribution(dcandidate, dplatforms, poverall, psubcat)
   } else {
-
+    
     perm_indices <- unique(targetPermutations$perm_index)
     dist <- c(0)
-
+    
     # Loop over all permutations to add the distribution within each permutation
     for (i in perm_indices) {
-
+      
       dcandidate[, pcandperm := pcand * targetPermutations[.(i, dcandidate$Target), success]]
-
+      
       ndist <- targetPermutations[.(i), probability][1] *
         permutationDistribution(dcandidate, dplatforms, poverall, psubcat)[, prob]
       olddist <- dist
-
+      
       if (length(ndist) > length(olddist)) {
         dist <- ndist
         dist[1:length(olddist)] <- dist[1:length(olddist)] + olddist
@@ -364,19 +385,19 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
         dist[1:length(ndist)] <- dist[1:length(ndist)] + ndist
       }
     }
-
+    
     maxcap <- max(c(which(dist>1e-14), 1)) - 1
     overallDist <- data.table(capacity=0:maxcap, prob=dist[1:(maxcap + 1)])
   }
-
+  
   # Discount by overall probability
   overallDist[, prob := poverall * prob]
   overallDist[1, prob := prob + (1-poverall)]
-
+  
   # Map distributions back to original space
   dcandidate[, capacity := grid * capacity]
   overallDist[, capacity := grid * capacity]
-
+  
   return(overallDist)
 }
 
@@ -395,53 +416,57 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #'
 #' @export
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
+<<<<<<< HEAD
   if(poverall<0 | poverall>1 | psubcat<0 | psubcat>1) stop('probability should be between 0 and 1') 
+=======
+  
+>>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   # t0 <- proc.time()
   # Compute capacity by subcategory
   subcatDists <- rbindlist(lapply(unique(dcandidate$Subcategory), subcatDistribution, dcandidate))
   setkey(subcatDists, Platform, Subcategory, capacity)
-
+  
   # t1 <- proc.time()
   # Compute capacity by platform
   platDists <- rbindlist(lapply(unique(dcandidate$Platform), platformDistribution, subcatDists, psubcat))
   setkey(platDists, Platform, capacity)
-
+  
   # t2 <- proc.time()
   # Create matrix where each column represents the distribution of capacity in one platform
   probTable <- dcast(platDists, capacity ~ Platform, value.var="prob")
   probTable[, capacity := NULL]
   probTableMat <- as.matrix(probTable)
   probTableMat[is.na(probTableMat)] <- 0
-
+  
   for (i in 1:ncol(probTableMat)) {
     probTableMat[, i] <- dplatforms$pplat[i] * probTableMat[, i]
   }
   probTableMat[1, ] <- probTableMat[1, ] + (1-dplatforms$pplat)
-
+  
   veclen <- nrow(platDists)
   nplats <- length(unique(platDists$Platform))
   distributionMat <- matrix(0, veclen, nplats)
   distributionMat[1:nrow(probTableMat), ] <- probTableMat
-
+  
   # Find the distribution of the sum through the product of the convolution of the fourier transforms
   fourier <- mvfft(distributionMat)
   conv <- rowProds(fourier)
   dist <- Re(fft(conv, inverse=T))/veclen
-
+  
   # Trim vector to only include nonzero values
   maxcap <- max(c(which(dist>1e-14), 1)) - 1
-
+  
   # Create data.table summarizing information about distribution
   overallDist <- data.table(capacity=0:maxcap, prob=dist[1:(maxcap + 1)])
   # overallDist$prob <- poverall * overallDist$prob
   # overallDist[1, prob := prob + (1-poverall)]
-
+  
   # t3 <- proc.time()
-
+  
   # print((t1-t0)["elapsed"])
   # print((t2-t1)["elapsed"])
   # print((t3-t2)["elapsed"])
-
+  
   return(overallDist)
 }
 
@@ -462,34 +487,34 @@ platformDistribution <- function(plat, subcatDists, psubcat) {
   if(!(plat %in% subcatDists$Platform)) stop('please enter a correct Platform')
   if(psubcat<0 | psubcat>1) stop('probability should be between 0 and 1')
   dplat <- subcatDists[.(plat), on=.(Platform)]
-
+  
   # Creating matrix where each column represents the distribution for one subcategory
   probTable <- dcast(dplat, capacity ~ Subcategory, value.var="prob")
   probTable[, capacity := NULL]
   probTableMat <- as.matrix(probTable)
   probTableMat[is.na(probTableMat)] <- 0
-
+  
   for (i in 1:ncol(probTableMat)) {
     probTableMat[, i] <- psubcat * probTableMat[, i]
   }
   probTableMat[1, ] <- probTableMat[1, ] + (1-psubcat)
-
+  
   veclen <- nrow(dplat)
   nsubcats <- length(unique(dplat$Subcategory))
   distributionMat <- matrix(0, veclen, nsubcats)
   distributionMat[1:nrow(probTableMat), ] <- probTableMat
-
+  
   # Find the distribution of the sum through the product of the convolution of the fourier transforms
   fourier <- mvfft(distributionMat)
   conv <- rowProds(fourier)
   dist <- Re(fft(conv, inverse=T))/veclen
-
+  
   # Trim vector to only include nonzero values
   maxcap <- max(c(which(dist>1e-14), 1)) - 1
-
+  
   # Creating data.table with the data on the distribution
   platDist <- data.table(Platform=plat, capacity=0:maxcap, prob=dist[1:(maxcap + 1)])
-
+  
   return(platDist)
 }
 
@@ -504,29 +529,33 @@ platformDistribution <- function(plat, subcatDists, psubcat) {
 #' @importFrom stats fft mvfft
 subcatDistribution <- function(sub, dcandidate) {
   dsub <- dcandidate[Subcategory == sub]
+<<<<<<< HEAD
   if(!(sub %in% dcandidate$Subcategory)) stop('please enter a correct subcategory')
+=======
+  
+>>>>>>> d537c78ef52ccf99f0e3b2aea9a311f63fbdeb96
   # Creating matrix where each column represents the distribution for one candidate
   rsub <- nrow(dsub)
   veclen <- sum(dsub$capacity) + 1
-
+  
   distributionMat <- matrix(0, veclen, rsub)
   distributionMat[1, ] <- 1-dsub$pcandperm
   is <- seq_len(rsub)
   js <- dsub$capacity + 1
   ks <- veclen * (is-1) + js
   distributionMat[ks] <- distributionMat[ks] + dsub$pcandperm
-
+  
   # Find the distribution of the sum through the product of the convolution of the fourier transforms
   fourier <- mvfft(distributionMat)
   conv <- rowProds(fourier)
   dist <- Re(fft(conv, inverse=T))/veclen
-
+  
   # Trim vector to only include nonzero values
   maxcap <- max(c(which(dist>1e-14), 1)) - 1
-
+  
   # Creating data.table with data on the distribution
   subcatDist <- data.table(Subcategory=sub, Platform=dsub$Platform[1], capacity=0:maxcap, prob=dist[1:(maxcap + 1)])
-
+  
   return(subcatDist)
 }
 
@@ -544,14 +573,14 @@ sumdist <- function(dist1, dist2) {
     stop('dist must be a discrete distribution')
   }
   l <- length(dist1)+length(dist2)-1
-
+  
   d1 <- rep(0, l)
   d2 <- rep(0, l)
   d1[1:length(dist1)] <- dist1
   d2[1:length(dist2)] <- dist2
-
+  
   dist <- Re(fft(fft(d1) * fft(d2), inverse=T))/l
-
+  
   return(dist)
 }
 
@@ -569,11 +598,11 @@ sumdistSelf <- function(dist, N=2) {
     stop('dist must be a discrete distribution')
   }
   l <- N*length(dist)-(N-1)
-
+  
   dd <- rep(0, l)
   dd[1:length(dist)] <- dist
-
+  
   dist <- Re(fft(fft(dd)^N, inverse=T))/l
-
+  
   return(dist)
 }

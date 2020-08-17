@@ -13,7 +13,8 @@ portfolioPriceTaker(
   price,
   steps = c(10, 1, 0.1),
   candidateFile = NULL,
-  lambda = 1
+  lambda = 1,
+  return_benefit_args = FALSE
 )
 }
 \arguments{
@@ -29,9 +30,13 @@ portfolioPriceTaker(
 
 \item{price}{Market price for manufacturing capacity ($ per course / year)}
 
-\item{steps}{Steps to optimize over}
+\item{steps}{Steps to optimize over. By default three step-sizes are used in succession:
+10, 1 and 0.1.}
 
 \item{candidateFile}{File with candidate data}
+
+\item{return_benefit_args}{if \code{TRUE}, then an extra object is returned, that can then be used
+as input to \code{\link[=countryNetBenefits]{countryNetBenefits()}}}
 }
 \value{
 List with information on optimal portfolio. Includes investment
@@ -40,6 +45,7 @@ in every candidate, benefits, cost, and total capacity.
 \description{
 Computes the optimal portfolio for a price-taking country.
 This is done by calling optimisation function \code{\link[=optimizeGrid]{optimizeGrid()}}
+by optimising using decreasing step sizes (see \code{step})
 on benefits function \code{\link[=countryNetBenefits]{countryNetBenefits()}}
 }
 \examples{
