@@ -20,12 +20,12 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
   if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
-      d <- data.table(read.csv("inst/extdata/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
+      d <- data.table(read.csv(system.file("extdata/vaccinesSummary.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
     } else if (par$inputfile=="US") {
-      d <- data.table(read.csv("Data/vaccinesSummaryUS.csv", fileEncoding = "UTF-8-BOM"))
+      d <- data.table(read.csv(system.file("Data/vaccinesSummaryUS.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
     }
   } else {
-    d <- data.table(read.csv(candidateFile, fileEncoding = "UTF-8-BOM"))
+    d <- data.table(read.csv(system.file(candidateFile, package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
   }
 
   d[is.na(PreClinicalCandidates), PreClinicalCandidates := 0]
@@ -38,7 +38,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
     d[, X := NULL]
   }
 
-  # dchoose <- data.table(read.csv("Data/vaccinesChoose.csv", fileEncoding = "UTF-8-BOM"))
+  # dchoose <- data.table(read.csv(system.file("Data/vaccinesChoose.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
   # d <- d[.(dchoose$Platform, dchoose$Subcategory), on=.(Platform, Subcategory)]
 
   # Delete rows of vaccines to omit in analysis 

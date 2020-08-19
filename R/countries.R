@@ -131,10 +131,10 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @import data.table
 #' @importFrom stats weighted.mean
 #' @examples
-#' countrydata <- loadCountryData('inst/extdata/countryData.xlsx')
+#' countrydata <- loadCountryData('extdata/countryData.xlsx')
 loadCountryData <- function(filename, Gavi=F) {
 
-  rawData <- data.table(read_excel(filename))
+  rawData <- data.table(read_excel(system.file(filename,package = 'vaccineEarlyInvest')))
 
   #drop countries without needed data (DISCUSS HOW TO COMPARE TO GLOBAL SCENARIO)
   data <- rawData[!is.na(populationtotal) & !is.na(gdp) & !is.na(frac_highrisk)]

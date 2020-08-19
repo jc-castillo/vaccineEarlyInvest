@@ -1,4 +1,3 @@
-setwd('~/GIT/vaccineEarlyInvest')
 test_that('demandPriceTaker() works',{
   population <- 31.99 # In millions
   gdp_pc <- 6.71 # In thousand dollars

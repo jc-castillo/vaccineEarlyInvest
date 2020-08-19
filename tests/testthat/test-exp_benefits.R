@@ -1,6 +1,4 @@
 # test functions in distributions.R that are related to the calculation of cost and benefits
-setwd('~/GIT/vaccineEarlyInvest')
-?socialCost
 
 test_that('priceTakerCost() works only for sensible inputs',{
   expect_gte(priceTakerCost(c(10,12,140),10),0)
@@ -57,7 +55,7 @@ test_that('countryExpectedBenefits works only for sensible inputs',{
   expect_error(countryExpectedBenefits(capacities,dcandidate,targetPermutations,dplatforms,par,grid = -1))
 })
 
-?countryNetBenefits
+
 test_that('countryNetBenefits() works only for sensible input',{
   targets = c("Spike","Recombinant","Other")
   probs = c(0.1, 0.1, 0.3)
@@ -71,7 +69,7 @@ test_that('countryNetBenefits() works only for sensible input',{
   dordered <- dordered[,1:11]
   dcandidate = copy(dordered)
   dplatforms <- unique(dordered[, .(Platform, pplat)])
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   benefitsTable = getBenefitsTable(countryData)
   capacities = sample(seq(0,10),nrow(dcandidate),replace = T)
   netben = countryNetBenefits(capacities,dcandidate,targetPermutations,dplatforms,grid = 1, price = 10,par=par)

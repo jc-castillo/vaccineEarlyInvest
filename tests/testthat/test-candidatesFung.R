@@ -1,5 +1,4 @@
 #Test files for function candidatesFung() in models.R
-setwd('~/GIT/vaccineEarlyInvest')
 test_that('returns a list with two named data.tables',{
   par = Parameters$new()
   d0 = loadData(par = par)

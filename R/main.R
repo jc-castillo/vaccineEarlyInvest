@@ -29,14 +29,14 @@
 #' portfolio <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, 
 #'                    loss2yr=loss2yr, price=price,
-#'                    candidateFile="../inst/extdata/vaccinesSummary.csv")
+#'                    candidateFile="extdata/vaccinesSummary.csv")
 #'or 
 #'
 #'par <- Parameters$new(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, 
 #'                    loss2yr=loss2yr)
 #'portfolio <- portfolioPriceTaker(parameters=par, price=price,
-#'                    candidateFile="../inst/extdata/vaccinesSummary.csv")          
+#'                    candidateFile="extdata/vaccinesSummary.csv")          
 portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                                 price, steps=c(10,1,0.1), candidateFile=NULL, lambda=1,
                                 return_benefit_args = FALSE) {

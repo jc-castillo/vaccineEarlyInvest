@@ -1,13 +1,12 @@
 # test functions in countries.R
-setwd('~/GIT/vaccineEarlyInvest')
 test_that('loadCountryData works',{
-  expect_silent(loadCountryData('inst/extdata/countryData.xlsx'))
-  expect_equal(class(loadCountryData('inst/extdata/countryData.xlsx')),c('data.table','data.frame'))
+  expect_silent(loadCountryData('extdata/countryData.xlsx'))
+  expect_equal(class(loadCountryData('extdata/countryData.xlsx')),c('data.table','data.frame'))
   expect_error(loadCountryData(countrydata))
 })
 
 test_that('getBenefitsTable works',{
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   expect_silent(getBenefitsTable(countryData))
   benefitsTable = getBenefitsTable(countryData)
   expect_equal(class(benefitsTable),c('data.table','data.frame'))
@@ -20,7 +19,7 @@ test_that('getBenefitsTable works',{
 })
 
 test_that('countryParameters works',{
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   expect_silent(countryParameters(countryData))
   countryPar = countryParameters(countryData)
   expect_equal(class(countryPar),'list')
@@ -39,7 +38,7 @@ test_that('globalNetBenefits() works',{
   dordered <- dordered[,1:11]
   dcandidate = copy(dordered)
   dplatforms <- unique(dordered[, .(Platform, pplat)])
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   benefitsTable = getBenefitsTable(countryData)
   expect_silent(globalNetBenefits(capacities = sample(seq(1,10),nrow(dcandidate),replace = T),dcandidate = dcandidate, targetPermutations = targetPermutations, 
                                   dplatforms=dplatforms,benefitsTable = benefitsTable,par = Parameters$new()))
@@ -64,7 +63,7 @@ test_that('expectedBenefitsTable() works',{
   dordered <- dordered[,1:11]
   dcandidate = copy(dordered)
   dplatforms <- unique(dordered[, .(Platform, pplat)])
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   benefitsTable = getBenefitsTable(countryData)
   dcandidate[,capacity:=sample(seq(1,10),nrow(dcandidate),replace = T)]
   dist = overallDistribution(dcandidate, targetPermutations, dplatforms, grid=1,
@@ -89,7 +88,7 @@ test_that('globalNetBenefits() works',{
   dordered <- dordered[,1:11]
   dcandidate = copy(dordered)
   dplatforms <- unique(dordered[, .(Platform, pplat)])
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   benefitsTable = getBenefitsTable(countryData)
   capacities = sample(seq(0,10),nrow(dcandidate),replace = T)
   expect_silent(globalNetBenefits(capacities,dcandidate,targetPermutations,dplatforms,benefitsTable,par))
@@ -111,7 +110,7 @@ test_that('globalNetBenefits() reports error for incorrect input',{
   dordered <- dordered[,1:11]
   dcandidate = copy(dordered)
   dplatforms <- unique(dordered[, .(Platform, pplat)])
-  countryData = loadCountryData('inst/extdata/countryData.xlsx')
+  countryData = loadCountryData('extdata/countryData.xlsx')
   benefitsTable = getBenefitsTable(countryData)
   capacities = sample(seq(0,10),nrow(dcandidate),replace = T)
   expect_error(globalNetBenefits(capacities,dcandidate,targetPermutations,dplatforms,benefitsTable,par,grid=-1))

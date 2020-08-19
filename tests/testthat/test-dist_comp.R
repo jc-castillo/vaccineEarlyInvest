@@ -2,7 +2,6 @@
 # gettargetPermutationss(), permutationDistribution(), platformDistribution, subcatDistribution(),
 # countryDistribution()
 
-setwd('~/GIT/vaccineEarlyInvest')
 
 test_that("candidateDraws() works", {
   par = Parameters$new()
