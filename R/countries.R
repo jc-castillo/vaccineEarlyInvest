@@ -122,8 +122,11 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @importFrom readxl read_excel
 #' @import data.table
 #' @importFrom stats weighted.mean
-#' 
+#'
 loadCountryData <- function(filename, Gavi=F) {
+  . <- populationtotal <- gdp <- frac_highrisk <- `GAVI eligibility` <- country <- monthly_loss <-
+    cumulative_loss <- frac <- NULL
+
   rawData <- data.table(read_excel("../../Other/highrisk_clean_bt.xlsx"))
 
   #drop countries without needed data (DISCUSS HOW TO COMPARE TO GLOBAL SCENARIO)

@@ -1,7 +1,7 @@
 #' Optimal portfolio for a price taker
 #'
-#' Computes the optimal portfolio for a price-taking country. 
-#' This is done by calling optimisation function [optimizeGrid()] 
+#' Computes the optimal portfolio for a price-taking country.
+#' This is done by calling optimisation function [optimizeGrid()]
 #' by optimising using decreasing step sizes (see `step`)
 #' on benefits function [countryNetBenefits()]
 #'
@@ -14,8 +14,10 @@
 #' @param steps Steps to optimize over. By default three step-sizes are used in succession:
 #'              10, 1 and 0.1.
 #' @param candidateFile File with candidate data
-#' @param return_benefit_args if `TRUE`, then an extra object is returned, that can then be used 
+#' @param return_benefit_args if `TRUE`, then an extra object is returned, that can then be used
 #'                            as input to [countryNetBenefits()]
+#' @param lambda Lagrange multiplier. Should be one, unless trying to solve
+#'               problem with constrained budget.
 #'
 #' @return List with information on optimal portfolio. Includes investment
 #'  in every candidate, benefits, cost, and total capacity.
@@ -31,63 +33,63 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
     # Use parameters object passed as an argument
     par <- parameters
   }
-  
+
   d <- loadData(par, candidateFile)
-  
+
   d$Target <- "Other"
   d$Target[1:5]<-"Spike"
   d$Target[10:15]<-"Recombinant"
-  
+
   dordered <- candidatesFung(d, par)$dordered
-  
+
   dordered <- dordered[,1:11]
   dplatforms <- unique(dordered[, .(Platform, pplat)])
   setkey(dplatforms, Platform, pplat)
   dcandidate <- copy(dordered)
-  
+
   # Getting information about permutations
   targets <- c("Spike","Recombinant","Other")
-  probs <- c(as.numeric(par$pspike), 
-             as.numeric(par$precombinant), 
+  probs <- c(as.numeric(par$pspike),
+             as.numeric(par$precombinant),
              as.numeric(par$potherprotein))
   targetPermutations <- getTargetPermutations(targets, probs)
-  
+
   # Creating objective function
   objectiveFun <- function(capacities, grid, price, par) {
-    countryNetBenefits(capacities, dcandidate, targetPermutations, 
+    countryNetBenefits(capacities, dcandidate, targetPermutations,
                        dplatforms, grid, price, par, lambda=lambda)
   }
-  
+
   # Initialize at zero
   capacities <- rep(0, nrow(dcandidate))
-  
+
   # Optimize over grids with decreasing step sizes
   for (s in steps) {
-    capacities <- optimizeGrid(capacities, objectiveFun, step=s, price=price, par=par, 
+    capacities <- optimizeGrid(capacities, objectiveFun, step=s, price=price, par=par,
                                name = "country net benefits")
   }
-  
+
   if(return_benefit_args)
-    benefit_args <- list(capacities=capacities, dcandidate=dcandidate, targetPermutations=targetPermutations, 
+    benefit_args <- list(capacities=capacities, dcandidate=dcandidate, targetPermutations=targetPermutations,
                          dplatforms=dplatforms, grid=min(steps), price=price, par=par, lambda=lambda)
-  
+
   # Computing other values
   totCapacity <- sum(capacities)
   cost <- priceTakerCost(capacities, price)
-  expBenefits <- 
-    countryExpectedBenefits(capacities, dcandidate, 
+  expBenefits <-
+    countryExpectedBenefits(capacities, dcandidate,
                             targetPermutations, dplatforms, par, grid=s)
-  distribution <- 
-    countryDistribution(capacities, dcandidate, 
+  distribution <-
+    countryDistribution(capacities, dcandidate,
                         targetPermutations, dplatforms, par, grid=s)
   expCapacity <- sum(distribution[, prob * capacity])
-  
+
   out <- list(capacities=capacities, totCapacity=totCapacity, cost=cost,
               expBenefits=expBenefits, distribution=distribution, expCapacity=expCapacity)
-  
+
   if(return_benefit_args)
     out$benefit_args <-  benefit_args
-  
+
   return(out)
 }
 
@@ -113,6 +115,10 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #' @export
 demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                              prices=seq(100,1,-1), inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
+
+  . <- Platform <- pplat <- ind <- expBenefit <- cost <- expCapacity <- prob <- capacity <-
+    successProb <- totalCapacity <- NULL
+
   if (is.null(parameters)) {
     # Create parameters from function arguments
     par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
@@ -122,61 +128,61 @@ demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk
     # Copy parameters object passed as an argument
     par <- parameters
   }
-  
+
   d <- loadData(par, candidateFile)
-  
+
   d$Target <- "Other"
   d$Target[1:5]<-"Spike"
   d$Target[10:15]<-"Recombinant"
-  
+
   dordered <- candidatesFung(d, par)$dordered
-  
+
   dordered <- dordered[,1:11]
   dplatforms <- unique(dordered[, .(Platform, pplat)])
   setkey(dplatforms, Platform, pplat)
   dcandidate <- copy(dordered)
-  
+
   # Getting information about permutations
   targets <- c("Spike","Recombinant","Other")
   probs <- c(as.numeric(par$pspike), as.numeric(par$precombinant), as.numeric(par$potherprotein))
   targetPermutations <- getTargetPermutations(targets, probs)
-  
+
   # Creating objective function
   objectiveFun <- function(capacities, grid, price, par) {
     countryNetBenefits(capacities, dcandidate, targetPermutations, dplatforms, grid, price, par, lambda=1)
   }
-  
+
   # Initialize capacities at zero, initialize price
   capacities <- rep(0, nrow(dcandidate))
   price <- prices[1]
-  
+
   # Optimize over grids with decreasing step sizes to get initial point
   for (s in inisteps) {
     capacities <- optimizeGrid(capacities, objectiveFun, verbose=verbose, step=s, price=price, par=par)
   }
-  
+
   # Setting up objects to save infomation
   optimizations <- data.table(price=prices)
   optimizations[, ind := .I]
   setkey(optimizations, ind)
   allCapacities <- matrix(0, length(prices), length(capacities))
-  
+
   # Loop over prices to get demand levels
   for (p in prices[1:length(prices)]) {
     capacities <- optimizeGrid(capacities, objectiveFun, verbose=verbose, step=mainstep, price=p, par=par)
-    
+
     i <- optimizations[price==p, ind]
     allCapacities[i, ] <- capacities
     optimizations[.(i), expBenefit :=
                     countryExpectedBenefits(capacities, dcandidate, targetPermutations, dplatforms, par, grid=mainstep)]
     optimizations[.(i), cost := priceTakerCost(capacities, p)]
-    
+
     distribution <- countryDistribution(capacities, dcandidate, targetPermutations, dplatforms, par, grid=mainstep)
-    
+
     optimizations[.(i), expCapacity := sum(distribution[, prob * capacity])]
     optimizations[.(i), successProb := sum(distribution[capacity > 0.011, prob])]
     optimizations[.(i), totalCapacity := sum(capacities)]
   }
-  
+
   return(list(optimizations=optimizations, allCapacities=allCapacities))
 }

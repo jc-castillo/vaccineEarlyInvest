@@ -190,7 +190,7 @@ Parameters <- R6Class("Parameters", list(
   #' @param gdp_pc Country GDP per capita (in thousand $)
   #' @param frac_high_risk Fraction of population that is high risk
   #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
-  #' @param worldLoss2yr Cumulative percent of GDP lost because of pandemic over two years
+  #' @param worldLoss2yr Cumulative percent of GDP lost worldwide because of pandemic over two years
   #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
   initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, worldLoss2yr=0.138, ...) {
