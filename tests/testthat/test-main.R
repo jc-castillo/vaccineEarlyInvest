@@ -1,4 +1,5 @@
 test_that('demandPriceTaker() works',{
+  skip_on_cran()
   population <- 31.99 # In millions
   gdp_pc <- 6.71 # In thousand dollars
   frac_high_risk <- 0.131
@@ -22,6 +23,7 @@ test_that('demandPriceTaker() works',{
 })
 
 test_that('portfolioPriceTaker() works',{
+  skip_on_cran()
   population <- 31.99 # In millions
   gdp_pc <- 6.71 # In thousand dollars
   frac_high_risk <- 0.131
