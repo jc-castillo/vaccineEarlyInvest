@@ -61,7 +61,7 @@ countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations,
 
 #' Expected benefits for one country
 #'
-#' Compute expected benefits from a portfolio for one country
+#' Compute the distribution of effective capacity and benefits given some portfolio.
 #'
 #' @param capacities Vector of capacities for each candidate
 #' @param dcandidate `data.table` with candidate information
