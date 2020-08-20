@@ -117,7 +117,7 @@ demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk
     # Create parameters from function arguments
     par <- Parameters$new(global=F, inputfile="Default", maxcand=30, monthben=500, popshare=population/7800,
                           gdpshare=population*gdp_pc/1e3/87.3, fracHighRisk=frac_high_risk, afterCapacity=population/7800*500,
-                          counterCapacity=population/7800*500, econlossratio=loss2yr/0.138)
+                          counterCapacity=population/7800*500, loss2yr=loss2yr)
   } else {
     # Copy parameters object passed as an argument
     par <- parameters
