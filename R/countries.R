@@ -13,6 +13,8 @@
 #' @return Net global benefits
 #' @export
 globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, benefitsTable, par, grid=1) {
+  capacity <- NULL
+
   dcandidate[, capacity := capacities]
   distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms, grid=grid,
                                       poverall=par$poverall, psubcat=par$psubcat)
@@ -34,6 +36,8 @@ globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatf
 #' @return Expected benefits
 #' @export
 expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
+  . <- socialBenefit <- prob <- NULL
+
   distribution[, socialBenefit := benefitsTable[.(grid * round(distribution$capacity/grid)), socialBenefit]]
 
   return(sum(distribution[, prob*socialBenefit]))
@@ -78,6 +82,8 @@ countryParameters <- function(countryData) {
 #' @return `data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 #' @export
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
+  progBen <- noProgBen <- capacity <- socialBenefit <- NULL
+
   countryPars <- countryParameters(countryData)
 
   distribution <- data.table(capacity = seq(0, max, grid))

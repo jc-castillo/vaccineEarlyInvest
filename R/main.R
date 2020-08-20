@@ -25,6 +25,8 @@
 portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                                 price, steps=c(10,1,0.1), candidateFile=NULL, lambda=1,
                                 return_benefit_args = FALSE) {
+  . <- Platform <- pplat <- prob <- capacity <- NULL
+
   if (is.null(parameters)) {
     # Create parameters from function arguments
     par <- Parameters$new(population=population, gdp_pc=gdp_pc,

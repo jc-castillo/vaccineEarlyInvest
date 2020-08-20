@@ -30,5 +30,5 @@ countryDistribution(
 Expected benefits from vaccination
 }
 \description{
-Compute expected benefits from a portfolio for one country
+Compute the distribution of effective capacity and benefits given some portfolio.
 }

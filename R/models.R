@@ -13,6 +13,9 @@
 loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
 
+  Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-
+    PreClinicalCandidates <- X <- Subcategory <- NULL
+
   if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
       d <- data.table(read.csv("Data/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
@@ -84,7 +87,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
     cost <- welfareRatio <- opt <- MarginalProbability <- CumulativeProbability <-
     socialBenefit <- welfare <- oFung <- pFung <- margcost <- margbenefit <-
     r <- y <- subcand <- yplat <- ytarget <- yoverall <- success <- marg_success <-
-    ExpComp <- maxcand <- . <- NULL
+    ExpComp <- maxcand <- ysubcand <- . <- NULL
 
   # Adding platform feasibility probabilities to table
   d[Platform == "DNA", pplat := as.numeric(par$pdna)]
@@ -543,6 +546,8 @@ benefits <- function(monthben, capacities, endtimes, par) {
 #' @return Cartesian product of both datasets
 #' @export
 crossJoin <- function(db1, db2) {
+  ..dummy.. <- NULL
+
   db1[, ..dummy.. := 1]
   db2[, ..dummy.. := 1]
 

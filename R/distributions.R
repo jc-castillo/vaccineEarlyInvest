@@ -43,6 +43,9 @@ countryNetBenefits <- function(capacities, dcandidate, targetPermutations,
 #' @export
 countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations,
                                     dplatforms, par, grid=1) {
+
+  . <- capacity <- progBen <- noProgBen <- socialBenefit <- prob <- NULL
+
   dcandidate[, capacity := capacities]
   distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms,
                                       poverall=par$poverall, psubcat=par$psubcat, grid=grid)
@@ -74,6 +77,9 @@ countryExpectedBenefits <- function(capacities, dcandidate, targetPermutations,
 #' @export
 countryDistribution <- function(capacities, dcandidate, targetPermutations,
                                 dplatforms, par, grid=1) {
+
+  . <- capacity <- progBen <- noProgBen <- socialBenefit <- NULL
+
   dcandidate[, capacity := capacities]
   distribution <-
     overallDistribution(dcandidate, targetPermutations, dplatforms,
@@ -117,6 +123,8 @@ priceTakerCost <- function(capacities, price) {
 #' @return Social cost of the portfolio
 #' @export
 socialCost <- function(capacities, distribution, par) {
+
+  prob <- capacity <- socialCost <- NULL
 
   totcap <- sum(capacities)
   baseMgCost <- par$c * 12 / 1000
@@ -308,6 +316,8 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, name = "
 #' @return data.table with all permutations and their probabilities
 #' @export
 getTargetPermutations <- function(targets, probs) {
+  probability <- perm_index <- Target <- NULL
+
   tperm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
 
   perm <- vector(mode="numeric", length=nrow(tperm))
@@ -411,6 +421,8 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #' @export
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 
+  Platform <- Subcategory <- capacity <- NULL
+
   # t0 <- proc.time()
   # Compute capacity by subcategory
   subcatDists <- rbindlist(lapply(unique(dcandidate$Subcategory), subcatDistribution, dcandidate))
@@ -473,6 +485,8 @@ permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 #' @return A data.table summarizing the distribution of total capacity in the platfom
 #' @importFrom stats fft mvfft
 platformDistribution <- function(plat, subcatDists, psubcat) {
+  . <- Platform <- capacity <- NULL
+
   dplat <- subcatDists[.(plat), on=.(Platform)]
 
   # Creating matrix where each column represents the distribution for one subcategory
@@ -515,6 +529,8 @@ platformDistribution <- function(plat, subcatDists, psubcat) {
 #' @return A data.table summarizing the distribution of total capacity in the subcategory
 #' @importFrom stats fft mvfft
 subcatDistribution <- function(sub, dcandidate) {
+  Subcategory <- NULL
+
   dsub <- dcandidate[Subcategory == sub]
 
   # Creating matrix where each column represents the distribution for one candidate

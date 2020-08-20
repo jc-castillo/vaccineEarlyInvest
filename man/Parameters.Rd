@@ -193,6 +193,7 @@ Create a new \code{Parameters} object.
   gdp_pc = NULL,
   frac_high_risk = NULL,
   loss2yr = NULL,
+  worldLoss2yr = 0.138,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -211,6 +212,8 @@ fields.}
 \item{\code{frac_high_risk}}{Fraction of population that is high risk}
 
 \item{\code{loss2yr}}{Cumulative percent of GDP lost because of pandemic over two years}
+
+\item{\code{worldLoss2yr}}{Cumulative percent of GDP lost worldwide because of pandemic over two years}
 
 \item{\code{...}}{Set fields at non-default values}
 }
