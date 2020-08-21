@@ -39,9 +39,9 @@ test_that('portfolioPriceTaker() works',{
   expect_gte(port$expBenefits,0)
   expect_gte(port$expCapacity,0)
   port = portfolioPriceTaker(population=population, gdp_pc=gdp_pc, 
-                             frac_high_risk=frac_high_risk, loss2yr=loss2yr,price = 10,return_benefit_args == TRUE)
+                             frac_high_risk=frac_high_risk, loss2yr=loss2yr,price = 10,return_benefit_args = TRUE)
   expect_equal(class(port),'list')
-  expect_length(port,6)
+  expect_length(port,7)
   expect_true(all(port$capacities>=0))
   expect_gte(port$totCapacity,0)
   expect_gte(port$cost,0)
