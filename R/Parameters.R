@@ -117,7 +117,7 @@ Parameters <- R6Class("Parameters", list(
   # Parameters for shape of health benefits function
   #' @field simplebenefits Whether the benefit function is a simple function with one single kink
   simplebenefits=F,
-  #' @field kink2loc Location of the second kink in the benfit function
+  #' @field kink2loc Location of the second kink in the benefit function
   kink2loc=0.5,
   #' @field slopefactormax Maximum ratio between the benefits from vaccinating high risk people and
   #' next population group
@@ -257,8 +257,7 @@ initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=N
     if (!is.null(loss2yr)) {
       self$econlossratio <- loss2yr/worldLoss2yr
     }
-
-
+    
     self$setDerivedParameters(benefitKinks=benefitKinks)
     
     for (i in seq_len(length(parlist))) {
@@ -270,6 +269,7 @@ initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=N
       }
     }
     
+ 
   },
 
   #' @description
