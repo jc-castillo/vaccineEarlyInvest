@@ -23,3 +23,10 @@ test_that("Parameters$new reports error if only one of pop, gdp, and frac is pro
   expect_error(Parameters$new(gdp_pc = 342))
   expect_error(Parameters$new(frac_high_risk = 0.1))
 })
+
+test_that("Parameters$new works when simplebenefits=T",{
+  par1 = Parameters$new(simplebenefits=TRUE)
+  par2 = Parameters$new(benefitKinks = c(0.5,0.6))
+  expect_length(par1$piecewisepar[[1]],2)
+  expect_length(par2$piecewisepar[[1]],1)
+})
