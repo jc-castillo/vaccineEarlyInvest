@@ -109,6 +109,21 @@ a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefi
 \item{\code{effpop}}{Effective world population that needs to be vaccinated to
 get all (100 percent) of benefits}
 
+\item{\code{simplebenefits}}{Whether the benefit function is a simple function with one single kink}
+
+\item{\code{kink2loc}}{Location of the second kink in the benfit function}
+
+\item{\code{slopefactormax}}{Maximum ratio between the benefits from vaccinating high risk people and
+next population group}
+
+\item{\code{slopefactormin}}{Minimum ratio between the benefits from vaccinating high risk people and
+next population group}
+
+\item{\code{maxgdpratio}}{Maximum ratio between share of GDP and share of population}
+
+\item{\code{benefitshape}}{Parameter that specifies the shape of the benefit function. It's linear if it
+is one, it's equal to health benefits if it is zero.}
+
 \item{\code{c}}{Cost of capacity per dose / year}
 
 \item{\code{capacity}}{Constraint on capacity (doses / month)}
