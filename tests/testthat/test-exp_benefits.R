@@ -69,7 +69,7 @@ test_that('countryNetBenefits() works only for sensible input',{
   dordered <- dordered[,1:11]
   dcandidate = copy(dordered)
   dplatforms <- unique(dordered[, .(Platform, pplat)])
-  countryData = loadCountryData('extdata/countryData.xlsx')
+  countryData = loadCountryData(system.file('extdata/countryData.xlsx', package = 'vaccineEarlyInvest'))
   benefitsTable = getBenefitsTable(countryData)
   capacities = sample(seq(0,10),nrow(dcandidate),replace = T)
   netben = countryNetBenefits(capacities,dcandidate,targetPermutations,dplatforms,grid = 1, price = 10,par=par)
