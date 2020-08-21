@@ -42,7 +42,7 @@ Parameters <- R6Class("Parameters", list(
   #' @field pphase2 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
   pphase2=0.32,
   #' @field pphase3 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
-  pphase3=0.45,
+  pphase3=0.5,
   #' @field psubcat Probability that there's no problem at subcategory level
   psubcat=0.8,
   #' @field pspike Probability that there's no problem at the candidate level when a vaccine targets spike proten
@@ -70,7 +70,7 @@ Parameters <- R6Class("Parameters", list(
 
   # Parameters from model that converts production capacity into benefits
   #' @field TT Time that the vaccine is brought forward (months)
-  TT=6,
+  TT=3,
   #' @field tau Period of analysis (months)
   tau=24,
   #' @field damageshare Fraction of damage accounted for by some fraction of the population
@@ -111,6 +111,23 @@ Parameters <- R6Class("Parameters", list(
   #' @field effpop Effective world population that needs to be vaccinated to
   #' get all (100 percent) of benefits
   effpop=0.7*7.8,
+
+  # Parameters for shape of health benefits function
+  #' @field simplebenefits Whether the benefit function is a simple function with one single kink
+  simplebenefits=F,
+  #' @field kink2loc Location of the second kink in the benfit function
+  kink2loc=0.5,
+  #' @field slopefactormax Maximum ratio between the benefits from vaccinating high risk people and
+  #' next population group
+  slopefactormax=10,
+  #' @field slopefactormin Minimum ratio between the benefits from vaccinating high risk people and
+  #' next population group
+  slopefactormin=5,
+  #' @field maxgdpratio Maximum ratio between share of GDP and share of population
+  maxgdpratio=7.2, # Norway
+  #' @field benefitshape Parameter that specifies the shape of the benefit function. It's linear if it
+  #' is one, it's equal to health benefits if it is zero.
+  benefitshape=0.5,
 
   # Parameters for cost of capacity
   #' @field c Cost of capacity per dose / year
@@ -267,7 +284,7 @@ Parameters <- R6Class("Parameters", list(
 
     if (self$global) {
       self$totmonthben <- (self$monthben + self$hben) * (1 - self$sharm)
-    } else {
+    } else if (self$simplebenefits) {
       self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
       damageratio <- 0.25 / (1-0.25) * (1-0.75) / 0.75
       self$damageshare <- 1 / (1 + (1 - self$fracHighRisk) / self$fracHighRisk * damageratio)
@@ -277,6 +294,26 @@ Parameters <- R6Class("Parameters", list(
 
       piecewisepar <- list(vaccshares=c(self$fracHighRisk * self$popshare / self$fracneeded, self$popshare),
                            damageshares=c(self$damageshare, 1))
+      self$piecewisepar <- piecewisepar
+    } else {
+      self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
+      self$benefitdist <- "piecewiseLinearGen"
+
+      slopefactor <- self$slopefactormin + self$gdpshare / self$popshare / self$maxgdpratio *
+        (self$slopefactormax - self$slopefactormin)
+
+      denominator <- self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk) +
+        (self$fracneeded - self$kink2loc)*1/2
+
+      vaccshares <- c(self$fracHighRisk * self$popshare / self$fracneeded,
+                      self$kink2loc * self$popshare / self$fracneeded, self$popshare)
+      healthdamageshares <- c(slopefactor * self$fracHighRisk / denominator,
+                              (self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk)) / denominator,
+                              1)
+      lineardamageshares <- c(self$fracHighRisk / self$fracneeded, kink2loc /self$ fracneeded, 1)
+      damageshares <- self$benefitshape * lineardamageshares + (1-self$benefitshape) * healthdamageshares
+
+      piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
       self$piecewisepar <- piecewisepar
     }
 
