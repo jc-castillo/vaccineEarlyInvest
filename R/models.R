@@ -86,9 +86,6 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' d$Target[6:10] = 'Recombinant'
 #' candidate = candidatesFung(d, par)
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
-<<<<<<< HEAD
-=======
-
   Platform <- pplat <- Target <- ptarget <- phase <- Candidates <- PreClinicalCandidates <-
     Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-
     pcand <- selected <- psuccess <- Subcategory <- index <- plat_count <- subcat_count <-
@@ -98,7 +95,6 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
     r <- y <- subcand <- yplat <- ytarget <- yoverall <- success <- marg_success <-
     ExpComp <- maxcand <- ysubcand <- . <- NULL
 
->>>>>>> 45baaa36286a3fed91e44bb9085c142f9d76dc8b
   # Adding platform feasibility probabilities to table
   d[Platform == "DNA", pplat := as.numeric(par$pdna)]
   d[Platform == "RNA", pplat := par$prna]
@@ -419,13 +415,8 @@ benefitIntegral <- function(frac, par) {
       dsn <- damageshares[i+1]
       vsn <- vaccshares[i+1]
 
-<<<<<<< HEAD
       add <- if_else(frac < vs, 0,
                      if_else(frac >= vsn,
-=======
-      add <- if_else(frac < vs | vsn <= vs, 0,
-                     if_else(frac > vsn,
->>>>>>> 45baaa36286a3fed91e44bb9085c142f9d76dc8b
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
                              (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
                              )
@@ -453,13 +444,10 @@ benefitIntegral <- function(frac, par) {
 #' par = Parameters$new(benefitdist='pnorm',alpha=1)
 #' benefit = benefitIntegralDisc(0,0.5,par)
 benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
-<<<<<<< HEAD
   if(any(frac1<0) | any(frac2>1)) stop('limit of integral must be between 0 and 1')
   if(any(share1<0) | any(share1>1) | any(share2<0) | any(share2>1)) stop('share of damage must be between 0 and 1')
-=======
   frac <- NULL
 
->>>>>>> 45baaa36286a3fed91e44bb9085c142f9d76dc8b
   slope <- (share2 - share1) / (frac2 - frac1)
   inishare <- share1 - frac1 * slope
   endshare <- share2 + (1-frac2) * slope
