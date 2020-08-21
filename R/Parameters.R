@@ -41,7 +41,7 @@ Parameters <- R6Class("Parameters", list(
   pphase1=0.23,
   #' @field pphase2 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
   pphase2=0.32,
-  #' @field pphase3 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
+  #' @field pphase3 Probability that there's no problem at the candidate level when a vaccine is in phase 3 trials
   pphase3=0.5,
   #' @field psubcat Probability that there's no problem at subcategory level
   psubcat=0.8,
@@ -210,7 +210,8 @@ Parameters <- R6Class("Parameters", list(
   #' @param worldLoss2yr Cumulative percent of GDP lost worldwide because of pandemic over two years
   #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
-  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, worldLoss2yr=0.138, ...) {
+  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL,
+                        loss2yr=NULL, worldLoss2yr=0.138, benefitKinks=NULL, ...) {
     if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
       nms <- names(input)
       for (nm in nms) {
@@ -252,7 +253,7 @@ Parameters <- R6Class("Parameters", list(
       self$econlossratio <- loss2yr/worldLoss2yr
     }
 
-    self$setDerivedParameters()
+    self$setDerivedParameters(benefitKinks=benefitKinks)
 
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
@@ -266,7 +267,7 @@ Parameters <- R6Class("Parameters", list(
 
   #' @description
   #' Compute additional parameters that are functions of the input parameters
-  setDerivedParameters = function() {
+  setDerivedParameters = function(benefitKinks=NULL) {
     if (is.null(self$mortality)) {
       self$mortality <- self$popshare * self$worldmortality
     }
@@ -299,22 +300,29 @@ Parameters <- R6Class("Parameters", list(
       self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
       self$benefitdist <- "piecewiseLinearGen"
 
-      slopefactor <- self$slopefactormin + self$gdpshare / self$popshare / self$maxgdpratio *
-        (self$slopefactormax - self$slopefactormin)
+      if (is.null(benefitKinks)) {
+        slopefactor <- self$slopefactormin + self$gdpshare / self$popshare / self$maxgdpratio *
+          (self$slopefactormax - self$slopefactormin)
 
-      denominator <- self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk) +
-        (self$fracneeded - self$kink2loc)*1/2
+        denominator <- self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk) +
+          (self$fracneeded - self$kink2loc)*1/2
 
-      vaccshares <- c(self$fracHighRisk * self$popshare / self$fracneeded,
-                      self$kink2loc * self$popshare / self$fracneeded, self$popshare)
-      healthdamageshares <- c(slopefactor * self$fracHighRisk / denominator,
-                              (self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk)) / denominator,
-                              1)
-      lineardamageshares <- c(self$fracHighRisk / self$fracneeded, kink2loc /self$ fracneeded, 1)
-      damageshares <- self$benefitshape * lineardamageshares + (1-self$benefitshape) * healthdamageshares
+        vaccshares <- c(self$fracHighRisk * self$popshare / self$fracneeded,
+                        self$kink2loc * self$popshare / self$fracneeded, self$popshare)
+        healthdamageshares <- c(slopefactor * self$fracHighRisk / denominator,
+                                (self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk)) / denominator,
+                                1)
+        lineardamageshares <- c(self$fracHighRisk / self$fracneeded, kink2loc /self$ fracneeded, 1)
+        damageshares <- self$benefitshape * lineardamageshares + (1-self$benefitshape) * healthdamageshares
 
-      piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
-      self$piecewisepar <- piecewisepar
+        piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
+        self$piecewisepar <- piecewisepar
+      } else {
+        vaccshares <- benefitKinks[[1]] * self$popshare / self$fracneeded
+        damageshares <- benefitKinks[[2]]
+        piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
+        self$piecewisepar <- piecewisepar
+      }
     }
 
     # Compute damage parameters based on damage distribution
