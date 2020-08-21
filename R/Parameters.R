@@ -319,7 +319,7 @@ initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=N
         healthdamageshares <- c(slopefactor * self$fracHighRisk / denominator,
                                 (self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk)) / denominator,
                                 1)
-        lineardamageshares <- c(self$fracHighRisk / self$fracneeded, kink2loc /self$ fracneeded, 1)
+        lineardamageshares <- c(self$fracHighRisk / self$fracneeded, self$kink2loc /self$ fracneeded, 1)
         damageshares <- self$benefitshape * lineardamageshares + (1-self$benefitshape) * healthdamageshares
 
         piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
