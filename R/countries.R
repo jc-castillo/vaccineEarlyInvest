@@ -13,6 +13,8 @@
 #' @return Net global benefits
 #' @export
 globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatforms, benefitsTable, par, grid=1) {
+  capacity <- NULL
+
   dcandidate[, capacity := capacities]
   distribution <- overallDistribution(dcandidate, targetPermutations, dplatforms, grid=grid,
                                       poverall=par$poverall, psubcat=par$psubcat)
@@ -35,6 +37,8 @@ globalNetBenefits <- function(capacities, dcandidate, targetPermutations, dplatf
 #' @export
 expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
   if(grid<=0) stop('grid should be positive')
+  . <- socialBenefit <- prob <- NULL
+
   distribution[, socialBenefit := benefitsTable[.(grid * round(distribution$capacity/grid)), socialBenefit]]
 
   return(sum(distribution[, prob*socialBenefit]))
@@ -86,6 +90,8 @@ countryParameters <- function(countryData) {
 #' benefitsTable = getBenefitsTable(countryData)
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
   if(grid<=0) stop('grid should be positive')
+  progBen <- noProgBen <- capacity <- socialBenefit <- NULL
+
   countryPars <- countryParameters(countryData)
 
   distribution <- data.table(capacity = seq(0, max, grid))
@@ -133,7 +139,8 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @examples
 #' countrydata <- loadCountryData('system.file('extdata','countryData.xlsx',package = 'vaccineEarlyInvest'))
 loadCountryData <- function(filename, Gavi=F) {
-
+  . <- populationtotal <- gdp <- frac_highrisk <- `GAVI eligibility` <- country <- monthly_loss <-
+    cumulative_loss <- frac <- NULL
   rawData <- data.table(read_excel(filename))
 
   #drop countries without needed data (DISCUSS HOW TO COMPARE TO GLOBAL SCENARIO)

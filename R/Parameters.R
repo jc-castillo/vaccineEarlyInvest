@@ -110,7 +110,7 @@ Parameters <- R6Class("Parameters", list(
   piecewisepar=NA,
   #' @field fracneeded Fraction of population needed to reopen economy
   fracneeded=0.7,
-  #' @field effpop Effective world population that needs to be vaccinated to 
+  #' @field effpop Effective world population that needs to be vaccinated to
   #' get all (100 percent) of benefits
   effpop=0.7*7.8,
 
@@ -192,11 +192,12 @@ Parameters <- R6Class("Parameters", list(
   #' @param gdp_pc Country GDP per capita (in thousand $)
   #' @param frac_high_risk Fraction of population that is high risk
   #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
+  #' @param worldLoss2yr Cumulative percent of GDP lost worldwide because of pandemic over two years
   #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
   #' @examples 
   #' par = Parameters$new(global = T, population = 10)
-  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, ...) {
+  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, worldLoss2yr=0.138, ...) {
     if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
       nms <- names(input)
       for (nm in nms) {
@@ -235,7 +236,7 @@ Parameters <- R6Class("Parameters", list(
     }
 
     if (!is.null(loss2yr)) {
-      self$econlossratio <- loss2yr/0.138
+      self$econlossratio <- loss2yr/worldLoss2yr
     }
 
 

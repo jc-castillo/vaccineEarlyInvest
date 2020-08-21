@@ -35,6 +35,9 @@ portfolioPriceTaker(
 
 \item{candidateFile}{File with candidate data}
 
+\item{lambda}{Lagrange multiplier. Should be one, unless trying to solve
+problem with constrained budget.}
+
 \item{return_benefit_args}{if \code{TRUE}, then an extra object is returned, that can then be used
 as input to \code{\link[=countryNetBenefits]{countryNetBenefits()}}}
 }

@@ -18,6 +18,9 @@
 loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
 
+  Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-
+    PreClinicalCandidates <- X <- Subcategory <- NULL
+
   if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
       d <- data.table(read.csv(system.file("extdata","vaccinesSummary.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
@@ -58,17 +61,17 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
 #' Candidates with fungible costs
 #'
-#' Based on summary data for candidates, finds the optimal order to select those 
+#' Based on summary data for candidates, finds the optimal order to select those
 #' candidates, as well as some statistics about
 #' them. Some of those statistics are computed by a Monte Carlo simulation.
 #'
 #' @param d Summary data with candidates
 #' @param par Parameters object with model parameters
-#' @param computeExpComp Whether to compute expected competition for all 
+#' @param computeExpComp Whether to compute expected competition for all
 #'                       candidates for all numbers of potential competitors
 #' @param seed Seed for random generator
 #'
-#' @return List with two data.tables. `dordered` lists all the candidates in 
+#' @return List with two data.tables. `dordered` lists all the candidates in
 #'         the optimal order and with some statistics.
 #' `dcanddraws` includes all the random draws and their outcomes.
 #' @export
@@ -83,6 +86,19 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' d$Target[6:10] = 'Recombinant'
 #' candidate = candidatesFung(d, par)
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
+<<<<<<< HEAD
+=======
+
+  Platform <- pplat <- Target <- ptarget <- phase <- Candidates <- PreClinicalCandidates <-
+    Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-
+    pcand <- selected <- psuccess <- Subcategory <- index <- plat_count <- subcat_count <-
+    prot_vector_count <- cand <- Spike <- Recombinant <- Other <- ben <- mgben <- mgcost <-
+    cost <- welfareRatio <- opt <- MarginalProbability <- CumulativeProbability <-
+    socialBenefit <- welfare <- oFung <- pFung <- margcost <- margbenefit <-
+    r <- y <- subcand <- yplat <- ytarget <- yoverall <- success <- marg_success <-
+    ExpComp <- maxcand <- ysubcand <- . <- NULL
+
+>>>>>>> 45baaa36286a3fed91e44bb9085c142f9d76dc8b
   # Adding platform feasibility probabilities to table
   d[Platform == "DNA", pplat := as.numeric(par$pdna)]
   d[Platform == "RNA", pplat := par$prna]
@@ -154,7 +170,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 
   # Compute possible target protein success combinations
   targets<- c("Spike","Recombinant","Other")
-  probs<- c(as.numeric(par$pspike), 
+  probs<- c(as.numeric(par$pspike),
             as.numeric(par$precombinant), as.numeric(par$potherprotein))
   perm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
   p_perm <- vector(mode="numeric", length=nrow(perm))
@@ -364,7 +380,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 
 #' Benefit integral
 #'
-#' Computes the share of benefits obtained from vaccinating a fraction `frac` of the population is 
+#' Computes the share of benefits obtained from vaccinating a fraction `frac` of the population is
 #' by the end of the analysis period.
 #'
 #' @param frac Fraction of population that has been vaccinated by the end of the period
@@ -396,21 +412,24 @@ benefitIntegral <- function(frac, par) {
 
     if(length(damageshares) != length(vaccshares))
       stop()
-    
+
     for (i in seq_len(length(damageshares)-1)) {
       ds <- damageshares[i]
       vs <- vaccshares[i]
       dsn <- damageshares[i+1]
       vsn <- vaccshares[i+1]
 
+<<<<<<< HEAD
       add <- if_else(frac < vs, 0,
                      if_else(frac >= vsn,
+=======
+      add <- if_else(frac < vs | vsn <= vs, 0,
+                     if_else(frac > vsn,
+>>>>>>> 45baaa36286a3fed91e44bb9085c142f9d76dc8b
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
                              (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
                              )
                      )
-
-      #browser()
 
       ret <- ret + add
     }
@@ -434,8 +453,13 @@ benefitIntegral <- function(frac, par) {
 #' par = Parameters$new(benefitdist='pnorm',alpha=1)
 #' benefit = benefitIntegralDisc(0,0.5,par)
 benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
+<<<<<<< HEAD
   if(any(frac1<0) | any(frac2>1)) stop('limit of integral must be between 0 and 1')
   if(any(share1<0) | any(share1>1) | any(share2<0) | any(share2>1)) stop('share of damage must be between 0 and 1')
+=======
+  frac <- NULL
+
+>>>>>>> 45baaa36286a3fed91e44bb9085c142f9d76dc8b
   slope <- (share2 - share1) / (frac2 - frac1)
   inishare <- share1 - frac1 * slope
   endshare <- share2 + (1-frac2) * slope
@@ -513,6 +537,7 @@ benefits <- function(monthben, capacities, endtimes, par) {
   begintime <- rep(0, length(capacities[[1]]))
 
   for (i in seq_along(capacities)) {
+
     endtime <- endtimes[i]
     capacity <- capacities[[i]]
 
@@ -532,7 +557,6 @@ benefits <- function(monthben, capacities, endtimes, par) {
 
                            )
                     )
-
     benefits <- benefits + benefitsNew
     fracImmunized <- fracImmunizedNew
     begintime <- endtime
@@ -551,6 +575,8 @@ benefits <- function(monthben, capacities, endtimes, par) {
 #' @return Cartesian product of both datasets
 #' @export
 crossJoin <- function(db1, db2) {
+  ..dummy.. <- NULL
+
   db1[, ..dummy.. := 1]
   db2[, ..dummy.. := 1]
 
