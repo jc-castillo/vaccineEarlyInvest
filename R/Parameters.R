@@ -213,7 +213,7 @@ Parameters <- R6Class("Parameters", list(
   #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
   #' @examples 
-  #' par = Parameters$new(global = T, population = 10)
+  #' par = Parameters$new(global = TRUE, population = 10)
 initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL,
                       loss2yr=NULL, worldLoss2yr=0.138, benefitKinks=NULL, ...) {
 

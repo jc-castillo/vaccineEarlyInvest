@@ -23,7 +23,3 @@ Values of benefits integral
 \description{
 More general function that allows for linear damage discounting due to introduction of treatment
 }
-\examples{
-par = Parameters$new(benefitdist='pnorm',alpha=1)
-benefit = benefitIntegralDisc(0,0.5,par)
-}

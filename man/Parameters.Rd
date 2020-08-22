@@ -12,7 +12,7 @@ Class to handle parameters of the model for investment in early vaccine capacity
 ## Method `Parameters$new`
 ## ------------------------------------------------
 
-par = Parameters$new(global = T, population = 10)
+par = Parameters$new(global = TRUE, population = 10)
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -53,7 +53,7 @@ par = Parameters$new(global = T, population = 10)
 
 \item{\code{pphase2}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
 
-\item{\code{pphase3}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
+\item{\code{pphase3}}{Probability that there's no problem at the candidate level when a vaccine is in phase 3 trials}
 
 \item{\code{psubcat}}{Probability that there's no problem at subcategory level}
 
@@ -121,7 +121,7 @@ get all (100 percent) of benefits}
 
 \item{\code{simplebenefits}}{Whether the benefit function is a simple function with one single kink}
 
-\item{\code{kink2loc}}{Location of the second kink in the benfit function}
+\item{\code{kink2loc}}{Location of the second kink in the benefit function}
 
 \item{\code{slopefactormax}}{Maximum ratio between the benefits from vaccinating high risk people and
 next population group}
@@ -219,6 +219,7 @@ Create a new \code{Parameters} object.
   frac_high_risk = NULL,
   loss2yr = NULL,
   worldLoss2yr = 0.138,
+  benefitKinks = NULL,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -249,7 +250,7 @@ A new \code{Parameters} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{par = Parameters$new(global = T, population = 10)
+\preformatted{par = Parameters$new(global = TRUE, population = 10)
 }
 \if{html}{\out{</div>}}
 
@@ -262,7 +263,7 @@ A new \code{Parameters} object.
 \subsection{Method \code{setDerivedParameters()}}{
 Compute additional parameters that are functions of the input parameters
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Parameters$setDerivedParameters()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Parameters$setDerivedParameters(benefitKinks = NULL)}\if{html}{\out{</div>}}
 }
 
 }

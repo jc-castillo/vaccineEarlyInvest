@@ -440,9 +440,9 @@ benefitIntegral <- function(frac, par) {
 #' @param share2 Share of damage at time of frac2
 #'
 #' @return Values of benefits integral
-#' @examples 
-#' par = Parameters$new(benefitdist='pnorm',alpha=1)
-#' benefit = benefitIntegralDisc(0,0.5,par)
+# @examples 
+# par = Parameters$new(benefitdist='pnorm',alpha=1)
+# benefit = benefitIntegralDisc(0,0.5,par)
 benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
   if(any(frac1<0) | any(frac2>1)) stop('limit of integral must be between 0 and 1')
   if(any(share1<0) | any(share1>1) | any(share2<0) | any(share2>1)) stop('share of damage must be between 0 and 1')

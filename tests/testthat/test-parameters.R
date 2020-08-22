@@ -10,11 +10,11 @@ test_that("clone works", {
 test_that("setDerivedParameters() works", {
   par = Parameters$new(mortality = NULL)
   expect_silent(par$setDerivedParameters())
-  par = Parameters$new(global = T)
+  par = Parameters$new(global = TRUE)
   expect_silent(par$setDerivedParameters())
-  par = Parameters$new(global = T,benefitdist = 'pnorm')
+  par = Parameters$new(global = TRUE, benefitdist = 'pnorm')
   expect_silent(par$setDerivedParameters())
-  par = Parameters$new(global = T,benefitdist = 'piecewiseLinear')
+  par = Parameters$new(global = TRUE, benefitdist = 'piecewiseLinear')
   expect_silent(par$setDerivedParameters())
 })
 
