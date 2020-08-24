@@ -30,12 +30,6 @@
 #' price <- 4
 #' portfolio <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, loss2yr=loss2yr, price=price)
-#'or 
-#'
-#'par <- Parameters$new(population=population, gdp_pc=gdp_pc,
-#'                    frac_high_risk=frac_high_risk, 
-#'                    loss2yr=loss2yr)
-#'portfolio <- portfolioPriceTaker(parameters=par, price=price)          
 portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                                 price, steps=c(10,1,0.1), candidateFile=NULL, lambda=1,
                                 return_benefit_args = FALSE) {
@@ -134,15 +128,10 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #' gdp_pc <- 6.71
 #' frac_high_risk <- 0.131
 #' loss2yr <- 0.269
-#' demand <- demandPriceTaker(population=population, gdp_pc=gdp_pc,
+#' par <- Parameters$new(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, 
 #'                    loss2yr=loss2yr)
-#'or 
-#'
-#'par <- Parameters$new(population=population, gdp_pc=gdp_pc,
-#'                    frac_high_risk=frac_high_risk, 
-#'                    loss2yr=loss2yr)
-#'demand <- portfolioPriceTaker(parameters=par)        
+#'                    demand <- demandPriceTaker(parameters=par)        
 demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                              prices=seq(100,1,-1), inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
 
