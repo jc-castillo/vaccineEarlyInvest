@@ -86,7 +86,7 @@ countryParameters <- function(countryData) {
 #' @return `data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 #' @export
 #' @examples 
-#' countryData = loadCountryData('inst/extdata/countryData.xlsx')
+#' countryData = loadCountryData(system.file('extdata','countryData.xlsx',package = 'vaccineEarlyInvest'))
 #' benefitsTable = getBenefitsTable(countryData)
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
   if(grid<=0) stop('grid should be positive')
