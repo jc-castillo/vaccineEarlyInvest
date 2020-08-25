@@ -139,8 +139,9 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @import data.table
 #' @importFrom stats weighted.mean
 #' @examples
-#' countrydata <- loadCountryData(system.file('extdata',
-#' 'countryData.xlsx',package = 'vaccineEarlyInvest'))
+#' countrydata <- 
+#'   loadCountryData(system.file('extdata','countryData.xlsx',
+#'                               package = 'vaccineEarlyInvest'))
 loadCountryData <- function(filename, Gavi=F) {
   . <- populationtotal <- gdp <- frac_highrisk <- `GAVI eligibility` <- country <- monthly_loss <-
     cumulative_loss <- frac <- NULL
