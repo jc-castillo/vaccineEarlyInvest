@@ -53,10 +53,12 @@ expectedBenefitsTable <- function(distribution, benefitsTable, grid=1) {
 #'
 #' @return List of `Parameters` objects for all countries in the dataset
 #' @export
-#' @examples 
-#' countryData = loadCountryData(system.file('extdata',
+#' @examples
+#' \dontrun{ 
+#' countryData <- loadCountryData(system.file('extdata',
 #' 'countryData.xlsx',package = 'vaccineEarlyInvest'))
-#' countryPar = countryParameters(countryData)
+#' countryPar <- countryParameters(countryData)
+#' }
 countryParameters <- function(countryData) {
 
 
@@ -86,10 +88,12 @@ countryParameters <- function(countryData) {
 #'
 #' @return `data.table` keyed by `capacity`. The `socialBenefits` column gives the benefit from the program
 #' @export
-#' @examples 
-#' countryData = loadCountryData(system.file('extdata',
-#' 'countryData.xlsx',package = 'vaccineEarlyInvest'))
-#' benefitsTable = getBenefitsTable(countryData)
+#' @examples
+#' \dontrun{  
+#' countryData <- loadCountryData(system.file('extdata',
+#'   'countryData.xlsx',package = 'vaccineEarlyInvest'))
+#' benefitsTable <- getBenefitsTable(countryData)
+#' }
 getBenefitsTable <- function(countryData, max=1000, grid=1) {
   if(grid<=0) stop('grid should be positive')
   progBen <- noProgBen <- capacity <- socialBenefit <- NULL
@@ -127,7 +131,8 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 
 #' Load data from countries
 #'
-#' Loads a .xlsx file with country data, including demographics, GDP, and economic impact due to Covid-19
+#' Loads a .xlsx file with country data, including demographics, GDP, 
+#' and economic impact due to Covid-19
 #'
 #' @param filename File name (with path) of the xlsx file with country data
 #' @param Gavi Logical, whether to treat Gavi countries as a blcok
@@ -139,9 +144,11 @@ getBenefitsTable <- function(countryData, max=1000, grid=1) {
 #' @import data.table
 #' @importFrom stats weighted.mean
 #' @examples
+#' \dontrun{ 
 #' countrydata <- 
 #'   loadCountryData(system.file('extdata','countryData.xlsx',
 #'                               package = 'vaccineEarlyInvest'))
+#' }
 loadCountryData <- function(filename, Gavi=F) {
   . <- populationtotal <- gdp <- frac_highrisk <- `GAVI eligibility` <- country <- monthly_loss <-
     cumulative_loss <- frac <- NULL

@@ -23,6 +23,7 @@
 #'  in every candidate, benefits, cost, and total capacity.
 #' @export
 #' @examples
+#' \dontrun{
 #' population <- 31.99 
 #' gdp_pc <- 6.71
 #' frac_high_risk <- 0.131
@@ -30,6 +31,7 @@
 #' price <- 4
 #' portfolio <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, loss2yr=loss2yr, price=price)
+#' }
 portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                                 price, steps=c(10,1,0.1), candidateFile=NULL, lambda=1,
                                 return_benefit_args = FALSE) {
@@ -124,6 +126,7 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #' and a matrix with demand for individual candidates at every price
 #' @export
 #' @examples 
+#' \dontrun{
 #' population <- 31.99 
 #' gdp_pc <- 6.71
 #' frac_high_risk <- 0.131
@@ -131,7 +134,8 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #' par <- Parameters$new(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, 
 #'                    loss2yr=loss2yr)
-#'                    demand <- demandPriceTaker(parameters=par)        
+#'                    demand <- demandPriceTaker(parameters=par)
+#' }        
 demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                              prices=seq(100,1,-1), inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
 
