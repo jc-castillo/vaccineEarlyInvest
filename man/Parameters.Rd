@@ -250,11 +250,7 @@ A new \code{Parameters} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-<<<<<<< HEAD
 \preformatted{par = Parameters$new(global = TRUE)
-=======
-\preformatted{par = Parameters$new(global = TRUE, population = 10)
->>>>>>> 5c40ea5ef92f0eba6083193976706be6d4be823b
 }
 \if{html}{\out{</div>}}
 

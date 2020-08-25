@@ -16,6 +16,7 @@ List of \code{Parameters} objects for all countries in the dataset
 Get a list of \code{Parameters} objects for all countries from country data
 }
 \examples{
-countryData = loadCountryData(system.file('extdata','countryData.xlsx',package = 'vaccineEarlyInvest'))
+countryData = loadCountryData(system.file('extdata',
+'countryData.xlsx',package = 'vaccineEarlyInvest'))
 countryPar = countryParameters(countryData)
 }
