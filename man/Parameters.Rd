@@ -12,11 +12,7 @@ Class to handle parameters of the model for investment in early vaccine capacity
 ## Method `Parameters$new`
 ## ------------------------------------------------
 
-<<<<<<< HEAD
 par = Parameters$new(global = TRUE)
-=======
-par = Parameters$new(global = TRUE, population = 10)
->>>>>>> 5c40ea5ef92f0eba6083193976706be6d4be823b
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
