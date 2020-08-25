@@ -23,13 +23,15 @@
 #'  in every candidate, benefits, cost, and total capacity.
 #' @export
 #' @examples
-#' population <- 31.99 
+#' \dontrun{
+#' population <- 31.99
 #' gdp_pc <- 6.71
 #' frac_high_risk <- 0.131
 #' loss2yr <- 0.269
 #' price <- 4
 #' portfolio <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc,
 #'                    frac_high_risk=frac_high_risk, loss2yr=loss2yr, price=price)
+#' }
 portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                                 price, steps=c(10,1,0.1), candidateFile=NULL, lambda=1,
                                 return_benefit_args = FALSE) {
@@ -95,7 +97,8 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
   expCapacity <- sum(distribution[, prob * capacity])
 
   out <- list(capacities=capacities, totCapacity=totCapacity, cost=cost,
-              expBenefits=expBenefits, distribution=distribution, expCapacity=expCapacity)
+              expBenefits=expBenefits, distribution=distribution, expCapacity=expCapacity,
+              dordered=dordered)
 
   if(return_benefit_args)
     out$benefit_args <-  benefit_args
@@ -123,15 +126,17 @@ portfolioPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_r
 #' @return List with information on demand curve. Includes a `data.table` with total demand, benefits, and cost,
 #' and a matrix with demand for individual candidates at every price
 #' @export
-#' @examples 
-#' population <- 31.99 
+#' @examples
+#' \dontrun{
+#' population <- 31.99
 #' gdp_pc <- 6.71
 #' frac_high_risk <- 0.131
 #' loss2yr <- 0.269
 #' par <- Parameters$new(population=population, gdp_pc=gdp_pc,
-#'                    frac_high_risk=frac_high_risk, 
+#'                    frac_high_risk=frac_high_risk,
 #'                    loss2yr=loss2yr)
-#'                    demand <- demandPriceTaker(parameters=par)        
+#'                    demand <- demandPriceTaker(parameters=par)
+#' }
 demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk, loss2yr,
                              prices=seq(100,1,-1), inisteps=c(10,1), mainstep=0.1, candidateFile=NULL, verbose=0) {
 
@@ -203,5 +208,5 @@ demandPriceTaker <- function(parameters=NULL, population, gdp_pc, frac_high_risk
     optimizations[.(i), totalCapacity := sum(capacities)]
   }
 
-  return(list(optimizations=optimizations, allCapacities=allCapacities))
+  return(list(optimizations=optimizations, allCapacities=allCapacities, dordered=dordered))
 }

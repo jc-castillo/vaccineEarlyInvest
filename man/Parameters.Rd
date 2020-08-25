@@ -13,6 +13,7 @@ Class to handle parameters of the model for investment in early vaccine capacity
 ## ------------------------------------------------
 
 par = Parameters$new(global = TRUE)
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -227,19 +228,22 @@ Create a new \code{Parameters} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input}}{Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
-the \code{input} object (of class \code{reactivevalues}) with the inputs from a shiny app, in which case all inputs are copied into
-fields.}
+\item{\code{input}}{Determines how to initialize object. Can be a string telling
+which default parameters to use. Can also be the \code{input} object
+(of class \code{reactivevalues}) with the inputs from a Shiny app,
+in which case all inputs are copied into fields.}
 
 \item{\code{population}}{Country population (in millions)}
 
-\item{\code{gdp_pc}}{Country GDP per capita (in thousand $)}
+\item{\code{gdp_pc}}{Country GDP per capita (in thousand USD)}
 
 \item{\code{frac_high_risk}}{Fraction of population that is high risk}
 
 \item{\code{loss2yr}}{Cumulative percent of GDP lost because of pandemic over two years}
 
 \item{\code{worldLoss2yr}}{Cumulative percent of GDP lost worldwide because of pandemic over two years}
+
+\item{\code{benefitKinks}}{NEEDS DOCUMENTING}
 
 \item{\code{...}}{Set fields at non-default values}
 }
@@ -251,7 +255,6 @@ A new \code{Parameters} object.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{par = Parameters$new(global = TRUE)
-}
 \if{html}{\out{</div>}}
 
 }
