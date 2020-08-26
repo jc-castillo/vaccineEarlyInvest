@@ -53,7 +53,7 @@ on benefits function \code{\link[=countryNetBenefits]{countryNetBenefits()}}
 }
 \examples{
 \dontrun{
-population <- 31.99 
+population <- 31.99
 gdp_pc <- 6.71
 frac_high_risk <- 0.131
 loss2yr <- 0.269

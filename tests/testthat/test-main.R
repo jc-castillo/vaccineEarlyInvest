@@ -8,7 +8,7 @@ test_that('demandPriceTaker() works',{
                                frac_high_risk=frac_high_risk, loss2yr=loss2yr)
   demand = demandPriceTaker(parameters)
   expect_equal(class(demand),'list')
-  expect_length(demand,2)
+  expect_length(demand,3)
   opt = demand$optimizations
   expect_true(all(opt>=0))
   expect_is(demand$allCapacities,c("matrix", "array" ))
@@ -16,7 +16,7 @@ test_that('demandPriceTaker() works',{
   demand = demandPriceTaker(population = population, gdp_pc = gdp_pc, 
                             frac_high_risk = frac_high_risk, loss2yr = loss2yr)
   expect_equal(class(demand),'list')
-  expect_length(demand,2)
+  expect_length(demand,3)
   opt = demand$optimizations
   expect_true(all(opt>=0))
   expect_is(demand$allCapacities,c("matrix", "array" ))
@@ -33,7 +33,7 @@ test_that('portfolioPriceTaker() works',{
                                frac_high_risk=frac_high_risk, loss2yr=loss2yr)
   port = portfolioPriceTaker(parameters,price = 10)
   expect_equal(class(port),'list')
-  expect_length(port,6)
+  expect_length(port,7)
   expect_true(all(port$capacities>=0))
   expect_gte(port$totCapacity,0)
   expect_gte(port$cost,0)
@@ -44,7 +44,7 @@ test_that('portfolioPriceTaker() works',{
                              steps = c(10),
                              price = 10,return_benefit_args = TRUE)
   expect_equal(class(port),'list')
-  expect_length(port,7)
+  expect_length(port,8)
   expect_true(all(port$capacities>=0))
   expect_gte(port$totCapacity,0)
   expect_gte(port$cost,0)

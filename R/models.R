@@ -79,12 +79,12 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @importFrom purrr rbernoulli
 #' @import gtools
 #' @examples 
-#' par = Parameters$new()
-#' d = loadData(par = par)
-#' d$Target = 'Others'
-#' d$Target[1:5] = 'Spike'
-#' d$Target[6:10] = 'Recombinant'
-#' candidate = candidatesFung(d, par)
+#' par <- Parameters$new()
+#' d <- loadData(par = par)
+#' d$Target <- 'Others'
+#' d$Target[1:5] <- 'Spike'
+#' d$Target[6:10] <-'Recombinant'
+#' candidate <- candidatesFung(d, par)
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   Platform <- pplat <- Target <- ptarget <- phase <- Candidates <- PreClinicalCandidates <-
     Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-

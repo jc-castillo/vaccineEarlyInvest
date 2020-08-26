@@ -47,13 +47,13 @@ Builds the demand curve for a price-taking country
 }
 \examples{
 \dontrun{
-population <- 31.99 
+population <- 31.99
 gdp_pc <- 6.71
 frac_high_risk <- 0.131
 loss2yr <- 0.269
 par <- Parameters$new(population=population, gdp_pc=gdp_pc,
-                   frac_high_risk=frac_high_risk, 
+                   frac_high_risk=frac_high_risk,
                    loss2yr=loss2yr)
                    demand <- demandPriceTaker(parameters=par)
-}        
+}
 }
