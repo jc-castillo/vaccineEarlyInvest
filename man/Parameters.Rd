@@ -6,9 +6,20 @@
 \description{
 Class to handle parameters of the model for investment in early vaccine capacity
 }
+\examples{
+
+## ------------------------------------------------
+## Method `Parameters$new`
+## ------------------------------------------------
+
+par = Parameters$new(global = TRUE)
+
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{inputfile}}{World or US input file}
+
 \item{\code{poverall}}{Probability that no problem at the overall level prevents vaccine feasibility}
 
 \item{\code{pvector}}{Probability that there's no problem at the viral vector platform level}
@@ -43,7 +54,7 @@ Class to handle parameters of the model for investment in early vaccine capacity
 
 \item{\code{pphase2}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
 
-\item{\code{pphase3}}{Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials}
+\item{\code{pphase3}}{Probability that there's no problem at the candidate level when a vaccine is in phase 3 trials}
 
 \item{\code{psubcat}}{Probability that there's no problem at subcategory level}
 
@@ -108,6 +119,21 @@ a=1 corresponds to perfectly homogeneous benefits, a=0 corresponds to all benefi
 
 \item{\code{effpop}}{Effective world population that needs to be vaccinated to
 get all (100 percent) of benefits}
+
+\item{\code{simplebenefits}}{Whether the benefit function is a simple function with one single kink}
+
+\item{\code{kink2loc}}{Location of the second kink in the benefit function}
+
+\item{\code{slopefactormax}}{Maximum ratio between the benefits from vaccinating high risk people and
+next population group}
+
+\item{\code{slopefactormin}}{Minimum ratio between the benefits from vaccinating high risk people and
+next population group}
+
+\item{\code{maxgdpratio}}{Maximum ratio between share of GDP and share of population}
+
+\item{\code{benefitshape}}{Parameter that specifies the shape of the benefit function. It's linear if it
+is one, it's equal to health benefits if it is zero.}
 
 \item{\code{c}}{Cost of capacity per dose / year}
 
@@ -194,6 +220,7 @@ Create a new \code{Parameters} object.
   frac_high_risk = NULL,
   loss2yr = NULL,
   worldLoss2yr = 0.138,
+  benefitKinks = NULL,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -201,19 +228,22 @@ Create a new \code{Parameters} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input}}{Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
-the \code{input} object (of class \code{reactivevalues}) with the inputs from a shiny app, in which case all inputs are copied into
-fields.}
+\item{\code{input}}{Determines how to initialize object. Can be a string telling
+which default parameters to use. Can also be the \code{input} object
+(of class \code{reactivevalues}) with the inputs from a Shiny app,
+in which case all inputs are copied into fields.}
 
 \item{\code{population}}{Country population (in millions)}
 
-\item{\code{gdp_pc}}{Country GDP per capita (in thousand $)}
+\item{\code{gdp_pc}}{Country GDP per capita (in thousand USD)}
 
 \item{\code{frac_high_risk}}{Fraction of population that is high risk}
 
 \item{\code{loss2yr}}{Cumulative percent of GDP lost because of pandemic over two years}
 
 \item{\code{worldLoss2yr}}{Cumulative percent of GDP lost worldwide because of pandemic over two years}
+
+\item{\code{benefitKinks}}{NEEDS DOCUMENTING}
 
 \item{\code{...}}{Set fields at non-default values}
 }
@@ -222,6 +252,15 @@ fields.}
 \subsection{Returns}{
 A new \code{Parameters} object.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{par = Parameters$new(global = TRUE)
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setDerivedParameters"></a>}}
@@ -229,7 +268,7 @@ A new \code{Parameters} object.
 \subsection{Method \code{setDerivedParameters()}}{
 Compute additional parameters that are functions of the input parameters
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Parameters$setDerivedParameters()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Parameters$setDerivedParameters(benefitKinks = NULL)}\if{html}{\out{</div>}}
 }
 
 }

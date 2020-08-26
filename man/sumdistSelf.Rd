@@ -7,12 +7,12 @@
 sumdistSelf(dist, N = 2)
 }
 \arguments{
-\item{dist}{Input distribution. Vector where position i corresponds to the probability that the probability is i-1}
+\item{dist}{Input distribution. Vector where position i corresponds to the probability that the random variable is i-1}
 
 \item{N}{Number of times to add}
 }
 \value{
-Distribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+Distribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 }
 \description{
 Computes the sum of the distribution of N iid discrete random variables

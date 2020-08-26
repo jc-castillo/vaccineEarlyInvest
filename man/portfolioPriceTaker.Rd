@@ -51,3 +51,14 @@ This is done by calling optimisation function \code{\link[=optimizeGrid]{optimiz
 by optimising using decreasing step sizes (see \code{step})
 on benefits function \code{\link[=countryNetBenefits]{countryNetBenefits()}}
 }
+\examples{
+\dontrun{
+population <- 31.99 
+gdp_pc <- 6.71
+frac_high_risk <- 0.131
+loss2yr <- 0.269
+price <- 4
+portfolio <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc,
+                   frac_high_risk=frac_high_risk, loss2yr=loss2yr, price=price)
+}
+}

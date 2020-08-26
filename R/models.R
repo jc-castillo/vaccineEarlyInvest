@@ -10,6 +10,11 @@
 #' @export
 #' @import data.table
 #' @importFrom utils read.csv
+#' @examples 
+#' par=Parameters$new()
+#' d = loadData(par, includeVaccines = 'BCG')
+#' d = loadData(par,candidateFile = 
+#'              system.file("extdata","vaccinesSummaryAug20.csv", package = 'vaccineEarlyInvest'))
 loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
 
@@ -18,9 +23,9 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 
   if (is.null(candidateFile)) {
     if (par$inputfile=="Default") {
-      d <- data.table(read.csv("Data/vaccinesSummary.csv", fileEncoding = "UTF-8-BOM"))
+      d <- data.table(read.csv(system.file("extdata","vaccinesSummaryAug20.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
     } else if (par$inputfile=="US") {
-      d <- data.table(read.csv("Data/vaccinesSummaryUS.csv", fileEncoding = "UTF-8-BOM"))
+      d <- data.table(read.csv(system.file("Data","vaccinesSummaryUS.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
     }
   } else {
     d <- data.table(read.csv(candidateFile, fileEncoding = "UTF-8-BOM"))
@@ -36,24 +41,19 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
     d[, X := NULL]
   }
 
-  # dchoose <- data.table(read.csv("Data/vaccinesChoose.csv", fileEncoding = "UTF-8-BOM"))
+  # dchoose <- data.table(read.csv(system.file("Data/vaccinesChoose.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
   # d <- d[.(dchoose$Platform, dchoose$Subcategory), on=.(Platform, Subcategory)]
 
-  # Delete rows of vaccines to omit in analysis
-  if (!"BCG" %in% includeVaccines) {
-    d <- d[Subcategory != "Live attenuated bacteria"]
+  # Delete rows of vaccines to omit in analysis 
+  exp_subcat = c("Live attenuated bacteria","Self-assembling vaccine","Dendritic cells",
+                 "Artificial antigen presenting cells","Unknown")
+  exp_names = c("BCG","Self-assembling","Dendritic","AAPC","Unknown")
+  if(!all(includeVaccines  %in% exp_names)){
+    stop(paste(c('Vaccines to be included must be from', exp_names),collapse = ' '))
   }
-  if (!"Self-assembling" %in% includeVaccines) {
-    d <- d[Subcategory != "Self-assembling vaccine"]
-  }
-  if (!"Dendritic" %in% includeVaccines) {
-    d <- d[Subcategory != "Dendritic cells"]
-  }
-  if (!"AAPC" %in% includeVaccines) {
-    d <- d[Subcategory != "Artificial antigen presenting cells"]
-  }
-  if (!"Unknown" %in% includeVaccines) {
-    d <- d[Subcategory != "Unknown"]
+  for (i in 1:length(exp_names)) {
+    if(!exp_names[i] %in% includeVaccines)
+      d <- d[Subcategory != exp_subcat[i]]
   }
 
   return(d)
@@ -78,8 +78,14 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @importFrom dplyr if_else
 #' @importFrom purrr rbernoulli
 #' @import gtools
+#' @examples 
+#' par = Parameters$new()
+#' d = loadData(par = par)
+#' d$Target = 'Others'
+#' d$Target[1:5] = 'Spike'
+#' d$Target[6:10] = 'Recombinant'
+#' candidate = candidatesFung(d, par)
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
-
   Platform <- pplat <- Target <- ptarget <- phase <- Candidates <- PreClinicalCandidates <-
     Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-
     pcand <- selected <- psuccess <- Subcategory <- index <- plat_count <- subcat_count <-
@@ -349,9 +355,9 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   }
 
   if (computeExpComp) {
-    # dexpComp <- data.table(ind=1:maxcand)
+    # dexpComp <- data.table(ind=1:par$maxcand)
 
-    for (n in 1:maxcand) {
+    for (n in 1:par$maxcand) {
       dcanddraws[, paste0("success_", n) := as.numeric(success==1 & n >= index), by="r"]
       # dcanddraws[, paste0("successes_", n) := sum(as.numeric(success==1 & n >= index)), by="r"]
       dcanddraws[, paste0("successes_", n) := sum(get(paste0("success_", n))), by="r"]
@@ -385,6 +391,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
 #' benefitIntegral(0.5, par)
 
 benefitIntegral <- function(frac, par) {
+  if(any(frac < 0) | any(frac > 1)) stop('frac must be a real number between 0 and 1')
   if (par$benefitdist == "pnorm") {
     ret <- Re(frac * (1-hypergeo(-1/par$alpha, 1/par$alpha, 1+1/par$alpha, frac^par$alpha)))
   } else if (par$benefitdist == "piecewiseLinear") {
@@ -408,8 +415,8 @@ benefitIntegral <- function(frac, par) {
       dsn <- damageshares[i+1]
       vsn <- vaccshares[i+1]
 
-      add <- if_else(frac < vs | vsn <= vs, 0,
-                     if_else(frac > vsn,
+      add <- if_else(frac < vs, 0,
+                     if_else(frac >= vsn,
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
                              (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
                              )
@@ -434,6 +441,8 @@ benefitIntegral <- function(frac, par) {
 #'
 #' @return Values of benefits integral
 benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
+  if(any(frac1<0) | any(frac2>1)) stop('limit of integral must be between 0 and 1')
+  if(any(share1<0) | any(share1>1) | any(share2<0) | any(share2>1)) stop('share of damage must be between 0 and 1')
   frac <- NULL
 
   slope <- (share2 - share1) / (frac2 - frac1)
@@ -454,7 +463,7 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
   } else if (par$benefitdist == "piecewiseLinear") {
     stop("Not implemented. Use piecewiseLinearGen")
   } else if (par$benefitdist == "piecewiseLinearGen") {
-    if (frac1 > 0 | share1 < 1 | share2 < 1) {
+    if (any(frac1 > 0) | any(share1 < 1) | any(share2 < 1)) {
       stop("Not implemented yet.")
     }
 
@@ -469,10 +478,10 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
       dsn <- damageshares[i+1]
       vsn <- vaccshares[i+1]
 
-      add <- if_else(frac < vs, 0,
+      add <- if_else(frac2 < vs, 0,
                      if_else(frac2 > vsn,
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
-                             (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
+                             (frac2 - vs) * ds + 1/2 * (frac2 - vs)^2 * (dsn - ds) / (vsn - vs),
                      )
       )
 
@@ -497,8 +506,14 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
 #'
 #' @return Total benefits from vaccination
 #' @export
+#' @examples 
+#' cap = list(c(0.1,0.2,0.4),c(0.2,0.5,0.7))
+#' par = Parameters$new()
+#' ben = benefits(100, cap, c(3,4),par)
 benefits <- function(monthben, capacities, endtimes, par) {
-
+  if(any(monthben<0)) stop('benefits must be non-negative')
+  if(any(unlist(capacities)<0)) stop('capacities must be non-negative')
+  if(any(endtimes<0)) stop('endtimes must be non-negative')
   if (length(capacities) != length(endtimes)) {
     stop("The capacities and endtimes vectors should be of the same length")
   }
@@ -517,11 +532,11 @@ benefits <- function(monthben, capacities, endtimes, par) {
     timeFinish <- begintime + (1-fracImmunized) * (par$effpop) / capacity
 
     # Different computation when everyone was already vaccinated in the fist stage
-    benefitsNew <- if_else(fracImmunized >= 1,
+    benefitsNew <- ifelse(fracImmunized >= 1,
                            (endtime - begintime) * monthben,
-                           if_else(fracImmunizedNew < 1, # Different computation when capacity is enough to vaccinate everyone before endtime2
+                           ifelse(fracImmunizedNew < 1, # Different computation when capacity is enough to vaccinate everyone before endtime2
                                    (benefitIntegral(fracImmunizedNew, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll * monthben,
-                                   if_else(fracImmunized < 1,
+                                   ifelse(fracImmunized < 1,
                                            ((benefitIntegral(1, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll + (endtime - timeFinish)) * monthben,
                                            (endtime - timeFinish) * monthben
                                    )

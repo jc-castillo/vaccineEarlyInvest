@@ -19,3 +19,10 @@ getBenefitsTable(countryData, max = 1000, grid = 1)
 \description{
 Create a table that tells the global benefits corresponding to every level of effective capacity
 }
+\examples{
+\dontrun{  
+countryData <- loadCountryData(system.file('extdata',
+  'countryData.xlsx',package = 'vaccineEarlyInvest'))
+benefitsTable <- getBenefitsTable(countryData)
+}
+}

@@ -1,5 +1,5 @@
 ---
-title: "Finding the optimal portfolio for a country with vaccineEarlyInvest"
+title: "Country portfolio"
 author: "Juan Camilo Castillo"
 output: rmarkdown::html_vignette
 vignette: >
@@ -10,16 +10,21 @@ vignette: >
 
 
 
+## Finding the optimal portfolio for a country
+
+
 ```r
 # Loading packages and setting up options
 library(vaccineEarlyInvest)
+#> This is vaccineEarlyInvest v0.1;
+#> see ?vaccineEarlyInvest for basic information; vignette('countryPorfolio') for a tutorial
 library(ggplot2)
 theme_set(theme_bw(base_size=12))
 ```
 
 ### Simple case: Peru
 
-The main function that finds the optimal portfolio for a price taking country is `portfolioPriceTaker()`. In order to illustrate its basic usage, let's find the optimal portfolio for Peru. It has 31.99 million people, its GDP per capita is $6,710, 13.1% of its population is high risk, and the World Bank projects the Covid-19 pandemic will cause a 26.9% cumulative GDP loss over 2020 and 2021. The main arguments to `portfolioPriceTaker()` are these five numbers, the price at which manufacturing capacity is sold in the market (let's assume it's $4 per course / year), as well as the path to a .csv file with data on vaccine candidates.
+The main function that finds the optimal portfolio for a price taking country is `portfolioPriceTaker()`. In order to illustrate its basic usage, let's find the optimal portfolio for Peru. It has 31.99 million people, its GDP per capita is $6,710, 13.1% of its population is high risk, and the World Bank projects the Covid-19 pandemic will cause a 26.9% cumulative GDP loss over 2020 and 2021. The main arguments to `portfolioPriceTaker()` are these five numbers, the price at which manufacturing capacity is sold in the market (let's assume it's $10 per course / year), as well as the path to a .csv file with data on vaccine candidates. The file in `inst/extdata/vaccinesSummaryAug20.csv` gives an example of how the input file should look like. It reflects the state of the vaccine landscape in August 20, 2020, with [data from the WHO](https://www.who.int/publications/m/item/draft-landscape-of-covid-19-candidate-vaccines).
 
 
 ```r
@@ -27,17 +32,17 @@ population <- 31.99 # In millions
 gdp_pc <- 6.71 # In thousand dollars
 frac_high_risk <- 0.131
 loss2yr <- 0.269
-price <- 4 # In dollars per course / year
+price <- 10 # In dollars per course / year
 
 portfolioPeru <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, price=price,
-                                 candidateFile="../inst/extdata/vaccinesSummary.csv")
-#> [1] "Objective function: "
-#> 1.302723 , 2.254786 , 2.926032 , 3.245756 , 3.344065 , 3.344065 , 
-#> [1] "Objective function: "
-#> 3.383466 , 3.422812 , 3.463115 , 3.503331 , 3.545 , 3.713448 , 3.850454 , 3.955998 , 4.029705 , 4.082548 , 4.128162 , 4.166448 , 4.199885 , 4.231882 , 4.265915 , 4.284632 , 4.303598 , 4.31903 , 4.329401 , 4.336939 , 4.3423 , 4.347574 , 4.347927 , 4.348882 , 4.352215 , 4.39483 , 4.436352 , 4.476365 , 4.517707 , 4.557754 , 4.598906 , 4.63873 , 4.676744 , 4.714237 , 4.751994 , 4.791885 , 4.830119 , 4.869856 , 4.907906 , 4.943673 , 4.979281 , 5.013758 , 5.047959 , 5.080985 , 5.112787 , 5.144346 , 5.173713 , 5.202612 , 5.22826 , 5.25369 , 5.278714 , 5.298809 , 5.318014 , 5.329448 , 5.343035 , 5.355857 , 5.357927 , 5.365323 , 5.370007 , 5.372713 , 5.373566 , 5.373628 , 5.374905 , 5.376236 , 5.383015 , 5.383015 , 
-#> [1] "Objective function: "
-#> 5.383869 , 5.384696 , 5.384877 , 5.385032 , 5.385577 , 5.385715 , 5.386384 , 5.387561 , 5.387773 , 5.388341 , 5.388892 , 5.390164 , 5.39115 , 5.391692 , 5.391832 , 5.392948 , 5.393902 , 5.394834 , 5.395861 , 5.396938 , 5.397945 , 5.398847 , 5.399892 , 5.400871 , 5.401732 , 5.40269 , 5.403684 , 5.404681 , 5.406123 , 5.406965 , 5.408073 , 5.409276 , 5.410155 , 5.411169 , 5.411985 , 5.412732 , 5.413544 , 5.414338 , 5.415108 , 5.41586 , 5.416628 , 5.417398 , 5.418184 , 5.418793 , 5.419519 , 5.42023 , 5.420828 , 5.421384 , 5.421949 , 5.422686 , 5.423229 , 5.423697 , 5.424244 , 5.424697 , 5.425073 , 5.425429 , 5.425763 , 5.426117 , 5.42642 , 5.42673 , 5.427022 , 5.427734 , 5.428483 , 5.428932 , 5.429488 , 5.429834 , 5.430163 , 5.430589 , 5.430936 , 5.431097 , 5.431281 , 5.431444 , 5.43155 , 5.431932 , 5.432081 , 5.432157 , 5.432231 , 5.43233 , 5.432434 , 5.432721 , 5.433032 , 5.433193 , 5.433288 , 5.433382 , 5.43355 , 5.433826 , 5.433883 , 5.43411 , 5.434119 , 5.434186 , 5.43435 , 5.434355 , 5.434371 , 5.434378 , 5.434401 , 5.434402 , 5.434407 , 5.434431 , 5.43447 , 5.434489 , 5.43449 , 5.434564 , 5.434614 , 5.434651 , 5.434667 , 5.434709 , 5.434718 , 5.434718 ,
+                                 candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+#> [1] "Objective function: country net benefits"
+#> 1.068466 , 1.460368 , 1.460368 , 
+#> [1] "Objective function: country net benefits"
+#> 1.554469 , 1.648282 , 1.748535 , 1.838525 , 1.885214 , 1.92167 , 1.946261 , 1.984039 , 2.016145 , 2.114031 , 2.206913 , 2.302001 , 2.390823 , 2.474062 , 2.480079 , 2.557254 , 2.629442 , 2.685971 , 2.736347 , 2.763836 , 2.783209 , 2.796411 , 2.818007 , 2.820258 , 2.828095 , 2.833647 , 2.836328 , 2.836328 , 
+#> [1] "Objective function: country net benefits"
+#> 2.836893 , 2.837652 , 2.837997 , 2.83801 , 2.839312 , 2.839497 , 2.841001 , 2.84242 , 2.843518 , 2.844526 , 2.84537 , 2.846001 , 2.846533 , 2.846939 , 2.847877 , 2.848437 , 2.848689 , 2.848845 , 2.849028 , 2.849292 , 2.849733 , 2.849813 , 2.849938 , 2.850027 , 2.850178 , 2.850208 , 2.850208 ,
 ```
 
 Note that the names of all six arguments must be entered explicitly when calling `portfolioPriceTaker()`. The output from this function is a list that includes the main information about the optimal portfolio:
@@ -45,11 +50,11 @@ Note that the names of all six arguments must be entered explicitly when calling
 
 ```r
 portfolioPeru$expBenefits # In billion dollars
-#> [1] 7.042718
+#> [1] 4.866208
 portfolioPeru$cost # In billion dollars
-#> [1] 1.608
+#> [1] 2.016
 portfolioPeru$totCapacity # In million courses / month
-#> [1] 33.5
+#> [1] 16.8
 
 # Sorting capacities in descending order
 capacities <- sort(portfolioPeru$capacities, decreasing=T)
@@ -57,7 +62,7 @@ capacities <- sort(portfolioPeru$capacities, decreasing=T)
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
-       title="Capacity per cand. at $4 per course / year, Peru")
+       title="Capacity per cand. at $10 per\ncourse / year, Peru")
 ```
 
 ![](figure/PeruPortfolioFigure-1.png)
@@ -93,7 +98,7 @@ prices <- 1:30 # Vector of prices at which demand will be evaluated
 
 demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, prices=prices,
-                                 candidateFile="../inst/extdata/vaccinesSummary.csv")
+                                 candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
 
 ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) + 
   labs(x="Capacity (mil. courses / month)", y="Price ($ per course / year)", 
@@ -107,7 +112,7 @@ ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) +
 
 The previous simple analysis uses the default parameters of the model. Those default parameters can be modified by passing an object of the `Parameters` class (an `R6` class). In that case, the input arguments `population`, `gdp_pc`, `frac_high_risk`, and `loss2yr` passed to `portfolioPriceTaker()` and `demandPriceTaker()` are overriden. Instead, they should be passed as arguments to the constructor of the `Parameters` class.
 
-As an example, let's find the optimal portfolio for Germany at a price of $10 per course / year, but let's now assume that the probability that vaccine candidates in phase 2 are successful is 0.5 (instead of 0.32), that the expected fraction of harm that will be mitigated because of alternative treatments is 0.7 (instead of 0.5), and that worldide mortality is 500,000 people per month (instead of 200,000 per month).
+As an example, let's find the optimal portfolio for Germany at a price of $12 per course / year, but let's now assume that the probability that vaccine candidates in phase 2 are successful is 0.5 (instead of 0.32), that the expected fraction of harm that will be mitigated because of alternative treatments is 0.7 (instead of 0.5), and that worldwide mortality is 500,000 people per month (instead of 200,000 per month).
 
 
 
@@ -117,7 +122,7 @@ population <- 83.02 # In millions
 gdp_pc <- 47.6 # In thousand dollars
 frac_high_risk <- 0.297
 loss2yr <- 0.170
-price <- 6 # In dollars per course / year
+price <- 12 # In dollars per course / year
 
 # Alternative model parameters
 pphase2 <- 0.5
@@ -128,23 +133,81 @@ parameters <- Parameters$new(population=population, gdp_pc=gdp_pc,
                              frac_high_risk=frac_high_risk, loss2yr=loss2yr,
                              pphase2=pphase2, sharm=sharm, worldmortality=worldmortality)
 
-portfolioGermany <- portfolioPriceTaker(parameters, price=10,
-                                     candidateFile="../inst/extdata/vaccinesSummary.csv")
-#> [1] "Objective function: "
-#> 17.68738 , 30.0601 , 38.66327 , 42.8045 , 46.10618 , 47.73178 , 48.42624 , 49.21456 , 49.29033 , 49.29033 , 
-#> [1] "Objective function: "
-#> 49.29063 , 49.33415 , 49.39177 , 49.43327 , 49.49695 , 49.5623 , 49.60135 , 49.66316 , 49.71929 , 49.74168 , 49.76125 , 49.77801 , 49.7823 , 49.78459 , 49.84753 , 49.90439 , 49.95606 , 50.01112 , 50.05721 , 50.10079 , 50.13439 , 50.17707 , 50.21961 , 50.25091 , 50.27875 , 50.30608 , 50.33047 , 50.35479 , 50.37854 , 50.40009 , 50.42729 , 50.43714 , 50.44113 , 50.44665 , 50.45134 , 50.45137 , 50.46354 , 50.46513 , 50.47283 , 50.47782 , 50.48016 , 50.48846 , 50.49776 , 50.50481 , 50.50906 , 50.51111 , 50.51917 , 50.52327 , 50.52483 , 50.52838 , 50.52974 , 50.53188 , 50.53188 , 
-#> [1] "Objective function: "
-#> 50.53218 , 50.53282 , 50.53287 , 50.53293 , 50.53296 , 50.53324 , 50.53406 , 50.53431 , 50.53508 , 50.53584 , 50.53658 , 50.53728 , 50.53795 , 50.53859 , 50.53921 , 50.53981 , 50.53983 , 50.54041 , 50.54042 , 50.541 , 50.54155 , 50.54209 , 50.54211 , 50.54264 , 50.5431 , 50.5437 , 50.54427 , 50.54481 , 50.54518 , 50.54552 , 50.54596 , 50.54627 , 50.54655 , 50.54695 , 50.54723 , 50.54748 , 50.54788 , 50.54812 , 50.54851 , 50.54875 , 50.54895 , 50.54908 , 50.54928 , 50.54951 , 50.54971 , 50.54988 , 50.54991 , 50.54993 , 50.55002 , 50.55018 , 50.55029 , 50.5503 , 50.55033 , 50.55035 , 50.55043 , 50.55051 , 50.55053 , 50.55053 ,
+portfolioGermany <- portfolioPriceTaker(parameters, price=price,
+                                     candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+#> [1] "Objective function: country net benefits"
+#> 11.25136 , 19.72368 , 26.00028 , 30.1296 , 32.25973 , 34.1566 , 35.44903 , 36.05811 , 36.15191 , 36.15191 , 
+#> [1] "Objective function: country net benefits"
+#> 36.2092 , 36.25338 , 36.28505 , 36.31141 , 36.35467 , 36.40508 , 36.42879 , 36.46244 , 36.47588 , 36.51985 , 36.5692 , 36.64341 , 36.64599 , 36.67575 , 36.69582 , 36.7389 , 36.78961 , 36.82861 , 36.87332 , 36.9151 , 36.9442 , 36.97324 , 36.99159 , 37.03818 , 37.07273 , 37.10995 , 37.13616 , 37.14816 , 37.17188 , 37.19394 , 37.21849 , 37.2462 , 37.27627 , 37.28811 , 37.29861 , 37.31014 , 37.32523 , 37.33098 , 37.33226 , 37.33368 , 37.3576 , 37.36386 , 37.39023 , 37.40304 , 37.41173 , 37.47283 , 37.51213 , 37.53199 , 37.5341 , 37.54508 , 37.55205 , 37.55421 , 37.56156 , 37.56174 , 37.56574 , 37.57384 , 37.57515 , 37.57739 , 37.58207 , 37.5854 , 37.58695 , 37.58695 , 
+#> [1] "Objective function: country net benefits"
+#> 37.58754 , 37.58813 , 37.58836 , 37.5889 , 37.58943 , 37.59005 , 37.59049 , 37.59092 , 37.59133 , 37.59163 , 37.59203 , 37.5925 , 37.59271 , 37.59295 , 37.59308 , 37.59325 , 37.59346 , 37.5935 , 37.59357 , 37.594 , 37.59428 , 37.59429 , 37.59468 , 37.59491 , 37.59501 , 37.59525 , 37.59532 , 37.59565 , 37.5958 , 37.59584 , 37.59586 , 37.59596 , 37.59602 , 37.59605 , 37.59606 , 37.59614 , 37.59614 , 37.59615 , 37.59616 , 37.59616 ,
 
 # Sorting capacities in descending order
 capacities <- sort(portfolioGermany$capacities, decreasing=T)
 ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
                     fill="black", color="black", alpha=0.5) +
   labs(x="Candidate", y="Capacity (mil. courses / month)", 
-       title="Capacity per cand. at $10 per course / year, Germany")
+       title="Capacity per cand. at $12 per\ncourse / year, Germany")
 ```
 
 ![](figure/Germany-1.png)
 
 A `Parameters` object can also be passed in the same way to `demandPriceTaker()` (instead of specifying the population, GDP per capita, fraction of high risk population, and 2-year economic loss arguments).
+
+
+### Modifying parameters directly
+
+The code above shows how to run the model using only simple demographics as model inputs. The `Parameters` constructor computes the main model parameters from those inputs.
+
+It is also possible to enter those main model parameters directly, by passing them as arguments to `Parameters$new()`. This is an exhaustive list of all the model parameters that are used to compute the optimal portfolio for a country:
+
+1. `TT`: The number of periods that early capacity investment is able to accelerate vaccination. 6 months by default.
+2. `poverall`: Probability that no problem at the overall level prevents vaccine feasibility. 0.9 by default.
+3. `pvector`: Probability that there's no problem at the viral vector platform level. 0.8 by default.
+4. `psubunit`: Probability that there's no problem at the protein subunit platform level. 0.8 by default.
+5. `prna`: Probability that there's no problem at the RNA platform level. 0.6 by default.
+6. `pdna`: Probability that there's no problem at the DNA platform level. 0.4 by default.
+7. `pattenuated`: Probability that there's no problem at the live attenuated platform level. 0.8 by default.
+8. `pinactivated`: Probability that there's no problem at the inactivated platform level. 0.8 by default
+9. `ppreclinical`: Probability that there's no problem at the candidate level when a vaccine is in preclincal trials. 0.14 by default.
+10. `pphase1`: Probability that there's no problem at the candidate level when a vaccine is in phase 1 trials. 0.23 by default.
+11. `pphase2`: Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials. 0.32 by default.
+12. `pphase3`: Probability that there's no problem at the candidate level when a vaccine is in phase 3 trials. 0.5 by default.
+13. `psubcat`: Probability that there's no problem at subcategory level. 0.8 by default.
+14. `totmonthben`: Total macroeconomic and health benefits from avoiding one month of the pandemic, in billion dollars per month. The default is computed based on the country population and GDP per capita.
+15. `sharm`: Expected share of harm avoided by some drug or other policy. 0.5 by default.
+16. `fracneeded`: Fraction of population that must be vaccinated to obtain herd immunity. 0.7 by default.
+16. `effpop`: Worldwide population that must be vaccinated to optain herd immunity, in billions. 5.46 billion (70% of the human population) by default.
+17. `popshare`: Share of the worldwide population in the country of analysis. Computed from country population by default.
+17. `gdpshare`: Share of the worldwide GDP in the country of analysis. Computed from country population and GDP per capita by default.
+17. `afterCapacity`: Monthly courses obtained after knowing which candidates succeed. Computed by default as 500 million courses / month split evenly across the world by population.
+18. `counterCapacity`: Monthly courses obtained if there is no early investment after knowing which candidates succeed. Computed by default as 500 million courses / month split evenly across the world by population. 
+19. `benefitKinks`: List describing the form of the piecewise linear function that determines benefits from vaccination as a fraction of the population vaccinated. It can be set by passing, for instance, `benefitShape=list(c(0.15,0.4,0.7),c(0.6,0.9,1))`, which means that vaccinating 15% of the population gives 60% of the harm, vaccinating 40% of the population gives 90% of the harm, and vaccinating 70% of the population gives 100% of the harm.
+
+
+As an example of how to enter parameters directly, consider a hypothetical country with 0.05 of the world population and 0.06 of the world GDP, whose monthly harm from Covid is $30 billion. Once it is clear which vaccines succeed, it gets 20 million vaccines per month regardless of whether it invested in them or not. Suppose the country has a simple benefit function in which vaccinating 20% of the population gives 80% of the benefits, and vaccinating 75% gives 100% of the benfits. Also suppose phase 3 candidates have a probability of no idiosyncratic problem of 0.7:
+
+
+```r
+parameters <- Parameters$new(popshare=0.05, gdpshare=0.06, totmonthben=30, pphase3=0.7,
+                             afterCapacity=20, counterCapacity=20,
+                             benefitKinks=list(c(0.2,0.75),c(0.8,1)))
+
+portfolioCountry <- portfolioPriceTaker(parameters, price=price,
+                                     candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+#> [1] "Objective function: country net benefits"
+#> 19.49538 , 36.48969 , 47.01998 , 58.53018 , 62.734 , 66.48219 , 69.70933 , 74.92913 , 76.53219 , 77.88462 , 79.03073 , 80.93667 , 81.25603 , 85.95045 , 86.50564 , 86.94955 , 87.97651 , 88.22635 , 88.38479 , 90.63736 , 92.98906 , 94.38239 , 95.18767 , 95.62418 , 96.28759 , 96.97346 , 96.99155 , 97.32343 , 97.637 , 98.04127 , 98.43834 , 98.5085 , 99.05453 , 99.39611 , 99.50924 , 99.86893 , 100.429 , 100.6532 , 100.8394 , 100.9935 , 100.9935 , 
+#> [1] "Objective function: country net benefits"
+#> 100.9985 , 100.9996 , 101.0143 , 101.0184 , 101.0277 , 101.0393 , 101.0463 , 101.0572 , 101.0599 , 101.0724 , 101.0771 , 101.0845 , 101.0869 , 101.0881 , 101.0897 , 101.1007 , 101.1079 , 101.1111 , 101.1165 , 101.1179 , 101.1185 , 101.1239 , 101.1248 , 101.1283 , 101.1326 , 101.1333 , 101.1339 , 101.1339 , 101.1349 , 101.1355 , 101.1355 , 
+#> [1] "Objective function: country net benefits"
+#> 101.1355 , 101.1356 , 101.1357 , 101.1357 , 101.1359 , 101.136 , 101.1361 , 101.1362 , 101.1363 , 101.1363 , 101.1364 , 101.1365 , 101.1366 , 101.1366 , 101.1367 , 101.1367 , 101.1367 , 101.1367 , 101.1368 , 101.1368 , 101.1368 , 101.1368 ,
+
+# Sorting capacities in descending order
+capacities <- sort(portfolioCountry$capacities, decreasing=T)
+ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
+                    fill="black", color="black", alpha=0.5) +
+  labs(x="Candidate", y="Capacity (mil. courses / month)", 
+       title="Capacity per cand. at $12 per\ncourse / year, hypothetical country")
+```
+
+![](figure/HypoCountry-1.png)

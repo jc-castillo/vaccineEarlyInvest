@@ -26,3 +26,11 @@ Based on summary data for candidates, finds the optimal order to select those
 candidates, as well as some statistics about
 them. Some of those statistics are computed by a Monte Carlo simulation.
 }
+\examples{
+par = Parameters$new()
+d = loadData(par = par)
+d$Target = 'Others'
+d$Target[1:5] = 'Spike'
+d$Target[6:10] = 'Recombinant'
+candidate = candidatesFung(d, par)
+}

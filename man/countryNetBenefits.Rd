@@ -9,7 +9,7 @@ countryNetBenefits(
   dcandidate,
   targetPermutations,
   dplatforms,
-  grid,
+  grid = 1,
   price,
   par,
   lambda = 1

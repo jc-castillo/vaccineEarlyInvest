@@ -17,9 +17,9 @@
 #'
 #' @return Expected benefits for the country
 #' @export
-countryNetBenefits <- function(capacities, dcandidate, targetPermutations,
-                               dplatforms, grid, price, par, lambda=1) {
-  ceb <- countryExpectedBenefits(capacities, dcandidate, targetPermutations,
+countryNetBenefits <- function(capacities, dcandidate, targetPermutations, 
+                               dplatforms, grid=1, price, par, lambda=1) {
+  ceb <- countryExpectedBenefits(capacities, dcandidate, targetPermutations, 
                                  dplatforms, par, grid=grid)
   netBenefits <- ceb - lambda * priceTakerCost(capacities, price)
 
@@ -107,6 +107,8 @@ countryDistribution <- function(capacities, dcandidate, targetPermutations,
 #' @return Total cost of the portfolio
 #' @export
 priceTakerCost <- function(capacities, price) {
+  if(any(capacities<0)) stop('capacities should be non-negative')
+  if(price<0) stop('price should be non-negative')
   baseMgCost <- price * 12 / 1000
   cost <- baseMgCost * sum(capacities)
   return(cost)
@@ -123,6 +125,7 @@ priceTakerCost <- function(capacities, price) {
 #' @return Social cost of the portfolio
 #' @export
 socialCost <- function(capacities, distribution, par) {
+  if(any(capacities<0)) stop('capacities should be non-negative')
 
   prob <- capacity <- socialCost <- NULL
 
@@ -316,6 +319,7 @@ optimizeGrid <- function(capacities, objectiveFun, step=100, verbose=1, name = "
 #' @return data.table with all permutations and their probabilities
 #' @export
 getTargetPermutations <- function(targets, probs) {
+  if(any(probs<0) | any(probs>1)) stop('probs must be between 0 and 1')
   probability <- perm_index <- Target <- NULL
 
   tperm <- permutations(2,length(targets),v=c(0,1),repeats.allowed=TRUE)
@@ -356,6 +360,8 @@ getTargetPermutations <- function(targets, probs) {
 #' @return data.table with the overall distribution
 #' @export
 overallDistribution <- function(dcandidate, targetPermutations, dplatforms, poverall, psubcat, grid=1, target=T) {
+  if(poverall<0 | poverall>1 | psubcat<0 | psubcat>1) stop('probability should be between 0 and 1') 
+  if(grid<=0) stop('grid must be positive')
 
   . <- capacity <- pcandperm <- pcand <- success <- probability <- prob <- NULL
 
@@ -420,6 +426,7 @@ overallDistribution <- function(dcandidate, targetPermutations, dplatforms, pove
 #'
 #' @export
 permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
+  if(poverall<0 | poverall>1 | psubcat<0 | psubcat>1) stop('probability should be between 0 and 1') 
 
   Platform <- Subcategory <- capacity <- NULL
 
@@ -485,6 +492,9 @@ permutationDistribution <- function(dcandidate, dplatforms, poverall, psubcat) {
 #' @return A data.table summarizing the distribution of total capacity in the platfom
 #' @importFrom stats fft mvfft
 platformDistribution <- function(plat, subcatDists, psubcat) {
+  if(length(plat)>1) stop('plat should be a character')
+  if(!(plat %in% subcatDists$Platform)) stop('please enter a correct Platform')
+  if(psubcat<0 | psubcat>1) stop('probability should be between 0 and 1')
   . <- Platform <- capacity <- NULL
 
   dplat <- subcatDists[.(plat), on=.(Platform)]
@@ -532,7 +542,7 @@ subcatDistribution <- function(sub, dcandidate) {
   Subcategory <- NULL
 
   dsub <- dcandidate[Subcategory == sub]
-
+  if(!(sub %in% dcandidate$Subcategory)) stop('please enter a correct subcategory')
   # Creating matrix where each column represents the distribution for one candidate
   rsub <- nrow(dsub)
   veclen <- sum(dsub$capacity) + 1
@@ -560,14 +570,17 @@ subcatDistribution <- function(sub, dcandidate) {
 
 #' Sum of distributions
 #'
-#' Distribution of the sum of two indepenent discrete random variables
+#' Distribution of the sum of two independent discrete random variables
 #'
-#' @param dist1 First distribution. Vector where position i corresponds to the probability that the probability is i-1
-#' @param dist2 Second distribution. Vector where position i corresponds to the probability that the probability is i-1
+#' @param dist1 First distribution. Vector where position i corresponds to the probability that the random variable is i-1
+#' @param dist2 Second distribution. Vector where position i corresponds to the probability that the random variable is i-1
 #'
-#' @return DIstribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+#' @return DIstribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 #' @importFrom stats fft mvfft
 sumdist <- function(dist1, dist2) {
+  if(any(dist1<0) | sum(dist1)!=1 | any(dist2<0) | sum(dist2)!=1){
+    stop('dist must be a discrete distribution')
+  }
   l <- length(dist1)+length(dist2)-1
 
   d1 <- rep(0, l)
@@ -584,12 +597,15 @@ sumdist <- function(dist1, dist2) {
 #'
 #' Computes the sum of the distribution of N iid discrete random variables
 #'
-#' @param dist Input distribution. Vector where position i corresponds to the probability that the probability is i-1
+#' @param dist Input distribution. Vector where position i corresponds to the probability that the random variable is i-1
 #' @param N Number of times to add
 #'
-#' @return Distribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+#' @return Distribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 #' @importFrom stats fft mvfft
 sumdistSelf <- function(dist, N=2) {
+  if(any(dist<0) | sum(dist)!=1){
+    stop('dist must be a discrete distribution')
+  }
   l <- N*length(dist)-(N-1)
 
   dd <- rep(0, l)

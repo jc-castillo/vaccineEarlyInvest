@@ -7,6 +7,8 @@ library("R6")
 #' @import data.table
 #' @export
 Parameters <- R6Class("Parameters", list(
+  #' @field inputfile World or US input file
+  inputfile="Default",
   #' @field poverall Probability that no problem at the overall level prevents vaccine feasibility
   poverall=0.9,
   #' @field pvector Probability that there's no problem at the viral vector platform level
@@ -41,8 +43,8 @@ Parameters <- R6Class("Parameters", list(
   pphase1=0.23,
   #' @field pphase2 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
   pphase2=0.32,
-  #' @field pphase3 Probability that there's no problem at the candidate level when a vaccine is in phase 2 trials
-  pphase3=0.45,
+  #' @field pphase3 Probability that there's no problem at the candidate level when a vaccine is in phase 3 trials
+  pphase3=0.5,
   #' @field psubcat Probability that there's no problem at subcategory level
   psubcat=0.8,
   #' @field pspike Probability that there's no problem at the candidate level when a vaccine targets spike proten
@@ -51,7 +53,7 @@ Parameters <- R6Class("Parameters", list(
   precombinant=1.0,
   #' @field potherprotein Probability that there's no problem at the candidate level when a vaccine targets some other proten
   potherprotein=1.0,
-
+  
   # Country / coalition specific parameters
   #' @field popshare Share of world population accounted for by country / coalition
   popshare=1,
@@ -67,10 +69,10 @@ Parameters <- R6Class("Parameters", list(
   outlivesratio=0,
   #' @field fracHighRisk Fraction of population in the country /coalition at high risk
   fracHighRisk=0.12841,
-
+  
   # Parameters from model that converts production capacity into benefits
   #' @field TT Time that the vaccine is brought forward (months)
-  TT=6,
+  TT=3,
   #' @field tau Period of analysis (months)
   tau=24,
   #' @field damageshare Fraction of damage accounted for by some fraction of the population
@@ -111,7 +113,24 @@ Parameters <- R6Class("Parameters", list(
   #' @field effpop Effective world population that needs to be vaccinated to
   #' get all (100 percent) of benefits
   effpop=0.7*7.8,
-
+  
+  # Parameters for shape of health benefits function
+  #' @field simplebenefits Whether the benefit function is a simple function with one single kink
+  simplebenefits=F,
+  #' @field kink2loc Location of the second kink in the benefit function
+  kink2loc=0.5,
+  #' @field slopefactormax Maximum ratio between the benefits from vaccinating high risk people and
+  #' next population group
+  slopefactormax=10,
+  #' @field slopefactormin Minimum ratio between the benefits from vaccinating high risk people and
+  #' next population group
+  slopefactormin=5,
+  #' @field maxgdpratio Maximum ratio between share of GDP and share of population
+  maxgdpratio=7.2, # Norway
+  #' @field benefitshape Parameter that specifies the shape of the benefit function. It's linear if it
+  #' is one, it's equal to health benefits if it is zero.
+  benefitshape=0.5,
+  
   # Parameters for cost of capacity
   #' @field c Cost of capacity per dose / year
   c=2,
@@ -143,7 +162,7 @@ Parameters <- R6Class("Parameters", list(
   fcostred=0,
   #' @field outsidefactor How much more likely are firms to be successful in an outside market
   outsidefactor=2,
-
+  
   # Parameters related to procurement scheme
   #' @field pearly Price of early batch of vaccines
   pearly=35,
@@ -167,12 +186,12 @@ Parameters <- R6Class("Parameters", list(
   fracScrap=0.3,
   #' @field budget Program budget
   budget=100,
-
+  
   #' @field capcost Total capacity cost per candidate
   capcost=NA,
   #' @field global Whether the the analysis is for the whole wolrd
   global=F,
-
+  
   # Parameters related to finding firm's incentives to participate
   #' @field outcap Capacity to build in an outside market
   outcap=0.1, # Billions
@@ -180,21 +199,29 @@ Parameters <- R6Class("Parameters", list(
   outprob=0.2,
   #' @field outquantity Amount of outside vaccines that will be sold at high prices
   outquantity=0.5, # Billions
-
+  
   #' @description
   #' Create a new `Parameters` object.
-  #' @param input Determines how to initialize object. Can be a string telling which default parameters to use. Can also be
-  #' the `input` object (of class `reactivevalues`) with the inputs from a shiny app, in which case all inputs are copied into
-  #' fields.
+  #' @param input Determines how to initialize object. Can be a string telling 
+  #' which default parameters to use. Can also be the `input` object 
+  #' (of class `reactivevalues`) with the inputs from a Shiny app, 
+  #' in which case all inputs are copied into fields.
   #' @param population Country population (in millions)
-  #' @param gdp_pc Country GDP per capita (in thousand $)
+  #' @param gdp_pc Country GDP per capita (in thousand USD)
   #' @param frac_high_risk Fraction of population that is high risk
   #' @param loss2yr Cumulative percent of GDP lost because of pandemic over two years
   #' @param worldLoss2yr Cumulative percent of GDP lost worldwide because of pandemic over two years
+  #' @param benefitKinks NEEDS DOCUMENTING
   #' @param ... Set fields at non-default values
   #' @return A new `Parameters` object.
-  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL, loss2yr=NULL, worldLoss2yr=0.138, ...) {
-    if (class(input) == "reactivevalues") { # Copy all parameters if the input comes from a shiny app interface
+  #' @examples 
+  #' par = Parameters$new(global = TRUE)
+  #' 
+  initialize = function(input=NULL, population=NULL, gdp_pc=NULL, frac_high_risk=NULL,
+                        loss2yr=NULL, worldLoss2yr=0.138, benefitKinks=NULL, ...) {
+    
+    if (class(input) == "reactivevalues") { 
+      # Copy all parameters if the input comes from a shiny app interface
       nms <- names(input)
       for (nm in nms) {
         if (nm %in% names(self)) {
@@ -204,13 +231,13 @@ Parameters <- R6Class("Parameters", list(
         }
       }
     }
-
+    
     self$capkink_nucleic <- self$capkink
     self$capkink_subunits <- self$capkink
     self$capkink_live <- self$capkink
-
+    
     parlist <- list(...)
-
+    
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
       if (nm %in% names(self)) {
@@ -219,7 +246,7 @@ Parameters <- R6Class("Parameters", list(
         }
       }
     }
-
+    
     # Setting parameters related to country
     if (!is.null(population) & !is.null(gdp_pc) & !is.null(frac_high_risk)) {
       self$popshare <- population/7800
@@ -230,13 +257,13 @@ Parameters <- R6Class("Parameters", list(
     } else if (!is.null(population) | !is.null(gdp_pc) | !is.null(frac_high_risk)) {
       stop("The arguments for population, gdp_pc, and frac_high_risk must all be provided or none of them should be provided")
     }
-
+    
     if (!is.null(loss2yr)) {
       self$econlossratio <- loss2yr/worldLoss2yr
     }
-
-    self$setDerivedParameters()
-
+    
+    self$setDerivedParameters(benefitKinks=benefitKinks)
+    
     for (i in seq_len(length(parlist))) {
       nm <- names(parlist)[i]
       if (nm %in% names(self)) {
@@ -245,41 +272,70 @@ Parameters <- R6Class("Parameters", list(
         }
       }
     }
+    
+    
   },
-
+  
   #' @description
   #' Compute additional parameters that are functions of the input parameters
-  setDerivedParameters = function() {
+  setDerivedParameters = function(benefitKinks=NULL) {
     if (is.null(self$mortality)) {
       self$mortality <- self$popshare * self$worldmortality
     }
-
+    
     if (!self$global) {
       popratio <- self$popshare / (0.33/7.8)
       gdpratio <- self$gdpshare / (20.54/87.3)
       gdppcratio <- gdpratio / popratio
       self$statLife=7 * gdppcratio
     }
-
+    
     self$capcost <- self$c * self$capacity * 12 / 1000
     self$hben <- self$mortality * self$statLife * self$yearsLost / self$lifeExp / 1000
     self$effpop <- self$fracneeded * self$pop
-
+    
     if (self$global) {
       self$totmonthben <- (self$monthben + self$hben) * (1 - self$sharm)
-    } else {
+    } else if (self$simplebenefits) {
       self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
       damageratio <- 0.25 / (1-0.25) * (1-0.75) / 0.75
       self$damageshare <- 1 / (1 + (1 - self$fracHighRisk) / self$fracHighRisk * damageratio)
       self$vaccshare <- self$fracHighRisk
-
+      
       self$benefitdist <- "piecewiseLinearGen"
-
+      
       piecewisepar <- list(vaccshares=c(self$fracHighRisk * self$popshare / self$fracneeded, self$popshare),
                            damageshares=c(self$damageshare, 1))
       self$piecewisepar <- piecewisepar
+    } else {
+      self$totmonthben <- (self$econlossratio * self$monthben * self$gdpshare + self$hben) * (1 - self$sharm)
+      self$benefitdist <- "piecewiseLinearGen"
+      
+      if (is.null(benefitKinks)) {
+        slopefactor <- self$slopefactormin + self$gdpshare / self$popshare / self$maxgdpratio *
+          (self$slopefactormax - self$slopefactormin)
+        
+        denominator <- self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk) +
+          (self$fracneeded - self$kink2loc)*1/2
+        
+        vaccshares <- c(self$fracHighRisk * self$popshare / self$fracneeded,
+                        self$kink2loc * self$popshare / self$fracneeded, self$popshare)
+        healthdamageshares <- c(slopefactor * self$fracHighRisk / denominator,
+                                (self$fracHighRisk * slopefactor + (self$kink2loc - self$fracHighRisk)) / denominator,
+                                1)
+        lineardamageshares <- c(self$fracHighRisk / self$fracneeded, self$kink2loc /self$ fracneeded, 1)
+        damageshares <- self$benefitshape * lineardamageshares + (1-self$benefitshape) * healthdamageshares
+        
+        piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
+        self$piecewisepar <- piecewisepar
+      } else {
+        vaccshares <- benefitKinks[[1]] * self$popshare / self$fracneeded
+        damageshares <- benefitKinks[[2]]
+        piecewisepar <- list(vaccshares=vaccshares, damageshares=damageshares)
+        self$piecewisepar <- piecewisepar
+      }
     }
-
+    
     # Compute damage parameters based on damage distribution
     if (self$benefitdist=="pnorm") {
       as <- seq(0,10,0.01)
@@ -294,6 +350,5 @@ Parameters <- R6Class("Parameters", list(
       self$piecewisepar <- list(slope1=slope1, int1=int1, slope2=slope2, int2=int2)
     }
   }
-
-)
-)
+  
+))

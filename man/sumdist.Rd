@@ -7,13 +7,13 @@
 sumdist(dist1, dist2)
 }
 \arguments{
-\item{dist1}{First distribution. Vector where position i corresponds to the probability that the probability is i-1}
+\item{dist1}{First distribution. Vector where position i corresponds to the probability that the random variable is i-1}
 
-\item{dist2}{Second distribution. Vector where position i corresponds to the probability that the probability is i-1}
+\item{dist2}{Second distribution. Vector where position i corresponds to the probability that the random variable is i-1}
 }
 \value{
-DIstribution of the sum. Vector where position i corresponds to the probability that the probability is i-1
+DIstribution of the sum. Vector where position i corresponds to the probability that the random variable is i-1
 }
 \description{
-Distribution of the sum of two indepenent discrete random variables
+Distribution of the sum of two independent discrete random variables
 }
