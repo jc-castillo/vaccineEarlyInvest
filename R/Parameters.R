@@ -137,7 +137,7 @@ Parameters <- R6Class("Parameters", list(
   #' @field capacity Constraint on capacity (doses / month)
   capacity=100,
   #' @field capkink Capacity at which marginal cost has a kink (doses / month)
-  capkink=100,
+  capkink=200,
   #' @field capkink_nucleic Capacity at which marginal cost has a kink for RNA and DNA (doses / month)
   capkink_nucleic=NULL,
   #' @field capkink_subunits Capacity at which marginal cost has a kink for protein subunit and viral vector (doses / month)
