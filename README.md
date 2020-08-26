@@ -1,5 +1,9 @@
 # vaccineEarlyInvest
 
+<!-- badges: start -->
+  [![Travis build status](https://travis-ci.com/jc-castillo/vaccineEarlyInvest.svg?branch=master)](https://travis-ci.com/jc-castillo/vaccineEarlyInvest)
+<!-- badges: end -->
+  
 This is an R package that helps determine investments to accelerate access to a Covid-19 vaccine. It provides tools to compute the optimal portfolio of investments for a country that wants to buy production capacity before the end of clinical trials. These tools follow the analysis and the model by the [AcceleratingHT](www.acceleratinght.org) team.
 
 ## Usage
