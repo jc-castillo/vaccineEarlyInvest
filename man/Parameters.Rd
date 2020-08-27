@@ -12,7 +12,7 @@ Class to handle parameters of the model for investment in early vaccine capacity
 ## Method `Parameters$new`
 ## ------------------------------------------------
 
-par = Parameters$new(global = TRUE)
+par <- Parameters$new(global = TRUE)
 
 }
 \section{Public fields}{
@@ -254,7 +254,7 @@ A new \code{Parameters} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{par = Parameters$new(global = TRUE)
+\preformatted{par <- Parameters$new(global = TRUE)
 
 }
 \if{html}{\out{</div>}}
