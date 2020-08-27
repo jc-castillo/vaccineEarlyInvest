@@ -10,10 +10,10 @@
 #' @export
 #' @import data.table
 #' @importFrom utils read.csv
-#' @examples 
+#' @examples
 #' par=Parameters$new()
 #' d = loadData(par, includeVaccines = 'BCG')
-#' d = loadData(par,candidateFile = 
+#' d = loadData(par,candidateFile =
 #'              system.file("extdata","vaccinesSummaryAug20.csv", package = 'vaccineEarlyInvest'))
 loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # We set encoding to BOM UTF to avoid cross-platform issues
@@ -44,7 +44,7 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
   # dchoose <- data.table(read.csv(system.file("Data/vaccinesChoose.csv", package = 'vaccineEarlyInvest'), fileEncoding = "UTF-8-BOM"))
   # d <- d[.(dchoose$Platform, dchoose$Subcategory), on=.(Platform, Subcategory)]
 
-  # Delete rows of vaccines to omit in analysis 
+  # Delete rows of vaccines to omit in analysis
   exp_subcat = c("Live attenuated bacteria","Self-assembling vaccine","Dendritic cells",
                  "Artificial antigen presenting cells","Unknown")
   exp_names = c("BCG","Self-assembling","Dendritic","AAPC","Unknown")
@@ -78,13 +78,13 @@ loadData <- function(par, candidateFile=NULL, includeVaccines=c()) {
 #' @importFrom dplyr if_else
 #' @importFrom purrr rbernoulli
 #' @import gtools
-#' @examples 
-#' par <- Parameters$new()
-#' d <- loadData(par = par)
-#' d$Target <- 'Others'
-#' d$Target[1:5] <- 'Spike'
-#' d$Target[6:10] <-'Recombinant'
-#' candidate <- candidatesFung(d, par)
+#' @examples
+#' par = Parameters$new()
+#' d = loadData(par = par)
+#' d$Target = 'Others'
+#' d$Target[1:5] = 'Spike'
+#' d$Target[6:10] = 'Recombinant'
+#' candidate = candidatesFung(d, par)
 candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
   Platform <- pplat <- Target <- ptarget <- phase <- Candidates <- PreClinicalCandidates <-
     Phase1candidates <- Phase2candidates <- Phase3candidates <- RepurposedCandidates <-
@@ -257,7 +257,7 @@ candidatesFung <- function(d, par, computeExpComp=F, seed=10) {
                                    basemgcost*(1-par$protVectorFung),
                                    basemgcost*(1-par$subcatFung)
                            )
-      )]
+                   )]
 
       # TODO: Need to double check this equation
       df_stacked[, mgcost := mgcost + par$poverall * (psuccess - culProb[j-1]) * par$fracScrap * basemgcost]
@@ -419,8 +419,8 @@ benefitIntegral <- function(frac, par) {
                      if_else(frac >= vsn,
                              (vsn - vs) * ds + 1/2 * (vsn - vs) * (dsn - ds),
                              (frac - vs) * ds + 1/2 * (frac - vs)^2 * (dsn - ds) / (vsn - vs),
-                             )
                      )
+      )
 
       ret <- ret + add
     }
@@ -506,7 +506,7 @@ benefitIntegralDisc <- function(frac1, frac2, par, share1=1, share2=1) {
 #'
 #' @return Total benefits from vaccination
 #' @export
-#' @examples 
+#' @examples
 #' cap = list(c(0.1,0.2,0.4),c(0.2,0.5,0.7))
 #' par = Parameters$new()
 #' ben = benefits(100, cap, c(3,4),par)
@@ -519,7 +519,7 @@ benefits <- function(monthben, capacities, endtimes, par) {
   }
 
   benefits <- rep(0, length(capacities[[1]]))
-  fracImmunized <- rep(0, length(capacities[[1]]))
+  fracImmunized <- pmin(rep(0, length(capacities[[1]])), 1)
   begintime <- rep(0, length(capacities[[1]]))
 
   for (i in seq_along(capacities)) {
@@ -527,23 +527,22 @@ benefits <- function(monthben, capacities, endtimes, par) {
     endtime <- endtimes[i]
     capacity <- capacities[[i]]
 
-    fracImmunizedNew <- fracImmunized + capacity * (endtime - begintime) / (par$effpop)
-
+    fracImmunizedNew <- pmin(fracImmunized + capacity * (endtime - begintime) / (par$effpop), 1)
     timeVaccAll <- par$effpop / capacity
     timeFinish <- begintime + (1-fracImmunized) * (par$effpop) / capacity
 
     # Different computation when everyone was already vaccinated in the fist stage
     benefitsNew <- ifelse(fracImmunized >= 1,
-                           (endtime - begintime) * monthben,
-                           ifelse(fracImmunizedNew < 1, # Different computation when capacity is enough to vaccinate everyone before endtime2
-                                   (benefitIntegral(fracImmunizedNew, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll * monthben,
-                                   ifelse(fracImmunized < 1,
-                                           ((benefitIntegral(1, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll + (endtime - timeFinish)) * monthben,
-                                           (endtime - timeFinish) * monthben
-                                   )
+                          (endtime - begintime) * monthben,
+                          ifelse(fracImmunizedNew < 1, # Different computation when capacity is enough to vaccinate everyone before endtime2
+                                 (benefitIntegral(fracImmunizedNew, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll * monthben,
+                                 ifelse(fracImmunized < 1,
+                                        ((benefitIntegral(1, par) - benefitIntegral(fracImmunized, par)) * timeVaccAll + (endtime - timeFinish)) * monthben,
+                                        (endtime - timeFinish) * monthben
+                                 )
 
-                           )
-                    )
+                          )
+    )
     benefits <- benefits + benefitsNew
     fracImmunized <- fracImmunizedNew
     begintime <- endtime
