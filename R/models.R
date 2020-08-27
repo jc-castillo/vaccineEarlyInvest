@@ -528,7 +528,7 @@ benefits <- function(monthben, capacities, endtimes, par) {
     capacity <- capacities[[i]]
 
     fracImmunizedNew <- fracImmunized + capacity * (endtime - begintime) / (par$effpop)
-    if (fracImmunizedNew>1){ fracImmunizedNew = 1}
+
     timeVaccAll <- par$effpop / capacity
     timeFinish <- begintime + (1-fracImmunized) * (par$effpop) / capacity
 
