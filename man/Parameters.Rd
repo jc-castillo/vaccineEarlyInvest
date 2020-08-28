@@ -243,7 +243,8 @@ in which case all inputs are copied into fields.}
 
 \item{\code{worldLoss2yr}}{Cumulative percent of GDP lost worldwide because of pandemic over two years}
 
-\item{\code{benefitKinks}}{NEEDS DOCUMENTING}
+\item{\code{benefitKinks}}{Location of the kinks in the benefit function. List with two vectors; the first
+vector has the fractions vaccinated, the second has the fractions of benefits obtained.}
 
 \item{\code{...}}{Set fields at non-default values}
 }

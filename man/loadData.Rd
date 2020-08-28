@@ -22,6 +22,6 @@ Load summary data with characteristics for vaccines
 \examples{
 par=Parameters$new()
 d = loadData(par, includeVaccines = 'BCG')
-d = loadData(par,candidateFile = 
+d = loadData(par,candidateFile =
              system.file("extdata","vaccinesSummaryAug20.csv", package = 'vaccineEarlyInvest'))
 }
