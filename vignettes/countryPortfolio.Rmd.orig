@@ -42,7 +42,7 @@ price <- 10 # In dollars per course / year
 
 portfolioPeru <- portfolioPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, price=price,
-                                 candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+                                 candidateFile="../inst/extdata/vaccinesSummarySep9.csv")
 ```
 
 Note that the names of all six arguments must be entered explicitly when calling `portfolioPriceTaker()`. The output from this function is a list that includes the main information about the optimal portfolio:
@@ -83,7 +83,7 @@ prices <- 1:30 # Vector of prices at which demand will be evaluated
 
 demandPeru <- demandPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
                                      loss2yr=loss2yr, prices=prices,
-                                 candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+                                 candidateFile="../inst/extdata/vaccinesSummarySep9.csv")
 
 ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) + 
   labs(x="Capacity (mil. courses / month)", y="Price ($ per course / year)", 
@@ -116,7 +116,7 @@ parameters <- Parameters$new(population=population, gdp_pc=gdp_pc,
                              pphase2=pphase2, sharm=sharm, worldmortality=worldmortality)
 
 portfolioGermany <- portfolioPriceTaker(parameters, price=price,
-                                     candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+                                     candidateFile="../inst/extdata/vaccinesSummarySep9.csv")
 
 # Sorting capacities in descending order
 capacities <- sort(portfolioGermany$capacities, decreasing=T)
@@ -167,7 +167,7 @@ parameters <- Parameters$new(popshare=0.05, gdpshare=0.06, totmonthben=30, pphas
                              benefitKinks=list(c(0.2,0.75),c(0.8,1)))
 
 portfolioCountry <- portfolioPriceTaker(parameters, price=price,
-                                     candidateFile="../inst/extdata/vaccinesSummaryAug20.csv")
+                                     candidateFile="../inst/extdata/vaccinesSummarySep9.csv")
 
 # Sorting capacities in descending order
 capacities <- sort(portfolioCountry$capacities, decreasing=T)

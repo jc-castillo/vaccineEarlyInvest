@@ -2,7 +2,7 @@ Package: vaccineEarlyInvest
 Type: Package
 Title: Investment in Early Manufacturing Capacity for Vaccines
 Version: 0.1.0
-Author: Juan Camilo Castillo, Brandon Tan
+Author: Juan Camilo Castillo, Brandon Tan, Junyi Que, Witold Więcek
 Maintainer: Juan Camilo Castillo <jccast@upenn.edu>
 Description: Find an optimal portfolio for investment in early manufacturing of a
     vaccine based on health and economic benefits.
