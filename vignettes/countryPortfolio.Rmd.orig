@@ -90,6 +90,24 @@ ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) +
        title="Demand curve, Peru")
 ```
 
+The function `limBudgetPriceTaker()` finds the optimal portfolio for a country with a limited budget. It takes as an input a vector `shadowCosts` that refers to different levels of the cost of public funds, and computes the optimal portfolio for each value of the shadow cost. The following example shows how this function can be used to compute the benefits and net benefits that can be obtained at every level of expenditure:
+
+```{r PeruBudget, fig.width=5, fig.height=3.5}
+shadowCosts <- seq(1,5,0.1)  # Vector of shadow costs: cost of public funds
+
+limBudgetPeru <- limBudgetPriceTaker(population=population, gdp_pc=gdp_pc, frac_high_risk=frac_high_risk, 
+                                     loss2yr=loss2yr, shadowCosts=shadowCosts, price=10,
+                                 candidateFile="../inst/extdata/vaccinesSummarySep9.csv")
+
+plotdata <- melt(limBudgetPeru$optimizations[, .(cost, expBenefit, netBenefit=expBenefit-cost)],
+                 id.vars="cost", measure.vars=c("expBenefit", "netBenefit"))
+plotdata[variable=="expBenefit", label := "Benefits"]
+plotdata[variable=="netBenefit", label := "Net Benefits"]
+
+ggplot() + geom_line(aes(cost, value, color=label), plotdata) +
+  scale_color_brewer(palette="Set1") +
+  labs(x="Cost (bil. $)", y="Benefits (bil. $)", color=NULL, title="Limited budget, Peru")
+```
 
 ### Advanced options
 
