@@ -279,6 +279,8 @@ Parameters <- R6Class("Parameters", list(
 
   #' @description
   #' Compute additional parameters that are functions of the input parameters
+  #' @param benefitKinks Location of the kinks in the benefit function. List with two vectors; the first
+  #' vector has the fractions vaccinated, the second has the fractions of benefits obtained.
   setDerivedParameters = function(benefitKinks=NULL) {
     if (is.null(self$mortality)) {
       self$mortality <- self$popshare * self$worldmortality

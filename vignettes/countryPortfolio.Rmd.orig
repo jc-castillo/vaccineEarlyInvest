@@ -1,5 +1,5 @@
 ---
-title: "Country portfolio"
+title: "Optimal portfolio for a country"
 author: "Juan Camilo Castillo"
 output: rmarkdown::html_vignette
 vignette: >
@@ -20,16 +20,15 @@ knitr::opts_chunk$set(
 # devtools::build_vignettes()
 ```
 
-## Finding the optimal portfolio for a country
-
 ```{r setup}
 # Loading packages and setting up options
 library(vaccineEarlyInvest)
 library(ggplot2)
+library(data.table)
 theme_set(theme_bw(base_size=12))
 ```
 
-### Simple case: Peru
+## Simple case: Peru
 
 The main function that finds the optimal portfolio for a price taking country is `portfolioPriceTaker()`. In order to illustrate its basic usage, let's find the optimal portfolio for Peru. It has 31.99 million people, its GDP per capita is $6,710, 13.1% of its population is high risk, and the World Bank projects the Covid-19 pandemic will cause a 26.9% cumulative GDP loss over 2020 and 2021. The main arguments to `portfolioPriceTaker()` are these five numbers, the price at which manufacturing capacity is sold in the market (let's assume it's $10 per course / year), as well as the path to a .csv file with data on vaccine candidates. The file in `inst/extdata/vaccinesSummaryAug20.csv` gives an example of how the input file should look like. It reflects the state of the vaccine landscape in August 20, 2020, with [data from the WHO](https://www.who.int/publications/m/item/draft-landscape-of-covid-19-candidate-vaccines).
 
@@ -76,6 +75,8 @@ ggplot() + geom_histogram(aes(socialBenefit, weight=prob), distribution,
   labs(x="Social benefits (bil. $)", y="Frequency")
 ```
 
+#### Full demand curve
+
 The function `demandPriceTaker()` finds the whole demand curve for a country for different prices. It is much more efficient than calling `portfolioPriceTaker()` multiple times at different prices. Here is an example of how to call that function and plot total demand for manufacturing capacity for Peru:
 
 ```{r PeruDemand, fig.width=5, fig.height=3.5}
@@ -89,6 +90,8 @@ ggplot() + geom_line(aes(totalCapacity, price), demandPeru$optimizations) +
   labs(x="Capacity (mil. courses / month)", y="Price ($ per course / year)", 
        title="Demand curve, Peru")
 ```
+
+#### Limited budget
 
 The function `limBudgetPriceTaker()` finds the optimal portfolio for a country with a limited budget. It takes as an input a vector `shadowCosts` that refers to different levels of the cost of public funds, and computes the optimal portfolio for each value of the shadow cost. The following example shows how this function can be used to compute the benefits and net benefits that can be obtained at every level of expenditure:
 
@@ -109,7 +112,7 @@ ggplot() + geom_line(aes(cost, value, color=label), plotdata) +
   labs(x="Cost (bil. $)", y="Benefits (bil. $)", color=NULL, title="Limited budget, Peru")
 ```
 
-### Advanced options
+## Advanced options
 
 The previous simple analysis uses the default parameters of the model. Those default parameters can be modified by passing an object of the `Parameters` class (an `R6` class). In that case, the input arguments `population`, `gdp_pc`, `frac_high_risk`, and `loss2yr` passed to `portfolioPriceTaker()` and `demandPriceTaker()` are overriden. Instead, they should be passed as arguments to the constructor of the `Parameters` class.
 
@@ -147,7 +150,7 @@ ggplot() + geom_bar(aes(1:length(capacities), capacities), stat="identity",
 A `Parameters` object can also be passed in the same way to `demandPriceTaker()` (instead of specifying the population, GDP per capita, fraction of high risk population, and 2-year economic loss arguments).
 
 
-### Modifying parameters directly
+#### Modifying parameters directly
 
 The code above shows how to run the model using only simple demographics as model inputs. The `Parameters` constructor computes the main model parameters from those inputs.
 

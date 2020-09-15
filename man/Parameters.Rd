@@ -272,6 +272,14 @@ Compute additional parameters that are functions of the input parameters
 \if{html}{\out{<div class="r">}}\preformatted{Parameters$setDerivedParameters(benefitKinks = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{benefitKinks}}{Location of the kinks in the benefit function. List with two vectors; the first
+vector has the fractions vaccinated, the second has the fractions of benefits obtained.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
