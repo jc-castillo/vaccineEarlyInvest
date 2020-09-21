@@ -5,20 +5,18 @@
 \alias{vaccineEarlyInvest}
 \title{vaccineEarlyInvest}
 \description{
-This is an R package that helps determine investments to
-accelerate access to a Covid-19 vaccine. It provides tools
-to compute the optimal portfolio of investments for a country
-that wants to buy production capacity before the end of clinical trials.
-These tools follow the analysis and the model by the \href{www.acceleratinght.org}{AcceleratingHT} team.
+This is an R package that helps determine investments to accelerate access to a Covid-19 vaccine.
+It provides tools to compute the optimal portfolio of investments for a country that wants to buy
+production capacity before the end of clinical trials. These tools follow the analysis and the model
+by the \href{https://www.acceleratinght.org}{AcceleratingHT} team.
 }
 \section{Usage}{
 
 
-\code{vignette('countryPorfolio')} gives examples of how to
-use the package to determine the optimal portfolio for a country,
-compute the demand curve for a country, and how to modify the default
+\code{vignette('countryPorfolio')} gives examples of how to use the package to determine the optimal
+portfolio for a country, compute the demand curve for a country, and how to modify the default
 parameters to obtain the optimal portfolio under different assumptions.
 
-Full details about the model can be found \href{www.acceleratinght.org/link_to_appendix}{here}.
+Full details about the model can be found \href{https://www.acceleratinght.org}{here}.
 }
 
