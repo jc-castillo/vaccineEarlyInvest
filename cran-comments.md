@@ -7,7 +7,7 @@ Test environments:
 * builder.r-hub.io (platforms = NULL)
 * win-builder (devel and release)
 
-There are no WARNINGs or ERRORs and 3 NOTEs:
+There are no WARNINGs or ERRORs and 4 NOTEs:
 
 N  checking CRAN incoming feasibility (932ms)      New submission   Maintainer: 'Juan Camilo Castillo <jccast@upenn.edu>'
 
@@ -19,3 +19,6 @@ N checking examples ... NOTE
 Examples with CPU or elapsed time > 5s
                  user system elapsed
 candidatesFung 13.237  0.113  28.535
+
+
+* The vignettes/figure directory has precompiled figures for the vignettes. This is necessary because a full run of the code in the vignettes takes around 10 minutes to run locally.
